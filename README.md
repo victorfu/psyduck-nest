@@ -36,4 +36,4 @@ $ npm run test:cov
 
 ## License
 
-Psyduck-Nest is private.
+Psyduck-Nest is [MIT licensed](LICENSE).
