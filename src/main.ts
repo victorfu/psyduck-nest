@@ -4,10 +4,12 @@ import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { getPackageVersion } from './utils';
 import { ServerConfig, SwaggerConfig } from './config/configuration.interface';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api');
+  app.useGlobalPipes(new ValidationPipe());
 
   const configService = app.get(ConfigService);
 
@@ -29,7 +31,7 @@ async function bootstrap() {
 
   const serverConfig = configService.get<ServerConfig>('server');
   await app.listen(serverConfig.port);
-  console.log(`~ Application is running on: ${await app.getUrl()}`);
+  console.info(`~ Server is running on: ${await app.getUrl()}`);
 }
 
 bootstrap();
