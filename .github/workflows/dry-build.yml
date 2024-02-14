@@ -1,0 +1,27 @@
+name: Dry Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+
+jobs:
+  Dry-Build:
+    runs-on: ubuntu-latest
+    # strategy:
+    #   matrix:
+    #     node-version: [16.14.2]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      #   - name: 'Use Node.js ${{ matrix.node-version }}'
+      #     uses: actions/setup-node@v2
+      #     with:
+      #       node-version: ${{ matrix.node-version }}
+      - name: 'Build application'
+        run: |
+          echo "::group::Build State"
+          npm install
+          npm test 
+          npm run build --prod
+          echo "::endgroup::"
