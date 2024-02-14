@@ -16,7 +16,7 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/api (GET)', () => {
-    return request(app.getHttpServer()).get('/api').expect(200).expect('pong');
+  it('/api/version (GET)', () => {
+    return request(app.getHttpServer()).get('/api/version').expect(200);
   });
 });

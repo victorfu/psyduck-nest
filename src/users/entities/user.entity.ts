@@ -20,4 +20,7 @@ export class User {
 
   @Column({ default: true })
   isActive: boolean;
+
+  @Column({ default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
 }
