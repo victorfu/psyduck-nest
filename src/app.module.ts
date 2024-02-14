@@ -7,6 +7,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { TerminusModule } from '@nestjs/terminus';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -24,6 +26,8 @@ import { join } from 'path';
       autoLoadEntities: true,
       synchronize: true,
     }),
+    TerminusModule,
+    HealthModule,
     UsersModule,
   ],
   controllers: [AppController],

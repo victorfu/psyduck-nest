@@ -3,10 +3,6 @@ import { getPackageVersion } from './utils';
 
 @Injectable()
 export class AppService {
-  ping(): string {
-    return 'pong';
-  }
-
   time(): string {
     return new Date().toISOString();
   }
