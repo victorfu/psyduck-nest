@@ -3,19 +3,23 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { UsersService } from './users.service';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
+import { ConfigService } from '@nestjs/config';
 
 const userArray = [
   {
+    username: 'user1',
     firstName: 'firstName #1',
     lastName: 'lastName #1',
   },
   {
+    username: 'user2',
     firstName: 'firstName #2',
     lastName: 'lastName #2',
   },
 ];
 
 const oneUser = {
+  username: 'user1',
   firstName: 'firstName #1',
   lastName: 'lastName #1',
 };
@@ -38,6 +42,18 @@ describe('UserService', () => {
             delete: jest.fn(),
           },
         },
+        {
+          provide: ConfigService,
+          useValue: {
+            get: jest.fn().mockImplementation((key: string) => {
+              if (key === 'bcrypt')
+                return {
+                  saltRounds: 10,
+                };
+              return null;
+            }),
+          },
+        },
       ],
     }).compile();
 
@@ -52,12 +68,16 @@ describe('UserService', () => {
   describe('create()', () => {
     it('should successfully insert a user', () => {
       const oneUser = {
+        username: 'user1',
+        password: '123',
         firstName: 'firstName #1',
         lastName: 'lastName #1',
       };
 
       expect(
         service.create({
+          username: 'user1',
+          password: '123',
           firstName: 'firstName #1',
           lastName: 'lastName #1',
         }),

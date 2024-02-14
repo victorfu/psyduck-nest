@@ -10,4 +10,7 @@ export default () => ({
     title: process.env.SWAGGER_TITLE || 'API',
     description: process.env.SWAGGER_DESCRIPTION || 'API description',
   },
+  bcrypt: {
+    saltRounds: parseInt(process.env.BCRYPT_SALT_ROUNDS, 10) || 10,
+  },
 });

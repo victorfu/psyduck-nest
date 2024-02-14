@@ -11,3 +11,7 @@ export interface SwaggerConfig {
   title: string;
   description: string;
 }
+
+export interface BcryptConfig {
+  saltRounds: number;
+}
