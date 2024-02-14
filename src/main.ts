@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { getPackageVersion } from './utils';
-import { SwaggerConfig } from './config/configuration.interface';
+import { ServerConfig, SwaggerConfig } from './config/configuration.interface';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,7 +12,6 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   const swaggerConfig = configService.get<SwaggerConfig>('swagger');
-
   if (swaggerConfig.enabled) {
     const config = new DocumentBuilder()
       .setTitle(swaggerConfig.title)
@@ -23,8 +22,13 @@ async function bootstrap() {
     SwaggerModule.setup('api', app, document);
   }
 
-  const port = configService.get<number>('port');
-  await app.listen(port);
+  const corsConfig = configService.get('cors');
+  if (corsConfig.enabled) {
+    app.enableCors();
+  }
+
+  const serverConfig = configService.get<ServerConfig>('server');
+  await app.listen(serverConfig.port);
   console.log(`~ Application is running on: ${await app.getUrl()}`);
 }
 

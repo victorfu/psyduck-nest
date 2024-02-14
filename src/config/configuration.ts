@@ -1,5 +1,10 @@
 export default () => ({
-  port: parseInt(process.env.PORT, 10) || 8080,
+  server: {
+    port: parseInt(process.env.PORT, 10) || 8080,
+  },
+  cors: {
+    enabled: process.env.CORS_ENABLED === 'true',
+  },
   swagger: {
     enabled: process.env.SWAGGER_ENABLED === 'true',
     title: process.env.SWAGGER_TITLE || 'API',
