@@ -25,8 +25,6 @@ jobs:
     needs: Dry-Build
     if: ${{ failure() }}
     steps:
-      - name: Check values
-        run: echo ${{ vars.EMAIL_USERNAME }} ${{ vars.EMAIL_TO }}
       - name: Send failure email notification
         uses: dawidd6/action-send-mail@v3
         with:
@@ -36,7 +34,7 @@ jobs:
           # app password https://support.google.com/mail/answer/185833?hl=en-GB
           password: ${{ secrets.EMAIL_APP_PASSWORD }}
           subject: Failed to build ${{ github.repository }}
-          body: '<!here> psyduck-nest build break.\n${{ github.event.pull_request.title }}: ${{ github.event.pull_request.html_url }} \n${{ github.event.pull_request.user.login}}'
+          body: '<!here> psyduck-nest build break.\n https://github.com/$${{ github.repository }}//commit/${{ github.sha }} \n${{ github.actor}}'
           # comma-separated string
           to: ${{ vars.EMAIL_TO }}
           from: Psyduck
