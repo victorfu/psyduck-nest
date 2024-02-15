@@ -31,6 +31,11 @@ export class User {
   @Column({ default: true })
   isActive: boolean;
 
+  @Column('simple-array', {
+    default: () => "('user')",
+  })
+  roles: string[];
+
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
