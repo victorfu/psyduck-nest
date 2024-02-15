@@ -26,17 +26,17 @@ jobs:
     if: ${{ failure() }}
     steps:
       - name: Check values
-        run: echo ${{ env.EMAIL_USERNAME }} ${{ env.EMAIL_TO }}
+        run: echo ${{ vars.EMAIL_USERNAME }} ${{ vars.EMAIL_TO }}
       - name: Send failure email notification
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
           server_port: 465
-          username: ${{ env.EMAIL_USERNAME }}
+          username: ${{ vars.EMAIL_USERNAME }}
           # app password https://support.google.com/mail/answer/185833?hl=en-GB
           password: ${{ secrets.EMAIL_APP_PASSWORD }}
           subject: ${{ github.job }} job of ${{ github.repository }} has ${{ job.status }}
           body: ${{ github.job }} job in worflow ${{ github.workflow }} of ${{ github.repository }} has ${{ job.status }}
           # comma-separated string
-          to: ${{ env.EMAIL_TO }}
+          to: ${{ vars.EMAIL_TO }}
           from: GitHub Actions
