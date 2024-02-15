@@ -12,7 +12,22 @@ export class AuthService {
 
   async validateUser(username: string, pass: string): Promise<any> {
     const user = await this.usersService.findOneByUsername(username);
-    if (user && (await bcrypt.compare(pass, user.password))) {
+    if (
+      user &&
+      (await bcrypt.compare(pass, user.password)) &&
+      user.isActive === true
+    ) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password, ...result } = user;
+      return result;
+    }
+    return null;
+  }
+
+  async validateToken(token: any): Promise<any> {
+    const { sub: username } = token;
+    const user = await this.usersService.findOneByUsername(username);
+    if (user && user.isActive === true) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...result } = user;
       return result;
