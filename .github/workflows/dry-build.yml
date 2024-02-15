@@ -35,8 +35,8 @@ jobs:
           username: ${{ vars.EMAIL_USERNAME }}
           # app password https://support.google.com/mail/answer/185833?hl=en-GB
           password: ${{ secrets.EMAIL_APP_PASSWORD }}
-          subject: ${{ github.job }} job of ${{ github.repository }} has ${{ job.status }}
-          body: ${{ github.job }} job in worflow ${{ github.workflow }} of ${{ github.repository }} has ${{ job.status }}
+          subject: Failed to build ${{ github.repository }}
+          body: '<!here> psyduck-nest build break.\n${{ github.event.pull_request.title }}: ${{ github.event.pull_request.html_url }} \n${{ github.event.pull_request.user.login}}'
           # comma-separated string
           to: ${{ vars.EMAIL_TO }}
-          from: GitHub Actions
+          from: Psyduck
