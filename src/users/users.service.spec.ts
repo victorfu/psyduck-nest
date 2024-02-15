@@ -74,14 +74,11 @@ describe('UserService', () => {
         lastName: 'lastName #1',
       };
 
-      expect(
-        service.create({
-          username: 'user1',
-          password: '123',
-          firstName: 'firstName #1',
-          lastName: 'lastName #1',
-        }),
-      ).resolves.toEqual(oneUser);
+      expect(service.create(oneUser)).resolves.toEqual({
+        username: 'user1',
+        firstName: 'firstName #1',
+        lastName: 'lastName #1',
+      });
     });
   });
 
