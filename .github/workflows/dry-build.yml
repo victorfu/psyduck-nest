@@ -25,6 +25,8 @@ jobs:
     needs: Dry-Build
     if: ${{ failure() }}
     steps:
+      - name: Check values
+        run: echo ${{ env.EMAIL_USERNAME }} ${{ env.EMAIL_TO }}
       - name: Send failure email notification
         uses: dawidd6/action-send-mail@v3
         with:
