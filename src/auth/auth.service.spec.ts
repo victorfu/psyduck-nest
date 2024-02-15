@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
+import { JwtService } from '@nestjs/jwt';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -11,7 +12,6 @@ describe('AuthService', () => {
       providers: [
         AuthService,
         UsersService,
-
         {
           provide: UsersService,
           useValue: {
@@ -43,6 +43,7 @@ describe('AuthService', () => {
             remove: jest.fn(),
           },
         },
+        JwtService,
       ],
     }).compile();
 

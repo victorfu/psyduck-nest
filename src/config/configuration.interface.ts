@@ -15,3 +15,8 @@ export interface SwaggerConfig {
 export interface BcryptConfig {
   saltRounds: number;
 }
+
+export interface JwtConfig {
+  secret: string;
+  expiresIn: string;
+}
