@@ -17,7 +17,7 @@ import { RolesGuard } from './auth/roles.guard';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'client'),
+      rootPath: join(__dirname, '..', 'web', 'dist'),
       exclude: ['/api/(.*)'],
     }),
     ConfigModule.forRoot({
