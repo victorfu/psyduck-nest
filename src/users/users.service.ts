@@ -18,7 +18,6 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const found = await this.findOneByUsername(createUserDto.username);
-    console.log(found);
     if (found) {
       throw new ConflictException('Username already exists');
     }
