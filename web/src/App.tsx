@@ -11,6 +11,15 @@ function App() {
       .then(setVersion);
   }, []);
 
+  useEffect(() => {
+    const socket = new WebSocket(import.meta.env.VITE_WS_SERVER_URL);
+    socket.onopen = function () {
+      socket.onmessage = function (data) {
+        console.log('onmessage: ', data);
+      };
+    };
+  }, []);
+
   return (
     <>
       <div>

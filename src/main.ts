@@ -5,11 +5,13 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { getPackageVersion } from './utils';
 import { ServerConfig, SwaggerConfig } from './config/configuration.interface';
 import { ValidationPipe } from '@nestjs/common';
+import { WsAdapter } from '@nestjs/platform-ws';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api');
   app.useGlobalPipes(new ValidationPipe());
+  app.useWebSocketAdapter(new WsAdapter(app));
 
   const configService = app.get(ConfigService);
 
