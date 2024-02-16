@@ -21,15 +21,10 @@ function App() {
   }, []);
 
   return (
-    <>
-      <div>
-        <img src={logo} className="logo" alt="App logo" />
-      </div>
-      <h1>Welcome</h1>
-      <div>
-        <p>{version}</p>
-      </div>
-    </>
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <img src={logo} className="logo" alt="App logo" />
+      <div>{version}</div>
+    </div>
   );
 }
 
