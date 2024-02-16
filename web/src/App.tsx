@@ -8,22 +8,28 @@ import {
   VideoCameraOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu, Button, theme } from 'antd';
-import { Link, Outlet } from 'react-router-dom';
+import {
+  Link,
+  Outlet,
+  useLocation,
+  useRouteLoaderData,
+} from 'react-router-dom';
 
 const { Header, Sider, Content } = Layout;
 
 function App() {
   const [collapsed, setCollapsed] = useState(false);
   const {
-    token: { colorBgContainer, borderRadiusLG },
+    token: { colorBgContainer },
   } = theme.useToken();
   const [broken, setBroken] = useState(false);
+  const location = useLocation();
+  const { pathname } = location;
+  const { user } = useRouteLoaderData('root') as { user: string | null };
 
   useEffect(() => {
-    fetch('/api/version')
-      .then((res) => res.text())
-      .then(console.log);
-  }, []);
+    console.log('user: ', user);
+  }, [user]);
 
   useEffect(() => {
     const socket = new WebSocket(import.meta.env.VITE_WS_SERVER_URL);
@@ -41,7 +47,7 @@ function App() {
         collapsible
         collapsed={collapsed}
         breakpoint="lg"
-        collapsedWidth={broken ? 0 : 80}
+        collapsedWidth={broken ? 0 : 70}
         onBreakpoint={(broken) => {
           setBroken(broken);
         }}
@@ -55,15 +61,15 @@ function App() {
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={['1']}
+          selectedKeys={[pathname]}
           items={[
             {
-              key: '1',
+              key: '/page-one',
               icon: <UserOutlined />,
               label: <Link to="/page-one">Page One</Link>,
             },
             {
-              key: '2',
+              key: '/page-two',
               icon: <VideoCameraOutlined />,
               label: <Link to="/page-two">Page Two</Link>,
             },
@@ -71,7 +77,7 @@ function App() {
         />
       </Sider>
       <Layout>
-        <Header className="p-0" style={{ background: colorBgContainer }}>
+        <Header className="p-0 bg-gray-50">
           <Button
             className="!w-16 !h-16"
             type="text"
@@ -80,10 +86,9 @@ function App() {
           />
         </Header>
         <Content
-          className="p-6"
+          className="p-4"
           style={{
             background: colorBgContainer,
-            borderRadius: borderRadiusLG,
           }}
         >
           <Outlet />
