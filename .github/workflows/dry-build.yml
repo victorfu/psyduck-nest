@@ -8,6 +8,9 @@ on:
 jobs:
   Dry-Build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./api
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -32,7 +35,7 @@ jobs:
           # app password https://support.google.com/mail/answer/185833?hl=en-GB
           password: ${{ secrets.EMAIL_APP_PASSWORD }}
           subject: Failed to build ${{ github.repository }}
-          body: '${{ github.actor}}!! Psyduck-nest build break: https://github.com/${{ github.repository }}/commit/${{ github.sha }}'
+          body: "${{ github.actor}}!! Psyduck-nest build break: https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
           # comma-separated string
           to: ${{ vars.EMAIL_TO }}
           from: Psyduck
