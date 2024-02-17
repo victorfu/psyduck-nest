@@ -32,6 +32,9 @@ export class UsersService {
     user.email = createUserDto.email;
     user.firstName = createUserDto.firstName;
     user.lastName = createUserDto.lastName;
+    if (createUserDto.roles) {
+      user.roles = createUserDto.roles;
+    }
     return this.usersRepository.save(user);
   }
 
@@ -53,5 +56,15 @@ export class UsersService {
 
   async remove(id: number): Promise<void> {
     await this.usersRepository.delete(id);
+  }
+
+  async initializeDefaultAdmin() {
+    const userCount = await this.usersRepository.count();
+    if (userCount === 0) {
+      const defaultAdmin = this.configService.get('defaultAdmin');
+      await this.create(defaultAdmin).catch((error) => {
+        console.error('Failed to create default admin user:', error);
+      });
+    }
   }
 }

@@ -36,7 +36,7 @@ function App() {
   return (
     <div className={`flex h-screen`}>
       <aside
-        className={`bg-gray-800 text-white ${collapsed ? 'w-16' : 'w-64'} transition-width duration-300`}
+        className={`bg-gray-800 text-white ${collapsed ? 'w-16' : 'w-48'} transition-width duration-300`}
       >
         <div className="flex items-center justify-center h-12">
           <img src={logo} className="logo" alt="App logo" />

@@ -23,4 +23,11 @@ export default () => ({
     secret: process.env.JWT_SECRET,
     expiresIn: process.env.JWT_EXPIRES_IN || '60s',
   },
+  defaultAdmin: {
+    username: process.env.DEFAULT_ADMIN_USERNAME || 'admin',
+    password: process.env.DEFAULT_ADMIN_PASSWORD || 'password',
+    firstName: process.env.DEFAULT_ADMIN_FIRST_NAME || 'Admin',
+    lastName: process.env.DEFAULT_ADMIN_LAST_NAME || 'User',
+    roles: (process.env.DEFAULT_ADMIN_ROLES || 'admin').split(','),
+  },
 });

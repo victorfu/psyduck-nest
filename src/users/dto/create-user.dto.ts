@@ -18,4 +18,7 @@ export class CreateUserDto {
 
   @IsOptional()
   lastName?: string;
+
+  @IsOptional()
+  roles?: string[];
 }
