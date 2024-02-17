@@ -1,5 +1,5 @@
+import "./root.css";
 import logo from "/logo.png";
-import "./App.css";
 import { useEffect, useState } from "react";
 import {
   Outlet,
@@ -26,7 +26,7 @@ import {
 } from "@heroicons/react/20/solid";
 import { twMerge } from "tailwind-merge";
 
-function App() {
+function Root() {
   const location = useLocation();
   const { pathname } = location;
   const { user } = useRouteLoaderData("root") as { user: string | null };
@@ -371,4 +371,4 @@ function App() {
   );
 }
 
-export default App;
+export default Root;

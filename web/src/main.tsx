@@ -1,12 +1,11 @@
+import "./index.css";
 import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
 import {
   createBrowserRouter,
   Navigate,
   redirect,
   RouterProvider,
 } from "react-router-dom";
-import "./index.css";
 import { authProvider, loginAction, loginLoader, rootLoader } from "./auth.ts";
 import DashboardPage from "./pages/dashboard-page.tsx";
 import UsersPage from "./pages/users-page.tsx";
@@ -16,12 +15,13 @@ import ProjectsPage from "./pages/projects-page.tsx";
 import CalendarPage from "./pages/calendar-page.tsx";
 import ReportsPage from "./pages/reports-page.tsx";
 import SettingsPage from "./pages/settings-page.tsx";
+import Root from "./root.tsx";
 
 const router = createBrowserRouter([
   {
     id: "root",
     path: "/",
-    element: <App />,
+    element: <Root />,
     errorElement: <ErrorPage />,
     loader: rootLoader,
     children: [
