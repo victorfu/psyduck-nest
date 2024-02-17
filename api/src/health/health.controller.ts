@@ -1,12 +1,12 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get } from "@nestjs/common";
 import {
   HealthCheckService,
   HttpHealthIndicator,
   HealthCheck,
   TypeOrmHealthIndicator,
-} from '@nestjs/terminus';
+} from "@nestjs/terminus";
 
-@Controller('health')
+@Controller("health")
 export class HealthController {
   constructor(
     private health: HealthCheckService,
@@ -14,17 +14,17 @@ export class HealthController {
     private db: TypeOrmHealthIndicator,
   ) {}
 
-  @Get('http')
+  @Get("http")
   @HealthCheck()
   check() {
     return this.health.check([
-      () => this.http.pingCheck('google', 'https://google.com'),
+      () => this.http.pingCheck("google", "https://google.com"),
     ]);
   }
 
-  @Get('db')
+  @Get("db")
   @HealthCheck()
   checkDb() {
-    return this.health.check([() => this.db.pingCheck('database')]);
+    return this.health.check([() => this.db.pingCheck("database")]);
   }
 }

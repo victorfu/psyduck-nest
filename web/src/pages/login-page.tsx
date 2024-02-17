@@ -1,9 +1,9 @@
-import { Form, useActionData, useNavigation } from 'react-router-dom';
-import logo from '/logo.png';
+import { Form, useActionData, useNavigation } from "react-router-dom";
+import logo from "/logo.png";
 
 function LoginPage() {
   const navigation = useNavigation();
-  const isLoggingIn = navigation.formData?.get('username') != null;
+  const isLoggingIn = navigation.formData?.get("username") != null;
   const actionData = useActionData() as { error: string } | undefined;
 
   return (
@@ -87,10 +87,10 @@ function LoginPage() {
                 disabled={isLoggingIn}
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                {isLoggingIn ? 'Logging in...' : 'Login'}
+                {isLoggingIn ? "Logging in..." : "Login"}
               </button>
               {actionData && actionData.error ? (
-                <p style={{ color: 'red' }}>{actionData.error}</p>
+                <p style={{ color: "red" }}>{actionData.error}</p>
               ) : null}
             </div>
           </Form>

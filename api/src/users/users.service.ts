@@ -1,12 +1,12 @@
-import { ConflictException, Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { User } from './entities/user.entity';
-import * as bcrypt from 'bcrypt';
-import { ConfigService } from '@nestjs/config';
-import { BcryptConfig } from 'src/config/configuration.interface';
+import { ConflictException, Injectable } from "@nestjs/common";
+import { CreateUserDto } from "./dto/create-user.dto";
+import { UpdateUserDto } from "./dto/update-user.dto";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { User } from "./entities/user.entity";
+import * as bcrypt from "bcrypt";
+import { ConfigService } from "@nestjs/config";
+import { BcryptConfig } from "src/config/configuration.interface";
 
 @Injectable()
 export class UsersService {
@@ -19,10 +19,10 @@ export class UsersService {
   async create(createUserDto: CreateUserDto): Promise<User> {
     const found = await this.findOneByUsername(createUserDto.username);
     if (found) {
-      throw new ConflictException('Username already exists');
+      throw new ConflictException("Username already exists");
     }
 
-    const bcryptConfig = this.configService.get<BcryptConfig>('bcrypt');
+    const bcryptConfig = this.configService.get<BcryptConfig>("bcrypt");
     const user = new User();
     user.username = createUserDto.username;
     user.password = await bcrypt.hash(
@@ -61,9 +61,9 @@ export class UsersService {
   async initializeDefaultAdmin() {
     const userCount = await this.usersRepository.count();
     if (userCount === 0) {
-      const defaultAdmin = this.configService.get('defaultAdmin');
+      const defaultAdmin = this.configService.get("defaultAdmin");
       await this.create(defaultAdmin).catch((error) => {
-        console.error('Failed to create default admin user:', error);
+        console.error("Failed to create default admin user:", error);
       });
     }
   }

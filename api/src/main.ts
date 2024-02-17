@@ -1,23 +1,23 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { ConfigService } from '@nestjs/config';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { getPackageVersion } from './utils';
-import { ServerConfig, SwaggerConfig } from './config/configuration.interface';
-import { ValidationPipe } from '@nestjs/common';
-import { WsAdapter } from '@nestjs/platform-ws';
-import { UsersService } from './users/users.service';
+import { NestFactory } from "@nestjs/core";
+import { AppModule } from "./app.module";
+import { ConfigService } from "@nestjs/config";
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import { getPackageVersion } from "./utils";
+import { ServerConfig, SwaggerConfig } from "./config/configuration.interface";
+import { ValidationPipe } from "@nestjs/common";
+import { WsAdapter } from "@nestjs/platform-ws";
+import { UsersService } from "./users/users.service";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix("api");
   app.useGlobalPipes(new ValidationPipe());
   app.useWebSocketAdapter(new WsAdapter(app));
 
   const configService = app.get(ConfigService);
-  const swaggerConfig = configService.get<SwaggerConfig>('swagger');
-  const corsConfig = configService.get('cors');
-  const serverConfig = configService.get<ServerConfig>('server');
+  const swaggerConfig = configService.get<SwaggerConfig>("swagger");
+  const corsConfig = configService.get("cors");
+  const serverConfig = configService.get<ServerConfig>("server");
 
   if (swaggerConfig.enabled) {
     const config = new DocumentBuilder()
@@ -26,7 +26,7 @@ async function bootstrap() {
       .setVersion(getPackageVersion())
       .build();
     const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup('api', app, document);
+    SwaggerModule.setup("api", app, document);
   }
 
   if (corsConfig.enabled) {

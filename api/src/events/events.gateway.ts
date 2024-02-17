@@ -1,5 +1,5 @@
-import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
-import { Server } from 'ws';
+import { WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
+import { Server } from "ws";
 
 @WebSocketGateway()
 export class EventsGateway {

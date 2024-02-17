@@ -1,14 +1,14 @@
-import logo from '/logo.png';
-import './App.css';
-import { useEffect, useState } from 'react';
+import logo from "/logo.png";
+import "./App.css";
+import { useEffect, useState } from "react";
 import {
   Outlet,
   useFetcher,
   useLocation,
   useRouteLoaderData,
-} from 'react-router-dom';
-import { Fragment } from 'react';
-import { Dialog, Menu, Transition } from '@headlessui/react';
+} from "react-router-dom";
+import { Fragment } from "react";
+import { Dialog, Menu, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
   BellIcon,
@@ -19,68 +19,64 @@ import {
   HomeIcon,
   UsersIcon,
   XMarkIcon,
-} from '@heroicons/react/24/outline';
+} from "@heroicons/react/24/outline";
 import {
   ChevronDownIcon,
   MagnifyingGlassIcon,
-} from '@heroicons/react/20/solid';
-import { twMerge } from 'tailwind-merge';
+} from "@heroicons/react/20/solid";
+import { twMerge } from "tailwind-merge";
 
 function App() {
   const location = useLocation();
   const { pathname } = location;
-  const { user } = useRouteLoaderData('root') as { user: string | null };
+  const { user } = useRouteLoaderData("root") as { user: string | null };
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const fetcher = useFetcher();
   const isLoggingOut = fetcher.formData != null;
 
   const navigation = [
     {
-      name: 'Dashboard',
-      href: '/dashboard',
+      name: "Dashboard",
+      href: "/dashboard",
       icon: HomeIcon,
-      current: pathname === '/dashboard',
+      current: pathname === "/dashboard",
     },
     {
-      name: 'Users',
-      href: '/users',
+      name: "Users",
+      href: "/users",
       icon: UsersIcon,
-      current: pathname === '/users',
+      current: pathname === "/users",
     },
     {
-      name: 'Projects',
-      href: '/projects',
+      name: "Projects",
+      href: "/projects",
       icon: FolderIcon,
-      current: pathname === '/projects',
+      current: pathname === "/projects",
     },
     {
-      name: 'Calendar',
-      href: '/calendar',
+      name: "Calendar",
+      href: "/calendar",
       icon: CalendarIcon,
-      current: pathname === '/calendar',
+      current: pathname === "/calendar",
     },
     {
-      name: 'Reports',
-      href: '/reports',
+      name: "Reports",
+      href: "/reports",
       icon: ChartPieIcon,
-      current: pathname === '/reports',
+      current: pathname === "/reports",
     },
   ];
 
   const userNavigation = [
-    { key: 'profile', name: 'Your profile', href: '/profile' },
-    { key: 'signout', name: 'Sign out', href: '/signout' },
+    { key: "profile", name: "Your profile", href: "/profile" },
+    { key: "signout", name: "Sign out", href: "/signout" },
   ];
-
-  useEffect(() => {
-    console.log('user: ', user);
-  }, [user]);
 
   useEffect(() => {
     const socket = new WebSocket(import.meta.env.VITE_WS_SERVER_URL);
     socket.onopen = function () {
       socket.onmessage = function (data) {
-        console.log('onmessage: ', data);
+        console.log("onmessage: ", data);
       };
     };
   }, []);
@@ -140,7 +136,7 @@ function App() {
                       </button>
                     </div>
                   </Transition.Child>
-                  {/* Sidebar component, swap this element with another sidebar if you like */}
+                  {/* Sidebar component */}
                   <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-4 ring-1 ring-white/10">
                     <div className="flex h-16 shrink-0 items-center">
                       <img
@@ -159,9 +155,9 @@ function App() {
                                   href={item.href}
                                   className={twMerge(
                                     item.current
-                                      ? 'bg-gray-800 text-white'
-                                      : 'text-gray-400 hover:text-white hover:bg-gray-800',
-                                    'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold',
+                                      ? "bg-gray-800 text-white"
+                                      : "text-gray-400 hover:text-white hover:bg-gray-800",
+                                    "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold",
                                   )}
                                 >
                                   <item.icon
@@ -197,7 +193,7 @@ function App() {
 
         {/* Static sidebar for desktop */}
         <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
-          {/* Sidebar component, swap this element with another sidebar if you like */}
+          {/* Sidebar component */}
           <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-4">
             <div className="flex h-16 shrink-0 items-center">
               <img className="h-8 w-auto logo" src={logo} alt="psyduck" />
@@ -212,9 +208,9 @@ function App() {
                           href={item.href}
                           className={twMerge(
                             item.current
-                              ? 'bg-gray-800 text-white'
-                              : 'text-gray-400 hover:text-white hover:bg-gray-800',
-                            'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold',
+                              ? "bg-gray-800 text-white"
+                              : "text-gray-400 hover:text-white hover:bg-gray-800",
+                            "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold",
                           )}
                         >
                           <item.icon
@@ -324,20 +320,20 @@ function App() {
                       {userNavigation.map((item) => (
                         <Menu.Item key={item.name}>
                           {({ active }) => {
-                            if (item.key === 'signout') {
+                            if (item.key === "signout") {
                               return (
                                 <fetcher.Form
                                   method="post"
                                   action="/logout"
                                   className={twMerge(
-                                    active ? 'bg-gray-50' : '',
-                                    'block px-3 py-1 text-sm leading-6 text-gray-900',
+                                    active ? "bg-gray-50" : "",
+                                    "block px-3 py-1 text-sm leading-6 text-gray-900",
                                   )}
                                 >
                                   <button type="submit" disabled={isLoggingOut}>
                                     {isLoggingOut
-                                      ? 'Signing out...'
-                                      : 'Sign out'}
+                                      ? "Signing out..."
+                                      : "Sign out"}
                                   </button>
                                 </fetcher.Form>
                               );
@@ -347,8 +343,8 @@ function App() {
                               <a
                                 href={item.href}
                                 className={twMerge(
-                                  active ? 'bg-gray-50' : '',
-                                  'block px-3 py-1 text-sm leading-6 text-gray-900',
+                                  active ? "bg-gray-50" : "",
+                                  "block px-3 py-1 text-sm leading-6 text-gray-900",
                                 )}
                               >
                                 {item.name}

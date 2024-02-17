@@ -1,5 +1,5 @@
-import { Exclude } from 'class-transformer';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Exclude } from "class-transformer";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class User {
@@ -31,17 +31,17 @@ export class User {
   @Column({ default: true })
   isActive: boolean;
 
-  @Column('simple-array', {
+  @Column("simple-array", {
     default: () => "('user')",
   })
   roles: string[];
 
-  @Column({ default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ default: () => "CURRENT_TIMESTAMP" })
   createdAt: Date;
 
   @Column({
-    default: () => 'CURRENT_TIMESTAMP',
-    onUpdate: 'CURRENT_TIMESTAMP',
+    default: () => "CURRENT_TIMESTAMP",
+    onUpdate: "CURRENT_TIMESTAMP",
   })
   updatedAt: Date;
 }

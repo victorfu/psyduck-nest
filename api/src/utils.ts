@@ -1,4 +1,4 @@
 export function getPackageVersion() {
-  const pkg = require('../package.json') as { version: string };
+  const pkg = require("../package.json") as { version: string };
   return pkg.version;
 }
