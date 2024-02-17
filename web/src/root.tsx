@@ -1,6 +1,6 @@
 import "./root.css";
 import logo from "/logo.png";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Outlet,
   useFetcher,
@@ -25,6 +25,7 @@ import {
   MagnifyingGlassIcon,
 } from "@heroicons/react/20/solid";
 import { twMerge } from "tailwind-merge";
+import { useWebSocket } from "./hooks/use-websocket";
 
 function Root() {
   const location = useLocation();
@@ -33,6 +34,10 @@ function Root() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const fetcher = useFetcher();
   const isLoggingOut = fetcher.formData != null;
+
+  useWebSocket((data) => {
+    console.log(data);
+  });
 
   const navigation = [
     {
@@ -71,15 +76,6 @@ function Root() {
     { key: "profile", name: "Your profile", href: "/profile" },
     { key: "signout", name: "Sign out", href: "/signout" },
   ];
-
-  useEffect(() => {
-    const socket = new WebSocket(import.meta.env.VITE_WS_SERVER_URL);
-    socket.onopen = function () {
-      socket.onmessage = function (data) {
-        console.log("onmessage: ", data);
-      };
-    };
-  }, []);
 
   return (
     <>
