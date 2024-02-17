@@ -1,4 +1,4 @@
-import "./root.css";
+import "./layout.css";
 import logo from "/logo.png";
 import { useState } from "react";
 import {
