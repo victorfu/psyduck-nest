@@ -15,52 +15,46 @@ export const authProvider: AuthProvider = {
 
   async signin(username: string, password: string) {
     authProvider.username = username;
-    try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-      });
-
-      if (response.ok) {
-        const { access_token } = await response.json();
-        await localForage.setItem('access_token', access_token);
-        authProvider.isAuthenticated = true;
-      } else {
-        authProvider.isAuthenticated = false;
-      }
-    } catch (error) {
-      authProvider.isAuthenticated = false;
+    const response = await fetch('/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username, password }),
+    });
+    if (response.ok) {
+      const { access_token } = await response.json();
+      await localForage.setItem('access_token', access_token);
+      authProvider.isAuthenticated = true;
+      return;
     }
+
+    authProvider.isAuthenticated = false;
+    throw new Error('Invalid login attempt');
   },
 
   async signinWithToken() {
-    try {
-      const access_token = await localForage.getItem('access_token');
-      if (!access_token) {
-        authProvider.isAuthenticated = false;
-        authProvider.username = '';
-        return;
-      }
-      const response = await fetch('/api/me', {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-      if (response.ok) {
-        const { username } = await response.json();
-        authProvider.isAuthenticated = true;
-        authProvider.username = username;
-      } else {
-        authProvider.isAuthenticated = false;
-      }
-    } catch (error) {
+    const access_token = await localForage.getItem('access_token');
+    if (!access_token) {
       authProvider.isAuthenticated = false;
+      authProvider.username = '';
+      return;
     }
+    const response = await fetch('/api/me', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    if (response.ok) {
+      const { username } = await response.json();
+      authProvider.isAuthenticated = true;
+      authProvider.username = username;
+      return;
+    }
+    authProvider.isAuthenticated = false;
+    throw new Error('Invalid login attempt');
   },
 
   async signout() {
@@ -89,7 +83,8 @@ export async function loginAction({ request }: LoaderFunctionArgs) {
     await authProvider.signin(username, password);
   } catch (error) {
     return {
-      error: 'Invalid login attempt',
+      error:
+        'The username or password provided is incorrect. Please try again.',
     };
   }
 
@@ -115,7 +110,11 @@ export function protectedLoader({ request }: LoaderFunctionArgs) {
 }
 
 export async function rootLoader() {
-  await authProvider.signinWithToken();
+  try {
+    await authProvider.signinWithToken();
+  } catch (error) {
+    // ignore
+  }
   if (!authProvider.isAuthenticated) return redirect('/login');
   return {
     user: authProvider.username,
