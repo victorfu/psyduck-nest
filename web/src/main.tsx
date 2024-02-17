@@ -7,26 +7,48 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 import './index.css';
-import PageOne from './pages/PageOne.tsx';
-import PageTwo from './pages/PageTwo.tsx';
 import { authProvider, loginAction, loginLoader, rootLoader } from './auth.ts';
+import DashboardPage from './pages/DashboardPage.tsx';
+import UsersPage from './pages/UsersPage.tsx';
 import LoginPage from './pages/LoginPage.tsx';
+import ErrorPage from './pages/ErrorPage.tsx';
+import ProjectsPage from './pages/ProjectsPage.tsx';
+import CalendarPage from './pages/CalendarPage.tsx';
+import ReportsPage from './pages/ReportsPage.tsx';
+import SettingsPage from './pages/SettingsPage.tsx';
 
 const router = createBrowserRouter([
   {
     id: 'root',
     path: '/',
     element: <App />,
+    errorElement: <ErrorPage />,
     loader: rootLoader,
     children: [
-      { index: true, element: <Navigate to="/page-one" replace /> },
+      { index: true, element: <Navigate to="/dashboard" replace /> },
       {
-        path: 'page-one',
-        element: <PageOne />,
+        path: 'dashboard',
+        element: <DashboardPage />,
       },
       {
-        path: 'page-two',
-        element: <PageTwo />,
+        path: 'users',
+        element: <UsersPage />,
+      },
+      {
+        path: 'projects',
+        element: <ProjectsPage />,
+      },
+      {
+        path: 'calendar',
+        element: <CalendarPage />,
+      },
+      {
+        path: 'reports',
+        element: <ReportsPage />,
+      },
+      {
+        path: 'settings',
+        element: <SettingsPage />,
       },
     ],
   },
@@ -37,7 +59,7 @@ const router = createBrowserRouter([
     element: <LoginPage />,
   },
   {
-    path: '/logout',
+    path: 'logout',
     action: async () => {
       await authProvider.signout();
       return redirect('/');
