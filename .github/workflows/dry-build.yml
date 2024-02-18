@@ -6,23 +6,36 @@ on:
     branches: [master]
 
 jobs:
-  Dry-Build:
+  build:
+    name: Build and Test
+    timeout-minutes: 15
     runs-on: ubuntu-latest
+    # To use Remote Caching, uncomment the next lines and follow the steps below.
+    # env:
+    #  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+    #  TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+    #  TURBO_REMOTE_ONLY: true
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Check out code
+        uses: actions/checkout@v3
         with:
           fetch-depth: 2
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "npm"
       - name: Install dependencies
         run: npm install
-      - name: Build application
+      - name: Build
         run: npm run build
-      - name: Run tests
+      - name: Test
         run: npm run test
 
   Notification:
     runs-on: ubuntu-latest
-    needs: Dry-Build
+    needs: build
     if: ${{ failure() }}
     steps:
       - name: Send failure email notification
