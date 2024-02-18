@@ -8,18 +8,15 @@ on:
 jobs:
   Dry-Build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./api
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Install dependencies
         run: npm install
-      - name: Run tests
-        run: npm run test
       - name: Build application
         run: npm run build
+      - name: Run tests
+        run: npm run test
 
   Notification:
     runs-on: ubuntu-latest
