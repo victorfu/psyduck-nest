@@ -1,0 +1,22 @@
+{
+  "name": "psyduck-turbo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "dotenv -- turbo dev",
+    "build": "turbo run build",
+    "start": "node apps/api/dist/main",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "private",
+  "workspaces": [
+    "apps/*"
+  ],
+  "devDependencies": {
+    "dotenv-cli": "^7.3.0",
+    "turbo": "^1.12.4"
+  }
+}

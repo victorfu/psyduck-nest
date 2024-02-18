@@ -18,7 +18,7 @@ import { EventsModule } from "./events/events.module";
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, "..", "web", "dist"),
+      rootPath: join(__dirname, "../..", "web", "dist"),
       exclude: ["/api/(.*)"],
     }),
     ConfigModule.forRoot({

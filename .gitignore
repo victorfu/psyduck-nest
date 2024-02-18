@@ -1,7 +1,11 @@
 # compiled output
 /dist
+dist
+dist-ssr
 /node_modules
+node_modules
 /build
+*.local
 
 # Logs
 logs
@@ -29,12 +33,19 @@ lerna-debug.log*
 *.sublime-workspace
 .editorconfig
 
-# IDE - VSCode
+# Editor directories and files
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
 # dotenv environment variable files
 .env
@@ -57,3 +68,5 @@ pids
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 db.dat
+
+.turbo
