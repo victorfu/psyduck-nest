@@ -1,6 +1,4 @@
-# Psyduck-Nest
-
-Psyduck-Nest is a boilerplate for NestJS with TypeORM, and JWT Authentication. It is a simple and easy to use boilerplate for starting a new project with NestJS.
+# API backend
 
 ## Installation
 
@@ -33,7 +31,3 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
-
-## License
-
-Psyduck-Nest is [MIT licensed](LICENSE).

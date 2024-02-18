@@ -8,6 +8,21 @@ interface AuthProvider {
   signinWithToken(): Promise<void>;
   signout(): Promise<void>;
 }
+interface TokenResponse {
+  access_token: string;
+}
+
+interface User {
+  id: number;
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  isActive: boolean;
+  roles: string[];
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 export const authProvider: AuthProvider = {
   isAuthenticated: false,
@@ -23,7 +38,8 @@ export const authProvider: AuthProvider = {
       body: JSON.stringify({ username, password }),
     });
     if (response.ok) {
-      const { access_token } = await response.json();
+      const responseJson = (await response.json()) as TokenResponse;
+      const { access_token } = responseJson;
       await localForage.setItem("access_token", access_token);
       authProvider.isAuthenticated = true;
       return;
@@ -34,7 +50,9 @@ export const authProvider: AuthProvider = {
   },
 
   async signinWithToken() {
-    const access_token = await localForage.getItem("access_token");
+    const access_token: string | null = await localForage.getItem(
+      "access_token",
+    );
     if (!access_token) {
       authProvider.isAuthenticated = false;
       authProvider.username = "";
@@ -48,7 +66,7 @@ export const authProvider: AuthProvider = {
       },
     });
     if (response.ok) {
-      const { username } = await response.json();
+      const { username } = (await response.json()) as User;
       authProvider.isAuthenticated = true;
       authProvider.username = username;
       return;
@@ -89,13 +107,13 @@ export async function loginAction({ request }: LoaderFunctionArgs) {
   }
 
   const redirectTo = formData.get("redirectTo") as string | null;
-  return redirect(redirectTo || "/");
+  return redirect(redirectTo ?? "/");
 }
 
-export async function loginLoader({ request }: LoaderFunctionArgs) {
+export function loginLoader({ request }: LoaderFunctionArgs) {
   const from = new URL(request.url).searchParams.get("from");
   if (authProvider.isAuthenticated) {
-    return redirect(from || "/");
+    return redirect(from ?? "/");
   }
   return null;
 }
