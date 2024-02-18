@@ -1,9 +1,19 @@
 import { Exclude } from "class-transformer";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Generated,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from "typeorm";
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn({
+    update: false,
+  })
+  @Generated("increment")
   id: number;
 
   @Column({ unique: true })
@@ -36,12 +46,9 @@ export class User {
   })
   roles: string[];
 
-  @Column({ default: () => "CURRENT_TIMESTAMP" })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @Column({
-    default: () => "CURRENT_TIMESTAMP",
-    onUpdate: "CURRENT_TIMESTAMP",
-  })
+  @UpdateDateColumn()
   updatedAt: Date;
 }
