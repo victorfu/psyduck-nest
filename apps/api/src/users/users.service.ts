@@ -50,7 +50,14 @@ export class UsersService {
     return this.usersRepository.findOneBy({ username: username });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    if (updateUserDto.password) {
+      const bcryptConfig = this.configService.get<BcryptConfig>("bcrypt");
+      updateUserDto.password = await bcrypt.hash(
+        updateUserDto.password,
+        bcryptConfig.saltRounds,
+      );
+    }
     return this.usersRepository.update(id, updateUserDto);
   }
 
