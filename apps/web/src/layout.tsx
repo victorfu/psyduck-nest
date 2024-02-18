@@ -2,6 +2,7 @@ import "./layout.css";
 import logo from "/logo.png";
 import { useState } from "react";
 import {
+  Link,
   Outlet,
   useFetcher,
   useLocation,
@@ -147,8 +148,8 @@ function Root() {
                           <ul role="list" className="-mx-2 space-y-1">
                             {navigation.map((item) => (
                               <li key={item.name}>
-                                <a
-                                  href={item.href}
+                                <Link
+                                  to={item.href}
                                   className={twMerge(
                                     item.current
                                       ? "bg-gray-800 text-white"
@@ -161,14 +162,14 @@ function Root() {
                                     aria-hidden="true"
                                   />
                                   {item.name}
-                                </a>
+                                </Link>
                               </li>
                             ))}
                           </ul>
                         </li>
                         <li className="mt-auto">
-                          <a
-                            href="/settings"
+                          <Link
+                            to="/settings"
                             className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
                           >
                             <Cog6ToothIcon
@@ -176,7 +177,7 @@ function Root() {
                               aria-hidden="true"
                             />
                             Settings
-                          </a>
+                          </Link>
                         </li>
                       </ul>
                     </nav>
@@ -200,8 +201,8 @@ function Root() {
                   <ul role="list" className="-mx-2 space-y-1">
                     {navigation.map((item) => (
                       <li key={item.name}>
-                        <a
-                          href={item.href}
+                        <Link
+                          to={item.href}
                           className={twMerge(
                             item.current
                               ? "bg-gray-800 text-white"
@@ -214,14 +215,14 @@ function Root() {
                             aria-hidden="true"
                           />
                           {item.name}
-                        </a>
+                        </Link>
                       </li>
                     ))}
                   </ul>
                 </li>
                 <li className="mt-auto">
-                  <a
-                    href="/settings"
+                  <Link
+                    to="/settings"
                     className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
                   >
                     <Cog6ToothIcon
@@ -229,7 +230,7 @@ function Root() {
                       aria-hidden="true"
                     />
                     Settings
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </nav>
@@ -336,15 +337,15 @@ function Root() {
                             }
 
                             return (
-                              <a
-                                href={item.href}
+                              <Link
+                                to={item.href}
                                 className={twMerge(
                                   active ? "bg-gray-50" : "",
                                   "block px-3 py-1 text-sm leading-6 text-gray-900",
                                 )}
                               >
                                 {item.name}
-                              </a>
+                              </Link>
                             );
                           }}
                         </Menu.Item>
