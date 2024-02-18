@@ -28,7 +28,7 @@ import {
 import { twMerge } from "tailwind-merge";
 import { useWebSocket } from "./hooks/use-websocket";
 
-function Root() {
+function Layout() {
   const location = useLocation();
   const { pathname } = location;
   const { user } = useRouteLoaderData("root") as { user: string | null };
@@ -368,4 +368,4 @@ function Root() {
   );
 }
 
-export default Root;
+export default Layout;

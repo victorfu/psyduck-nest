@@ -15,13 +15,13 @@ import ProjectsPage from "./pages/projects-page.tsx";
 import CalendarPage from "./pages/calendar-page.tsx";
 import ReportsPage from "./pages/reports-page.tsx";
 import SettingsPage from "./pages/settings-page.tsx";
-import Root from "./layout.tsx";
+import Layout from "./layout.tsx";
 
 const router = createBrowserRouter([
   {
     id: "root",
     path: "/",
-    element: <Root />,
+    element: <Layout />,
     errorElement: <ErrorPage />,
     loader: rootLoader,
     children: [
