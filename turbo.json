@@ -26,6 +26,11 @@
                 ".env.local",
                 ".env"
             ]
+        },
+        "test": {
+            "dependsOn": [
+                "^build"
+            ]
         }
     }
 }
