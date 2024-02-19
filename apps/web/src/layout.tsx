@@ -26,7 +26,6 @@ import {
   MagnifyingGlassIcon,
 } from "@heroicons/react/20/solid";
 import { twMerge } from "tailwind-merge";
-import { useWebSocket } from "./hooks/use-websocket";
 
 function Layout() {
   const location = useLocation();
@@ -35,10 +34,6 @@ function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const fetcher = useFetcher();
   const isLoggingOut = fetcher.formData != null;
-
-  useWebSocket((data) => {
-    console.log(data);
-  });
 
   const navigation = [
     {
