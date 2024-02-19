@@ -30,4 +30,10 @@ export default () => ({
     lastName: process.env.DEFAULT_ADMIN_LAST_NAME || "User",
     roles: (process.env.DEFAULT_ADMIN_ROLES || "admin").split(","),
   },
+  nodemailer: {
+    service: process.env.NODEMAILER_SERVICE || "gmail",
+    user: process.env.NODEMAILER_USER || "",
+    pass: process.env.NODEMAILER_PASS || "",
+    from: process.env.NODEMAILER_FROM || "",
+  },
 });
