@@ -26,6 +26,8 @@ import {
   MagnifyingGlassIcon,
 } from "@heroicons/react/20/solid";
 import { twMerge } from "tailwind-merge";
+import { Toaster } from "@/components/ui/toaster";
+import { TailwindIndicator } from "@/components/tailwind-indicator";
 
 function Layout() {
   const location = useLocation();
@@ -75,7 +77,7 @@ function Layout() {
 
   return (
     <>
-      <div>
+      <div className="h-screen">
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
             as="div"
@@ -359,6 +361,8 @@ function Layout() {
           </main>
         </div>
       </div>
+      <Toaster />
+      <TailwindIndicator />
     </>
   );
 }
