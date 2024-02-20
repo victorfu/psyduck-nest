@@ -37,16 +37,3 @@ export async function copyToClipboard(text?: string): Promise<void> {
     console.error("Failed to copy to clipboard: ", err);
   }
 }
-
-export const providerIdToName = (providerId: string): string => {
-  if (providerId === "google.com") {
-    return "Google";
-  }
-  if (providerId === "oidc.line") {
-    return "LINE";
-  }
-  if (providerId === "password") {
-    return "Password";
-  }
-  return providerId;
-};

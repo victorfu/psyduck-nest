@@ -9,52 +9,53 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import DataTable from "@/components/ui/data-table";
-import { AdminSwitch } from "@/components/ui/admin-switch";
-import { boolCompare, providerIdToName } from "@/lib/utils";
 import { useToast } from "@/components/ui/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
 import { UserTableToolbar } from "./user-table-toolbar";
-import { useState } from "react";
-// import UserWsMappingDialog from "./user-ws-mapping-dialog";
+import Api from "@/lib/api";
+import { Switch } from "./ui/switch";
+import { useRevalidator } from "react-router-dom";
 
-export default function UserTable({ users }: { users: User[] }) {
+export default function UserTable({ users = [] }: { users: User[] }) {
   const { toast } = useToast();
-  const [selectedUser, setSelectedUser] = useState<User>();
-  const [open, setOpen] = useState(false);
+  const revalidator = useRevalidator();
 
   const columns: ColumnDef<User>[] = [
     {
-      accessorKey: "email",
-      header: "Email",
+      accessorKey: "id",
+      header: "Id",
       cell: ({ row }) => {
         const user = row.original;
         return (
-          <div className="flex flex-col items-start">
-            <div
-              className={
-                user.disabled ? "text-muted-foreground" : "font-semibold"
-              }
-            >
-              {user.email ?? ""}
-            </div>
-            <div>
-              {user.disabled ? <Badge variant="outline">Disabled</Badge> : ""}
-            </div>
+          <div
+            className={
+              !user.isActive ? "text-muted-foreground" : "font-semibold"
+            }
+          >
+            {user.id}
           </div>
         );
       },
     },
     {
-      accessorKey: "displayName",
-      header: "Name",
+      accessorKey: "username",
+      header: "Username",
       cell: ({ row }) => {
         const user = row.original;
         return (
-          <div className="flex flex-col items-start">
-            <div>{user.displayName ?? ""}</div>
-            <div>{user.isOwner ? <Badge>Owner</Badge> : ""}</div>
+          <div className="flex flex-row items-center space-x-1">
+            <div
+              className={
+                !user.isActive ? "text-muted-foreground" : "font-semibold"
+              }
+            >
+              {user.username ?? ""}
+            </div>
+            <div>
+              {!user.isActive ? <Badge variant="outline">Disabled</Badge> : ""}
+            </div>
           </div>
         );
       },
@@ -64,74 +65,58 @@ export default function UserTable({ users }: { users: User[] }) {
       header: "Admin",
       cell: ({ row }) => {
         const user = row.original;
-        const isAdmin = user.customClaims?.isAdmin === true;
-        return <AdminSwitch uid={user.uid} isAdmin={isAdmin} />;
+        const isAdmin = user.roles.includes("admin");
+        return (
+          <Switch
+            checked={isAdmin}
+            onCheckedChange={() => {
+              Api.updateUser(user.id, {
+                roles: isAdmin ? ["user"] : ["admin"],
+              })
+                .then(() => {
+                  toast({
+                    title: "Admin status updated",
+                  });
+                  revalidator.revalidate();
+                })
+                .catch(() => {
+                  toast({
+                    title: "Failed to update admin status",
+                    description: `User ${user.username} admin status could not be updated.`,
+                    variant: "destructive",
+                  });
+                });
+            }}
+          />
+        );
       },
     },
     {
-      accessorKey: "provider",
-      header: "Provider",
+      accessorKey: "email",
+      header: "Email",
       cell: ({ row }) => {
         const user = row.original;
-        const providerId = user.providerData[0]?.providerId;
-        return <div>{providerIdToName(providerId)}</div>;
+        return <div>{user.email ?? ""}</div>;
       },
     },
     {
-      accessorKey: "uid",
-      header: "Uid",
-    },
-    {
-      accessorKey: "lastSignInTime",
+      accessorKey: "createdAt",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="LastSignInTime" />
+        <DataTableColumnHeader column={column} title="CreatedAt" />
       ),
       cell: ({ row }) => {
         const user = row.original;
         return (
           <div className="w-24">
-            {user.metadata?.lastSignInTime
-              ? format(user.metadata?.lastSignInTime, "LLL dd, y")
-              : ""}
+            {user.createdAt ? format(user.createdAt, "LLL dd, y") : ""}
           </div>
         );
       },
       sortingFn: (a, b) => {
         const userA = a.original;
         const userB = b.original;
-        const aDate = userA.metadata?.lastSignInTime
-          ? new Date(userA.metadata.lastSignInTime)
-          : new Date(0);
-        const bDate = userB.metadata?.lastSignInTime
-          ? new Date(userB.metadata.lastSignInTime)
-          : new Date(0);
-        return aDate.getTime() - bDate.getTime();
-      },
-    },
-    {
-      accessorKey: "creationTime",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="CreationTime" />
-      ),
-      cell: ({ row }) => {
-        const user = row.original;
-        return (
-          <div className="w-24">
-            {user.metadata?.creationTime
-              ? format(user.metadata?.creationTime, "LLL dd, y")
-              : ""}
-          </div>
-        );
-      },
-      sortingFn: (a, b) => {
-        const userA = a.original;
-        const userB = b.original;
-        const aDate = userA.metadata?.creationTime
-          ? new Date(userA.metadata.creationTime)
-          : new Date(0);
-        const bDate = userB.metadata?.creationTime
-          ? new Date(userB.metadata.creationTime)
-          : new Date(0);
+        const aDate = userA.createdAt ? new Date(userA.createdAt) : new Date(0);
+        const bDate = userB.createdAt ? new Date(userB.createdAt) : new Date(0);
         return aDate.getTime() - bDate.getTime();
       },
     },
@@ -151,36 +136,38 @@ export default function UserTable({ users }: { users: User[] }) {
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem
                 onClick={() => {
-                  void navigator.clipboard.writeText(user?.uid ?? "");
+                  navigator.clipboard
+                    .writeText(String(user?.id ?? 0))
+                    .catch(console.error);
                   toast({
-                    title: "Uid copied to clipboard",
-                    description: user.uid,
+                    title: "Id copied to clipboard",
+                    description: user.id,
                   });
                 }}
               >
-                Copy Uid
+                Copy Id
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => {
-                  setSelectedUser(user);
-                  setOpen(true);
+                onClick={async () => {
+                  try {
+                    await Api.updateUser(user.id, {
+                      isActive: !user.isActive,
+                    });
+                    toast({
+                      title: `${user.username} updated!`,
+                    });
+                    revalidator.revalidate();
+                  } catch (error) {
+                    toast({
+                      title: `Failed to ${
+                        !user.isActive ? "activate" : "disable"
+                      } ${user.username}`,
+                      variant: "destructive",
+                    });
+                  }
                 }}
               >
-                Assign
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => {
-                  // TODO: update user status
-                  toast({
-                    title: `${user.email} ${
-                      user.disabled ? "enabled" : "disabled"
-                    }`,
-
-                    description: `${user.displayName} ${user.uid}`,
-                  });
-                }}
-              >
-                {user.disabled ? "Enable" : "Disable"}
+                {!user.isActive ? "Activate" : "Disable"}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -193,31 +180,9 @@ export default function UserTable({ users }: { users: User[] }) {
     <>
       <DataTable
         columns={columns}
-        data={users.sort((a, b) => {
-          const disabledDiff = boolCompare(a.disabled, b.disabled);
-          if (disabledDiff !== 0) return disabledDiff;
-
-          const isOwnerDiff = boolCompare(
-            b.isOwner ?? false,
-            a.isOwner ?? false,
-          );
-          if (isOwnerDiff !== 0) return isOwnerDiff;
-
-          const isAdminDiff = boolCompare(
-            b.customClaims?.isAdmin,
-            a.customClaims?.isAdmin,
-          );
-          if (isAdminDiff !== 0) return isAdminDiff;
-
-          return a.email.localeCompare(b.email);
-        })}
+        data={users.sort((a, b) => (a.id > b.id ? 1 : -1))}
         toolbarComponent={UserTableToolbar}
       />
-      {/* <UserWsMappingDialog
-        selectedUser={selectedUser}
-        open={open}
-        setOpen={setOpen}
-      /> */}
     </>
   );
 }

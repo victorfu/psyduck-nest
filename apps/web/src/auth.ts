@@ -8,6 +8,7 @@ interface AuthProvider {
   signinWithToken(): Promise<void>;
   signout(): Promise<void>;
 }
+
 interface TokenResponse {
   access_token: string;
 }

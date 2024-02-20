@@ -9,26 +9,39 @@ import {
 import { Input } from "@/components/ui/input";
 import { FormEvent, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
+import Api from "@/lib/api";
+import { useRevalidator } from "react-router-dom";
 
 export default function UserDialog() {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [loading] = useState(false);
+  const revalidator = useRevalidator();
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>): void {
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const name = formData.get("name") as string;
-    const email = formData.get("email") as string;
+    const username = formData.get("username") as string;
     const password = formData.get("password") as string;
 
-    // TODO: create user
-    toast({
-      title: "User created",
-      description: `User ${name} (${password} ${email}) has been created.`,
-    });
-
-    setOpen(false);
+    Api.createUser({ username, password })
+      .then(() => {
+        toast({
+          title: "User created",
+          description: `User ${username} has been created.`,
+        });
+      })
+      .catch(() => {
+        toast({
+          title: "Failed to create user",
+          description: `User ${username} could not be created.`,
+          variant: "destructive",
+        });
+      })
+      .finally(() => {
+        setOpen(false);
+        revalidator.revalidate();
+      });
   }
 
   return (
@@ -48,25 +61,12 @@ export default function UserDialog() {
             <form onSubmit={handleSubmit} autoComplete="off">
               <div className="flex flex-col space-y-4">
                 <div className="space-y-2">
-                  <label htmlFor="name">Name</label>
+                  <label htmlFor="username">Username</label>
                   <Input
-                    id="name"
-                    name="name"
-                    placeholder="Name"
+                    id="username"
+                    name="username"
+                    placeholder="Username"
                     type="text"
-                    autoCapitalize="none"
-                    autoComplete="off"
-                    autoCorrect="off"
-                    autoSave="off"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label htmlFor="email">Email</label>
-                  <Input
-                    id="email"
-                    name="email"
-                    placeholder="Email"
-                    type="email"
                     autoCapitalize="none"
                     autoComplete="off"
                     autoCorrect="off"

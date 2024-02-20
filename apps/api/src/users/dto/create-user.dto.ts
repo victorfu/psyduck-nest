@@ -21,4 +21,7 @@ export class CreateUserDto {
 
   @IsOptional()
   roles?: string[];
+
+  @IsOptional()
+  isActive?: boolean;
 }

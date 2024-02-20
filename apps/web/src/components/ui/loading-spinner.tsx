@@ -1,6 +1,6 @@
 import { Loader2 } from "lucide-react";
 
-const LoadingSpinner = ({ fullpage = false }: { fullpage: boolean }) => {
+const LoadingSpinner = ({ fullpage = false }: { fullpage?: boolean }) => {
   const Spinner = () => {
     return <Loader2 className="mr-2 h-4 w-4 animate-spin" />;
   };
