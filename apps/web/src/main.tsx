@@ -16,6 +16,7 @@ import CalendarPage from "./pages/calendar-page.tsx";
 import ReportsPage from "./pages/reports-page.tsx";
 import SettingsPage from "./pages/settings-page.tsx";
 import Layout from "./layout.tsx";
+import { loadUsers } from "./lib/loaders.ts";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,7 @@ const router = createBrowserRouter([
       },
       {
         path: "users",
+        loader: loadUsers,
         element: <UsersPage />,
       },
       {

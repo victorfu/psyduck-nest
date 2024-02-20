@@ -51,6 +51,12 @@ export class UsersService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
+    if (updateUserDto.username) {
+      const found = await this.findOneByUsername(updateUserDto.username);
+      if (found && found.id !== id) {
+        throw new ConflictException("Username already exists");
+      }
+    }
     if (updateUserDto.password) {
       const bcryptConfig = this.configService.get<BcryptConfig>("bcrypt");
       updateUserDto.password = await bcrypt.hash(

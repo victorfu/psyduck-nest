@@ -1,11 +1,13 @@
-import { Link } from "react-router-dom";
+import UserTable from "@/components/user-table";
+import { useLoaderData } from "react-router-dom";
 
-function DashboardPage() {
+function UsersPage() {
+  const { users } = useLoaderData() as { users: User[] };
   return (
     <div>
-      <Link to="/dashboard">Go to Dashboard</Link>
+      <UserTable users={users} />
     </div>
   );
 }
 
-export default DashboardPage;
+export default UsersPage;
