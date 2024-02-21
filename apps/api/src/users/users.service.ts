@@ -64,6 +64,11 @@ export class UsersService {
         bcryptConfig.saltRounds,
       );
     }
+
+    // filter out undefined values
+    updateUserDto = Object.fromEntries(
+      Object.entries(updateUserDto).filter(([, v]) => v !== undefined),
+    );
     return this.usersRepository.update(id, updateUserDto);
   }
 

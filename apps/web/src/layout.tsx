@@ -9,7 +9,6 @@ import {
   BellIcon,
   CalendarIcon,
   ChartPieIcon,
-  Cog6ToothIcon,
   FolderIcon,
   HomeIcon,
   UsersIcon,
@@ -24,6 +23,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
 import { useWebSocket } from "./hooks/use-websocket";
 import { useRootUser } from "./hooks/use-root-user";
+import { CircleUserIcon, SettingsIcon } from "lucide-react";
 
 function Layout() {
   const location = useLocation();
@@ -32,6 +32,7 @@ function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const fetcher = useFetcher();
   const isLoggingOut = fetcher.formData != null;
+  const isAdmin = user?.roles.includes("admin");
 
   useWebSocket();
 
@@ -41,12 +42,6 @@ function Layout() {
       href: "/dashboard",
       icon: HomeIcon,
       current: pathname === "/dashboard",
-    },
-    {
-      name: "Users",
-      href: "/users",
-      icon: UsersIcon,
-      current: pathname === "/users",
     },
     {
       name: "Projects",
@@ -68,8 +63,32 @@ function Layout() {
     },
   ];
 
+  const secondaryNavigation = [
+    {
+      name: "Account",
+      href: "/account",
+      icon: CircleUserIcon,
+      current: pathname === "/account",
+    },
+    {
+      name: "Settings",
+      href: "/settings",
+      icon: SettingsIcon,
+      current: pathname === "/settings",
+    },
+  ];
+
+  if (isAdmin) {
+    secondaryNavigation.unshift({
+      name: "Users",
+      href: "/users",
+      icon: UsersIcon,
+      current: pathname === "/users",
+    });
+  }
+
   const userNavigation = [
-    { key: "profile", name: "Your profile", href: "/profile" },
+    { key: "account", name: "Your profile", href: "/account" },
     { key: "signout", name: "Sign out", href: "/signout" },
   ];
 
@@ -162,18 +181,27 @@ function Layout() {
                             ))}
                           </ul>
                         </li>
-                        <li className="mt-auto">
-                          <Link
-                            to="/settings"
-                            className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
-                          >
-                            <Cog6ToothIcon
-                              className="h-6 w-6 shrink-0"
-                              aria-hidden="true"
-                            />
-                            Settings
-                          </Link>
-                        </li>
+                        <div className="mt-auto">
+                          {secondaryNavigation.map((item) => (
+                            <li key={item.name}>
+                              <Link
+                                to={item.href}
+                                className={twMerge(
+                                  item.current
+                                    ? "bg-gray-800 text-white"
+                                    : "text-gray-400 hover:text-white hover:bg-gray-800",
+                                  "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold",
+                                )}
+                              >
+                                <item.icon
+                                  className="h-6 w-6 shrink-0"
+                                  aria-hidden="true"
+                                />
+                                {item.name}
+                              </Link>
+                            </li>
+                          ))}
+                        </div>
                       </ul>
                     </nav>
                   </div>
@@ -215,18 +243,27 @@ function Layout() {
                     ))}
                   </ul>
                 </li>
-                <li className="mt-auto">
-                  <Link
-                    to="/settings"
-                    className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
-                  >
-                    <Cog6ToothIcon
-                      className="h-6 w-6 shrink-0"
-                      aria-hidden="true"
-                    />
-                    Settings
-                  </Link>
-                </li>
+                <div className="mt-auto">
+                  {secondaryNavigation.map((item) => (
+                    <li key={item.name}>
+                      <Link
+                        to={item.href}
+                        className={twMerge(
+                          item.current
+                            ? "bg-gray-800 text-white"
+                            : "text-gray-400 hover:text-white hover:bg-gray-800",
+                          "-mx-2 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold",
+                        )}
+                      >
+                        <item.icon
+                          className="h-6 w-6 shrink-0"
+                          aria-hidden="true"
+                        />
+                        {item.name}
+                      </Link>
+                    </li>
+                  ))}
+                </div>
               </ul>
             </nav>
           </div>

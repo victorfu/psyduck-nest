@@ -17,6 +17,7 @@ import ReportsPage from "./pages/reports-page.tsx";
 import SettingsPage from "./pages/settings-page.tsx";
 import Layout from "./layout.tsx";
 import { loadUsers } from "./lib/loaders.ts";
+import AccountPage from "./pages/account-page.tsx";
 
 const router = createBrowserRouter([
   {
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
       {
         path: "reports",
         element: <ReportsPage />,
+      },
+      {
+        path: "account",
+        element: <AccountPage />,
       },
       {
         path: "settings",
