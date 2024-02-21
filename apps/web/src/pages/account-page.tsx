@@ -31,8 +31,8 @@ const accountFormSchema = z.object({
 });
 
 const passwordFormSchema = z.object({
-  current: z.string().min(8),
-  new: z.string().min(8),
+  currentPassword: z.string().min(8),
+  newPassword: z.string().min(8),
 });
 
 function AccountPage() {
@@ -51,8 +51,8 @@ function AccountPage() {
   const passwordForm = useForm<z.infer<typeof passwordFormSchema>>({
     resolver: zodResolver(passwordFormSchema),
     defaultValues: {
-      current: "",
-      new: "",
+      currentPassword: "",
+      newPassword: "",
     },
   });
 
@@ -91,7 +91,7 @@ function AccountPage() {
               <CardContent className="space-y-2">
                 <FormField
                   control={passwordForm.control}
-                  name="current"
+                  name="currentPassword"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Current password</FormLabel>
@@ -104,7 +104,7 @@ function AccountPage() {
                 />
                 <FormField
                   control={passwordForm.control}
-                  name="new"
+                  name="newPassword"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>New password</FormLabel>

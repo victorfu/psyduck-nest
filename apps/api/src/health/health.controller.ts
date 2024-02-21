@@ -1,4 +1,5 @@
 import { Controller, Get } from "@nestjs/common";
+import { ApiBearerAuth } from "@nestjs/swagger";
 import {
   HealthCheckService,
   HttpHealthIndicator,
@@ -6,6 +7,7 @@ import {
   TypeOrmHealthIndicator,
 } from "@nestjs/terminus";
 
+@ApiBearerAuth()
 @Controller("health")
 export class HealthController {
   constructor(
