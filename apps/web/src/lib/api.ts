@@ -28,4 +28,8 @@ export default class Api {
   public static async updateUser(id: number, user: Partial<User>) {
     return authenticatedFetch<User>(`/api/users/${id}`, "PATCH", user);
   }
+
+  public static async resetPassword(id: number) {
+    return authenticatedFetch(`/api/users/${id}/reset-password`, "POST");
+  }
 }

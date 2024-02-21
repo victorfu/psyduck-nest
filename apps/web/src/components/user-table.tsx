@@ -150,6 +150,24 @@ export default function UserTable({ users = [] }: { users: User[] }) {
               <DropdownMenuItem
                 onClick={async () => {
                   try {
+                    await Api.resetPassword(user.id);
+                    toast({
+                      title: `${user.username} password is reset to the default password`,
+                    });
+                  } catch (error) {
+                    toast({
+                      title: "Failed to reset password",
+                      description: user.username,
+                      variant: "destructive",
+                    });
+                  }
+                }}
+              >
+                Reset password
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={async () => {
+                  try {
                     await Api.updateUser(user.id, {
                       isActive: !user.isActive,
                     });

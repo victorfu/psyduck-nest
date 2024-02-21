@@ -6,7 +6,10 @@ import { Repository } from "typeorm";
 import { User } from "./entities/user.entity";
 import * as bcrypt from "bcrypt";
 import { ConfigService } from "@nestjs/config";
-import { BcryptConfig } from "src/config/configuration.interface";
+import {
+  BcryptConfig,
+  DefaultUserConfig,
+} from "../config/configuration.interface";
 
 @Injectable()
 export class UsersService {
@@ -69,6 +72,15 @@ export class UsersService {
 
   async remove(id: number): Promise<void> {
     await this.usersRepository.delete(id);
+  }
+
+  async resetPassword(id: number) {
+    const bcryptConfig = this.configService.get<BcryptConfig>("bcrypt");
+    const { defaultPassword } =
+      this.configService.get<DefaultUserConfig>("user");
+    return this.usersRepository.update(id, {
+      password: await bcrypt.hash(defaultPassword, bcryptConfig.saltRounds),
+    });
   }
 
   async initializeDefaultAdmin() {

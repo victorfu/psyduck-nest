@@ -54,4 +54,10 @@ export class UsersController {
   remove(@Param("id") id: string) {
     return this.usersService.remove(+id);
   }
+
+  @Roles(Role.Admin)
+  @Post(":id/reset-password")
+  resetPassword(@Param("id") id: string) {
+    return this.usersService.resetPassword(+id);
+  }
 }
