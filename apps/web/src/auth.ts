@@ -111,7 +111,12 @@ export async function loginAction({ request }: LoaderFunctionArgs) {
   return redirect(redirectTo ?? "/");
 }
 
-export function loginLoader({ request }: LoaderFunctionArgs) {
+export async function loginLoader({ request }: LoaderFunctionArgs) {
+  try {
+    await authProvider.signinWithToken();
+  } catch (error) {
+    // ignore
+  }
   const from = new URL(request.url).searchParams.get("from");
   if (authProvider.isAuthenticated) {
     return redirect(from ?? "/");
