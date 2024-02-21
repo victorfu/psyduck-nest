@@ -1,13 +1,7 @@
 import "./layout.css";
 import logo from "/logo.png";
 import { useState } from "react";
-import {
-  Link,
-  Outlet,
-  useFetcher,
-  useLocation,
-  useRouteLoaderData,
-} from "react-router-dom";
+import { Link, Outlet, useFetcher, useLocation } from "react-router-dom";
 import { Fragment } from "react";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import {
@@ -29,11 +23,12 @@ import { twMerge } from "tailwind-merge";
 import { Toaster } from "@/components/ui/toaster";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
 import { useWebSocket } from "./hooks/use-websocket";
+import { useRootUser } from "./hooks/use-root-user";
 
 function Layout() {
   const location = useLocation();
   const { pathname } = location;
-  const { user } = useRouteLoaderData("root") as { user: string | null };
+  const { user } = useRootUser();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const fetcher = useFetcher();
   const isLoggingOut = fetcher.formData != null;
@@ -296,7 +291,7 @@ function Layout() {
                         className="ml-4 text-sm font-semibold leading-6 text-gray-900"
                         aria-hidden="true"
                       >
-                        {user}
+                        {user?.username}
                       </span>
                       <ChevronDownIcon
                         className="ml-2 h-5 w-5 text-gray-400"
