@@ -1,9 +1,9 @@
-import { Link } from "react-router-dom";
-
 function CalendarPage() {
   return (
     <div>
-      <Link to="/dashboard">Go to Dashboard</Link>
+      <article className="prose lg:prose-xl">
+        <h1>Calendar</h1>
+      </article>
     </div>
   );
 }

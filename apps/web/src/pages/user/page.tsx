@@ -1,8 +1,8 @@
-import UserTable from "@/components/user-table";
+import UserTable from "@/pages/user/user-table";
 import { useRootUser } from "@/hooks/use-root-user";
 import { useLoaderData } from "react-router-dom";
 
-function UsersPage() {
+function UserPage() {
   const { user } = useRootUser();
   const { users } = useLoaderData() as { users: User[] };
 
@@ -22,4 +22,4 @@ function UsersPage() {
   );
 }
 
-export default UsersPage;
+export default UserPage;

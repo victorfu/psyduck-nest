@@ -1,9 +1,9 @@
-import { Link } from "react-router-dom";
-
 function ReportsPage() {
   return (
     <div>
-      <Link to="/dashboard">Go to Dashboard</Link>
+      <article className="prose lg:prose-xl">
+        <h1>Reports</h1>
+      </article>
     </div>
   );
 }

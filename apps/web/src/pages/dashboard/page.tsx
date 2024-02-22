@@ -8,7 +8,9 @@ function DashboardPage() {
   return (
     <div className="container mx-auto">
       <div className="flex flex-col md:flex-row items-center justify-between px-4 py-8">
-        <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+        <div className="prose lg:prose-xl">
+          <h2 className="tracking-tight">Dashboard</h2>
+        </div>
         <div className="flex flex-col items-center space-y-2 space-x-2 md:flex-row md:space-y-0">
           <DateRangePicker />
           <Button>Download</Button>

@@ -20,7 +20,7 @@ import {
 } from "@heroicons/react/20/solid";
 import { twMerge } from "tailwind-merge";
 import { Toaster } from "@/components/ui/toaster";
-import { TailwindIndicator } from "@/components/tailwind-indicator";
+import { TailwindIndicator } from "@/components/ui/tailwind-indicator";
 import { useWebSocket } from "./hooks/use-websocket";
 import { useRootUser } from "./hooks/use-root-user";
 import { CircleUserIcon, SettingsIcon } from "lucide-react";
@@ -44,10 +44,10 @@ function Layout() {
       current: pathname === "/dashboard",
     },
     {
-      name: "Projects",
-      href: "/projects",
+      name: "Workspaces",
+      href: "/workspaces",
       icon: FolderIcon,
-      current: pathname === "/projects",
+      current: pathname === "/workspaces",
     },
     {
       name: "Calendar",
