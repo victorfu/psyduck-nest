@@ -359,7 +359,11 @@ function Layout() {
                                     "block px-3 py-1 text-sm leading-6 text-gray-900",
                                   )}
                                 >
-                                  <button type="submit" disabled={isLoggingOut}>
+                                  <button
+                                    type="submit"
+                                    disabled={isLoggingOut}
+                                    className="w-full text-start"
+                                  >
                                     {isLoggingOut
                                       ? "Signing out..."
                                       : "Sign out"}
