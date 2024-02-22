@@ -31,6 +31,11 @@ export class User {
   @Column({
     nullable: true,
   })
+  emailVerified: boolean;
+
+  @Column({
+    nullable: true,
+  })
   firstName: string;
 
   @Column({
@@ -45,6 +50,11 @@ export class User {
     default: () => "('user')",
   })
   roles: string[];
+
+  @Column({
+    nullable: true,
+  })
+  picture: string;
 
   @CreateDateColumn()
   createdAt: Date;

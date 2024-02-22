@@ -33,6 +33,12 @@ export class AppController {
   }
 
   @Public()
+  @Get("env")
+  env() {
+    return this.appService.env();
+  }
+
+  @Public()
   @Get("version")
   version() {
     return this.appService.version();
@@ -43,7 +49,7 @@ export class AppController {
   @ApiBody({ type: UserLoginDto })
   @Post("login")
   async login(@Request() req) {
-    return await this.authService.login(req.user);
+    return await this.authService.generateToken(req.user);
   }
 
   @ApiBearerAuth()

@@ -18,6 +18,8 @@ import ReportsPage from "./pages/reports-page.tsx";
 import SettingsPage from "./pages/settings/page.tsx";
 import Layout from "./layout.tsx";
 import { loadUsers } from "./lib/loaders.ts";
+import AuthSuccessPage from "./pages/auth-success-page.tsx";
+import { CookiesProvider } from "react-cookie";
 
 const router = createBrowserRouter([
   {
@@ -71,6 +73,14 @@ const router = createBrowserRouter([
       await authProvider.signout();
       return redirect("/");
     },
+  },
+  {
+    path: "auth/google/success",
+    element: (
+      <CookiesProvider>
+        <AuthSuccessPage />
+      </CookiesProvider>
+    ),
   },
 ]);
 

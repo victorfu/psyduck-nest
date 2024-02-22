@@ -1,4 +1,5 @@
 export default () => ({
+  env: process.env.NODE_ENV || "development",
   server: {
     port: parseInt(process.env.PORT, 10) || 8080,
   },

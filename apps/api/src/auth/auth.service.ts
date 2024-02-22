@@ -40,7 +40,30 @@ export class AuthService {
     return null;
   }
 
-  async login(user: any) {
+  async validateGoogleUser(profile: any): Promise<any> {
+    const { id, emails, photos, name } = profile;
+    const user = await this.usersService.findOneByEmail(emails[0].value);
+    if (user) {
+      const result = { ...user };
+      delete result.password;
+      return result;
+    }
+    const newUser = await this.usersService.create({
+      username: emails[0].value,
+      email: emails[0].value,
+      // TODO: how to handle the password for google users?
+      password: `-1${id}`,
+      firstName: name.givenName,
+      lastName: name.familyName,
+      picture: photos[0].value,
+      isActive: true,
+    });
+    const result = { ...newUser };
+    delete result.password;
+    return result;
+  }
+
+  generateToken(user: any) {
     const payload = {
       sub: user.username,
     };

@@ -81,54 +81,6 @@ function AccountPage() {
       <TabsContent value="account">
         <Card>
           <CardHeader>
-            <CardTitle>Account</CardTitle>
-            <CardDescription>
-              Make changes to your account here.
-            </CardDescription>
-          </CardHeader>
-          <Form {...passwordForm}>
-            <form
-              onSubmit={passwordForm.handleSubmit(onPasswordSubmit)}
-              className="space-y-2"
-            >
-              <CardContent className="space-y-2">
-                <FormField
-                  control={passwordForm.control}
-                  name="currentPassword"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Current password</FormLabel>
-                      <FormControl>
-                        <Input {...field} type="password" autoComplete="off" />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={passwordForm.control}
-                  name="newPassword"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>New password</FormLabel>
-                      <FormControl>
-                        <Input {...field} type="password" autoComplete="off" />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
-              <CardFooter>
-                <Button>Save changes</Button>
-              </CardFooter>
-            </form>
-          </Form>
-        </Card>
-      </TabsContent>
-      <TabsContent value="password">
-        <Card>
-          <CardHeader>
             <CardTitle>Password</CardTitle>
             <CardDescription>
               Change your password here. After saving, you will be logged out.
@@ -182,6 +134,54 @@ function AccountPage() {
               </CardContent>
               <CardFooter>
                 <Button>Save password</Button>
+              </CardFooter>
+            </form>
+          </Form>
+        </Card>
+      </TabsContent>
+      <TabsContent value="password">
+        <Card>
+          <CardHeader>
+            <CardTitle>Account</CardTitle>
+            <CardDescription>
+              Make changes to your account here.
+            </CardDescription>
+          </CardHeader>
+          <Form {...passwordForm}>
+            <form
+              onSubmit={passwordForm.handleSubmit(onPasswordSubmit)}
+              className="space-y-2"
+            >
+              <CardContent className="space-y-2">
+                <FormField
+                  control={passwordForm.control}
+                  name="currentPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Current password</FormLabel>
+                      <FormControl>
+                        <Input {...field} type="password" autoComplete="off" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={passwordForm.control}
+                  name="newPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>New password</FormLabel>
+                      <FormControl>
+                        <Input {...field} type="password" autoComplete="off" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+              <CardFooter>
+                <Button>Save changes</Button>
               </CardFooter>
             </form>
           </Form>

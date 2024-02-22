@@ -11,7 +11,14 @@ describe("AppController", () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [AppController],
       providers: [
-        AppService,
+        {
+          provide: AppService,
+          useValue: {
+            date: jest.fn().mockResolvedValue(new Date()),
+            env: jest.fn().mockResolvedValue({}),
+            version: jest.fn().mockResolvedValue("1.0.0"),
+          },
+        },
         {
           provide: AuthService,
           useValue: {
