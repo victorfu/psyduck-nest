@@ -44,4 +44,11 @@ export default () => ({
       process.env.FIREBASE_ADMIN_SDK_PATH || "firebase-adminsdk.json",
     storageBucket: process.env.FIREBASE_STORAGE_BUCKET || "",
   },
+  oauth: {
+    google: {
+      clientId: process.env.OAUTH_GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.OAUTH_GOOGLE_CLIENT_SECRET || "",
+      redirectUrl: process.env.OAUTH_GOOGLE_REDIRECT_URL || "",
+    },
+  },
 });

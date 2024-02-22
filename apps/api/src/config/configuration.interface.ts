@@ -36,3 +36,11 @@ export interface FirebaseConfig {
   adminSdkPath: string;
   storageBucket: string;
 }
+
+export interface OauthConfig {
+  google: {
+    clientId: string;
+    clientSecret: string;
+    redirectUrl: string;
+  };
+}
