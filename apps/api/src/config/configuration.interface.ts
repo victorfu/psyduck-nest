@@ -27,3 +27,7 @@ export interface NodemailerConfig {
   pass: string;
   from: string;
 }
+
+export interface DefaultUserConfig {
+  defaultPassword: string;
+}

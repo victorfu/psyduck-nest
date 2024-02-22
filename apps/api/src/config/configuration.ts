@@ -36,4 +36,7 @@ export default () => ({
     pass: process.env.NODEMAILER_PASS || "",
     from: process.env.NODEMAILER_FROM || "",
   },
+  user: {
+    defaultPassword: process.env.USER_DEFAULT_PASSWORD || "password",
+  },
 });

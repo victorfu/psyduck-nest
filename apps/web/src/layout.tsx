@@ -1,13 +1,7 @@
 import "./layout.css";
 import logo from "/logo.png";
 import { useState } from "react";
-import {
-  Link,
-  Outlet,
-  useFetcher,
-  useLocation,
-  useRouteLoaderData,
-} from "react-router-dom";
+import { Link, Outlet, useFetcher, useLocation } from "react-router-dom";
 import { Fragment } from "react";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import {
@@ -15,7 +9,6 @@ import {
   BellIcon,
   CalendarIcon,
   ChartPieIcon,
-  Cog6ToothIcon,
   FolderIcon,
   HomeIcon,
   UsersIcon,
@@ -28,14 +21,20 @@ import {
 import { twMerge } from "tailwind-merge";
 import { Toaster } from "@/components/ui/toaster";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
+import { useWebSocket } from "./hooks/use-websocket";
+import { useRootUser } from "./hooks/use-root-user";
+import { CircleUserIcon, SettingsIcon } from "lucide-react";
 
 function Layout() {
   const location = useLocation();
   const { pathname } = location;
-  const { user } = useRouteLoaderData("root") as { user: string | null };
+  const { user } = useRootUser();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const fetcher = useFetcher();
   const isLoggingOut = fetcher.formData != null;
+  const isAdmin = user?.roles.includes("admin");
+
+  useWebSocket();
 
   const navigation = [
     {
@@ -43,12 +42,6 @@ function Layout() {
       href: "/dashboard",
       icon: HomeIcon,
       current: pathname === "/dashboard",
-    },
-    {
-      name: "Users",
-      href: "/users",
-      icon: UsersIcon,
-      current: pathname === "/users",
     },
     {
       name: "Projects",
@@ -70,8 +63,32 @@ function Layout() {
     },
   ];
 
+  const secondaryNavigation = [
+    {
+      name: "Account",
+      href: "/account",
+      icon: CircleUserIcon,
+      current: pathname === "/account",
+    },
+    {
+      name: "Settings",
+      href: "/settings",
+      icon: SettingsIcon,
+      current: pathname === "/settings",
+    },
+  ];
+
+  if (isAdmin) {
+    secondaryNavigation.unshift({
+      name: "Users",
+      href: "/users",
+      icon: UsersIcon,
+      current: pathname === "/users",
+    });
+  }
+
   const userNavigation = [
-    { key: "profile", name: "Your profile", href: "/profile" },
+    { key: "account", name: "Your profile", href: "/account" },
     { key: "signout", name: "Sign out", href: "/signout" },
   ];
 
@@ -164,18 +181,27 @@ function Layout() {
                             ))}
                           </ul>
                         </li>
-                        <li className="mt-auto">
-                          <Link
-                            to="/settings"
-                            className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
-                          >
-                            <Cog6ToothIcon
-                              className="h-6 w-6 shrink-0"
-                              aria-hidden="true"
-                            />
-                            Settings
-                          </Link>
-                        </li>
+                        <div className="mt-auto">
+                          {secondaryNavigation.map((item) => (
+                            <li key={item.name}>
+                              <Link
+                                to={item.href}
+                                className={twMerge(
+                                  item.current
+                                    ? "bg-gray-800 text-white"
+                                    : "text-gray-400 hover:text-white hover:bg-gray-800",
+                                  "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold",
+                                )}
+                              >
+                                <item.icon
+                                  className="h-6 w-6 shrink-0"
+                                  aria-hidden="true"
+                                />
+                                {item.name}
+                              </Link>
+                            </li>
+                          ))}
+                        </div>
                       </ul>
                     </nav>
                   </div>
@@ -186,7 +212,7 @@ function Layout() {
         </Transition.Root>
 
         {/* Static sidebar for desktop */}
-        <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
+        <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-60 lg:flex-col">
           {/* Sidebar component */}
           <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-4">
             <div className="flex h-16 shrink-0 items-center">
@@ -217,24 +243,33 @@ function Layout() {
                     ))}
                   </ul>
                 </li>
-                <li className="mt-auto">
-                  <Link
-                    to="/settings"
-                    className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
-                  >
-                    <Cog6ToothIcon
-                      className="h-6 w-6 shrink-0"
-                      aria-hidden="true"
-                    />
-                    Settings
-                  </Link>
-                </li>
+                <div className="mt-auto">
+                  {secondaryNavigation.map((item) => (
+                    <li key={item.name}>
+                      <Link
+                        to={item.href}
+                        className={twMerge(
+                          item.current
+                            ? "bg-gray-800 text-white"
+                            : "text-gray-400 hover:text-white hover:bg-gray-800",
+                          "-mx-2 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold",
+                        )}
+                      >
+                        <item.icon
+                          className="h-6 w-6 shrink-0"
+                          aria-hidden="true"
+                        />
+                        {item.name}
+                      </Link>
+                    </li>
+                  ))}
+                </div>
               </ul>
             </nav>
           </div>
         </div>
 
-        <div className="lg:pl-72">
+        <div className="lg:pl-60">
           <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
             <button
               type="button"
@@ -293,7 +328,7 @@ function Layout() {
                         className="ml-4 text-sm font-semibold leading-6 text-gray-900"
                         aria-hidden="true"
                       >
-                        {user}
+                        {user?.username}
                       </span>
                       <ChevronDownIcon
                         className="ml-2 h-5 w-5 text-gray-400"

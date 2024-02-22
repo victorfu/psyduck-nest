@@ -1,9 +1,10 @@
 import { LoaderFunctionArgs, redirect } from "react-router-dom";
 import localForage from "localforage";
+import Api from "./lib/api";
 
 interface AuthProvider {
   isAuthenticated: boolean;
-  username: null | string;
+  user: User | null;
   signin(username: string, password: string): Promise<void>;
   signinWithToken(): Promise<void>;
   signout(): Promise<void>;
@@ -13,72 +14,49 @@ interface TokenResponse {
   access_token: string;
 }
 
-interface User {
-  id: number;
-  username: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  isActive: boolean;
-  roles: string[];
-  createdAt: Date;
-  updatedAt: Date;
-}
-
 export const authProvider: AuthProvider = {
   isAuthenticated: false,
-  username: null,
+  user: null,
 
   async signin(username: string, password: string) {
-    authProvider.username = username;
-    const response = await fetch("/api/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, password }),
-    });
-    if (response.ok) {
-      const responseJson = (await response.json()) as TokenResponse;
-      const { access_token } = responseJson;
-      await localForage.setItem("access_token", access_token);
-      authProvider.isAuthenticated = true;
-      return;
+    try {
+      const response = await Api.login(username, password);
+      if (response.ok) {
+        const responseJson = (await response.json()) as TokenResponse;
+        const { access_token } = responseJson;
+        await localForage.setItem("access_token", access_token);
+        authProvider.isAuthenticated = true;
+
+        const user = await Api.me();
+        authProvider.user = user;
+        return;
+      }
+    } catch (error) {
+      console.error(error);
     }
 
     authProvider.isAuthenticated = false;
+    authProvider.user = null;
     throw new Error("Invalid login attempt");
   },
 
   async signinWithToken() {
-    const access_token: string | null = await localForage.getItem(
-      "access_token",
-    );
-    if (!access_token) {
-      authProvider.isAuthenticated = false;
-      authProvider.username = "";
-      return;
-    }
-    const response = await fetch("/api/me", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-        "Content-Type": "application/json",
-      },
-    });
-    if (response.ok) {
-      const { username } = (await response.json()) as User;
+    try {
+      const user = await Api.me();
       authProvider.isAuthenticated = true;
-      authProvider.username = username;
+      authProvider.user = user;
       return;
+    } catch (error) {
+      console.error(error);
     }
     authProvider.isAuthenticated = false;
+    authProvider.user = null;
     throw new Error("Invalid login attempt");
   },
 
   async signout() {
     authProvider.isAuthenticated = false;
-    authProvider.username = "";
+    authProvider.user = null;
     await localForage.removeItem("access_token");
   },
 };
@@ -111,7 +89,12 @@ export async function loginAction({ request }: LoaderFunctionArgs) {
   return redirect(redirectTo ?? "/");
 }
 
-export function loginLoader({ request }: LoaderFunctionArgs) {
+export async function loginLoader({ request }: LoaderFunctionArgs) {
+  try {
+    await authProvider.signinWithToken();
+  } catch (error) {
+    // ignore
+  }
   const from = new URL(request.url).searchParams.get("from");
   if (authProvider.isAuthenticated) {
     return redirect(from ?? "/");
@@ -136,6 +119,6 @@ export async function rootLoader() {
   }
   if (!authProvider.isAuthenticated) return redirect("/login");
   return {
-    user: authProvider.username,
+    user: authProvider.user,
   };
 }
