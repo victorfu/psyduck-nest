@@ -22,8 +22,8 @@ export class AuthService {
       (await bcrypt.compare(pass, user.password)) &&
       user.isActive === true
     ) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { password, ...result } = user;
+      const result = { ...user };
+      delete result.password;
       return result;
     }
     return null;
@@ -33,8 +33,8 @@ export class AuthService {
     const { sub: username } = token;
     const user = await this.usersService.findOneByUsername(username);
     if (user && user.isActive === true) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { password, ...result } = user;
+      const result = { ...user };
+      delete result.password;
       return result;
     }
     return null;

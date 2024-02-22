@@ -57,10 +57,13 @@ function AccountPage() {
   });
 
   function onAccountSubmit(values: z.infer<typeof accountFormSchema>) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { username, ...rest } = values;
     if (!user) return;
-    Api.updateUser(user.id, rest).catch(console.error);
+    const noUsernameValues = {
+      email: values.email,
+      firstName: values.firstName,
+      lastName: values.lastName,
+    };
+    Api.updateUser(user.id, noUsernameValues).catch(console.error);
   }
 
   function onPasswordSubmit(values: z.infer<typeof passwordFormSchema>) {
