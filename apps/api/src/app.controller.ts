@@ -27,14 +27,14 @@ export class AppController {
   ) {}
 
   @Public()
-  @Get("time")
-  time(): string {
-    return this.appService.time();
+  @Get("date")
+  date() {
+    return this.appService.date();
   }
 
   @Public()
   @Get("version")
-  version(): string {
+  version() {
     return this.appService.version();
   }
 

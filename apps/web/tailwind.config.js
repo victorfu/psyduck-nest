@@ -1,5 +1,6 @@
 import forms from "@tailwindcss/forms";
 import tailwindcssAnimate from "tailwindcss-animate";
+import tailwindcssTypography from "@tailwindcss/typography";
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -76,5 +77,5 @@ export default {
       },
     },
   },
-  plugins: [forms, tailwindcssAnimate],
+  plugins: [forms, tailwindcssAnimate, tailwindcssTypography],
 };

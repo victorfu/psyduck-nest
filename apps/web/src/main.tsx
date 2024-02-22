@@ -7,17 +7,17 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import { authProvider, loginAction, loginLoader, rootLoader } from "./auth.ts";
-import DashboardPage from "./pages/dashboard-page.tsx";
-import UsersPage from "./pages/users-page.tsx";
+import DashboardPage from "./pages/dashboard/page.tsx";
+import UserPage from "./pages/user/page.tsx";
+import AccountPage from "./pages/account/page.tsx";
 import LoginPage from "./pages/login-page.tsx";
 import ErrorPage from "./pages/error-page.tsx";
-import ProjectsPage from "./pages/projects-page.tsx";
+import WorkspacePage from "./pages/workspace/page.tsx";
 import CalendarPage from "./pages/calendar-page.tsx";
 import ReportsPage from "./pages/reports-page.tsx";
-import SettingsPage from "./pages/settings-page.tsx";
+import SettingsPage from "./pages/settings/page.tsx";
 import Layout from "./layout.tsx";
 import { loadUsers } from "./lib/loaders.ts";
-import AccountPage from "./pages/account-page.tsx";
 
 const router = createBrowserRouter([
   {
@@ -35,11 +35,11 @@ const router = createBrowserRouter([
       {
         path: "users",
         loader: loadUsers,
-        element: <UsersPage />,
+        element: <UserPage />,
       },
       {
-        path: "projects",
-        element: <ProjectsPage />,
+        path: "workspaces",
+        element: <WorkspacePage />,
       },
       {
         path: "calendar",

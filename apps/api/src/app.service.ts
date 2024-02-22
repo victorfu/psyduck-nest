@@ -3,11 +3,13 @@ import { getPackageVersion } from "./utils";
 
 @Injectable()
 export class AppService {
-  time(): string {
-    return new Date().toISOString();
+  date(): { date: string } {
+    return {
+      date: new Date().toISOString(),
+    };
   }
 
-  version(): string {
+  version(): { version: string } {
     return getPackageVersion();
   }
 }

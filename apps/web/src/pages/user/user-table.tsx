@@ -15,7 +15,7 @@ import { format } from "date-fns";
 import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
 import { UserTableToolbar } from "./user-table-toolbar";
 import Api from "@/lib/api";
-import { Switch } from "./ui/switch";
+import { Switch } from "../../components/ui/switch";
 import { useRevalidator } from "react-router-dom";
 
 export default function UserTable({ users = [] }: { users: User[] }) {
