@@ -22,6 +22,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useToast } from "@/components/ui/use-toast";
 
 const accountFormSchema = z.object({
   username: z.string(),
@@ -31,12 +32,13 @@ const accountFormSchema = z.object({
 });
 
 const passwordFormSchema = z.object({
-  currentPassword: z.string().min(8),
-  newPassword: z.string().min(8),
+  currentPassword: z.string().min(4),
+  newPassword: z.string().min(4),
 });
 
 function AccountPage() {
   const { user } = useRootUser();
+  const { toast } = useToast();
 
   const accountForm = useForm<z.infer<typeof accountFormSchema>>({
     resolver: zodResolver(accountFormSchema),
@@ -56,24 +58,51 @@ function AccountPage() {
     },
   });
 
-  function onAccountSubmit(values: z.infer<typeof accountFormSchema>) {
+  async function onAccountSubmit(values: z.infer<typeof accountFormSchema>) {
     if (!user) return;
     const noUsernameValues = {
       email: values.email,
       firstName: values.firstName,
       lastName: values.lastName,
     };
-    Api.updateAccount(noUsernameValues).catch(console.error);
+    try {
+      await Api.updateAccount(noUsernameValues);
+      toast({
+        title: "Account updated",
+        description: "You have successfully updated your account.",
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Account update failed",
+        description: "There was an error updating your account.",
+        variant: "destructive",
+      });
+    }
   }
 
-  function onPasswordSubmit(values: z.infer<typeof passwordFormSchema>) {
+  async function onPasswordSubmit(values: z.infer<typeof passwordFormSchema>) {
     if (!user) return;
-    console.log(values);
-    // TODO: Implement password change
+    try {
+      await Api.changePassword(values.currentPassword, values.newPassword);
+      toast({
+        title: "Password changed",
+        description: "You have successfully changed your password.",
+      });
+
+      passwordForm.reset();
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Password change failed",
+        description: "There was an error changing your password.",
+        variant: "destructive",
+      });
+    }
   }
 
   return (
-    <Tabs defaultValue="account" className="w-[400px]">
+    <Tabs defaultValue="account" className="w-[380px]">
       <TabsList className="grid w-full grid-cols-2">
         <TabsTrigger value="account">Account</TabsTrigger>
         <TabsTrigger value="password">Password</TabsTrigger>

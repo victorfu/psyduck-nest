@@ -16,6 +16,16 @@ export default class Api {
     return fetch("/api/version").then((res) => res.json());
   }
 
+  public static async changePassword(
+    currentPassword: string,
+    newPassword: string,
+  ) {
+    return authenticatedFetch("/api/change-password", "POST", {
+      currentPassword,
+      newPassword,
+    });
+  }
+
   // Account endpoints
   public static async getAccount() {
     return authenticatedFetch<User>("/api/account");
