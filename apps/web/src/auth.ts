@@ -27,7 +27,7 @@ export const authProvider: AuthProvider = {
         await localForage.setItem("access_token", access_token);
         authProvider.isAuthenticated = true;
 
-        const user = await Api.me();
+        const user = await Api.getAccount();
         authProvider.user = user;
         return;
       }
@@ -42,7 +42,7 @@ export const authProvider: AuthProvider = {
 
   async signinWithToken() {
     try {
-      const user = await Api.me();
+      const user = await Api.getAccount();
       authProvider.isAuthenticated = true;
       authProvider.user = user;
       return;

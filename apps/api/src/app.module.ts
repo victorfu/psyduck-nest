@@ -15,6 +15,7 @@ import { JwtAuthGuard } from "./auth/jwt-auth.guard";
 import { RolesGuard } from "./auth/roles.guard";
 import { EventsModule } from "./events/events.module";
 import { FirebaseAdminModule } from "./firebase-admin/firebase-admin.module";
+import { AccountModule } from './account/account.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { FirebaseAdminModule } from "./firebase-admin/firebase-admin.module";
     AuthModule,
     EventsModule,
     FirebaseAdminModule,
+    AccountModule,
   ],
   controllers: [AppController],
   providers: [

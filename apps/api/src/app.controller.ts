@@ -53,12 +53,6 @@ export class AppController {
   }
 
   @ApiBearerAuth()
-  @Get("me")
-  me(@Request() req) {
-    return req.user;
-  }
-
-  @ApiBearerAuth()
   @Post("change-password")
   async changePassword(@Request() req, @Body() body: ChangePasswordDto) {
     return await this.authService.changePassword(req.user, body);

@@ -12,12 +12,17 @@ export default class Api {
     });
   }
 
-  public static async me() {
-    return authenticatedFetch<User>("/api/me");
-  }
-
   public static async version(): Promise<{ version: string }> {
     return fetch("/api/version").then((res) => res.json());
+  }
+
+  // Account endpoints
+  public static async getAccount() {
+    return authenticatedFetch<User>("/api/account");
+  }
+
+  public static async updateAccount(user: Partial<User>) {
+    return authenticatedFetch<User>("/api/account", "PATCH", user);
   }
 
   // Users endpoints

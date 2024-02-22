@@ -63,7 +63,7 @@ function AccountPage() {
       firstName: values.firstName,
       lastName: values.lastName,
     };
-    Api.updateUser(user.id, noUsernameValues).catch(console.error);
+    Api.updateAccount(noUsernameValues).catch(console.error);
   }
 
   function onPasswordSubmit(values: z.infer<typeof passwordFormSchema>) {
