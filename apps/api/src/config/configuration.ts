@@ -39,4 +39,9 @@ export default () => ({
   user: {
     defaultPassword: process.env.USER_DEFAULT_PASSWORD || "password",
   },
+  firebase: {
+    adminSdkPath:
+      process.env.FIREBASE_ADMIN_SDK_PATH || "firebase-adminsdk.json",
+    storageBucket: process.env.FIREBASE_STORAGE_BUCKET || "",
+  },
 });

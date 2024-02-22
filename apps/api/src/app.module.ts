@@ -14,6 +14,7 @@ import { APP_GUARD } from "@nestjs/core";
 import { JwtAuthGuard } from "./auth/jwt-auth.guard";
 import { RolesGuard } from "./auth/roles.guard";
 import { EventsModule } from "./events/events.module";
+import { FirebaseAdminModule } from "./firebase-admin/firebase-admin.module";
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { EventsModule } from "./events/events.module";
     UsersModule,
     AuthModule,
     EventsModule,
+    FirebaseAdminModule,
   ],
   controllers: [AppController],
   providers: [

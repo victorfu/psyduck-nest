@@ -31,3 +31,8 @@ export interface NodemailerConfig {
 export interface DefaultUserConfig {
   defaultPassword: string;
 }
+
+export interface FirebaseConfig {
+  adminSdkPath: string;
+  storageBucket: string;
+}

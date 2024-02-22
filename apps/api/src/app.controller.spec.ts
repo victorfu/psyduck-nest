@@ -2,6 +2,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { AuthService } from "./auth/auth.service";
+import { FirebaseAdminService } from "./firebase-admin/firebase-admin.service";
 
 describe("AppController", () => {
   let appController: AppController;
@@ -15,6 +16,12 @@ describe("AppController", () => {
           provide: AuthService,
           useValue: {
             login: jest.fn().mockResolvedValue({ access_token: "token" }),
+          },
+        },
+        {
+          provide: FirebaseAdminService,
+          useValue: {
+            uploadFile: jest.fn().mockResolvedValue("url"),
           },
         },
       ],
