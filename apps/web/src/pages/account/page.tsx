@@ -23,6 +23,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useToast } from "@/components/ui/use-toast";
+import GoogleLogo from "@/svg/google-logo";
 
 const accountFormSchema = z.object({
   username: z.string(),
@@ -101,6 +102,8 @@ function AccountPage() {
     }
   }
 
+  const oauthGoogleRaw = user?.oauthGoogleRaw;
+
   return (
     <Tabs defaultValue="account" className="w-[380px]">
       <TabsList className="grid w-full grid-cols-2">
@@ -110,10 +113,18 @@ function AccountPage() {
       <TabsContent value="account">
         <Card>
           <CardHeader>
-            <CardTitle>Password</CardTitle>
-            <CardDescription>
-              Change your password here. After saving, you will be logged out.
-            </CardDescription>
+            <CardTitle>Account</CardTitle>
+
+            {oauthGoogleRaw ? (
+              <CardDescription className="flex">
+                This account is linked to Google.
+                <GoogleLogo className="w-5 h-5 ml-2" />
+              </CardDescription>
+            ) : (
+              <CardDescription>
+                Make changes to your account here.
+              </CardDescription>
+            )}
           </CardHeader>
           <Form {...accountForm}>
             <form
@@ -128,7 +139,7 @@ function AccountPage() {
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input {...field} disabled={!!oauthGoogleRaw} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -162,7 +173,7 @@ function AccountPage() {
                 />
               </CardContent>
               <CardFooter>
-                <Button>Save password</Button>
+                <Button>Save changes</Button>
               </CardFooter>
             </form>
           </Form>
@@ -171,9 +182,9 @@ function AccountPage() {
       <TabsContent value="password">
         <Card>
           <CardHeader>
-            <CardTitle>Account</CardTitle>
+            <CardTitle>Password</CardTitle>
             <CardDescription>
-              Make changes to your account here.
+              Change your password here. After saving, you will be logged out.
             </CardDescription>
           </CardHeader>
           <Form {...passwordForm}>
@@ -210,7 +221,7 @@ function AccountPage() {
                 />
               </CardContent>
               <CardFooter>
-                <Button>Save changes</Button>
+                <Button>Save password</Button>
               </CardFooter>
             </form>
           </Form>

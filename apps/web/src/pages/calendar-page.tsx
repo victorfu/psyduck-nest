@@ -2,7 +2,7 @@ function CalendarPage() {
   return (
     <div>
       <article className="prose lg:prose-xl">
-        <h1>Calendar</h1>
+        <h2>Calendar</h2>
       </article>
     </div>
   );
