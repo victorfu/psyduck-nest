@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from "@nestjs/common";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -55,6 +59,19 @@ export class UsersService {
       const found = await this.findOneByUsername(updateUserDto.username);
       if (found && found.id !== id) {
         throw new ConflictException("Username already exists");
+      }
+    }
+    if (updateUserDto.email) {
+      const found = await this.findOneByEmail(updateUserDto.email);
+      if (found && found.id !== id) {
+        throw new ConflictException("Email already exists");
+      }
+
+      updateUserDto.emailVerified = false;
+      if (updateUserDto.oauthGoogleRaw) {
+        throw new BadRequestException(
+          "Cannot update email for Google OAuth user",
+        );
       }
     }
     if (updateUserDto.password) {
