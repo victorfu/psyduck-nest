@@ -26,18 +26,11 @@ export class UsersService {
     }
 
     const bcryptConfig = this.configService.get<BcryptConfig>("bcrypt");
-    const user = new User();
-    user.username = createUserDto.username;
-    user.password = await bcrypt.hash(
+    createUserDto.password = await bcrypt.hash(
       createUserDto.password,
       bcryptConfig.saltRounds,
     );
-    user.email = createUserDto.email;
-    user.firstName = createUserDto.firstName;
-    user.lastName = createUserDto.lastName;
-    if (createUserDto.roles) {
-      user.roles = createUserDto.roles;
-    }
+    const user = await CreateUserDto.toUser(createUserDto);
     return this.usersRepository.save(user);
   }
 

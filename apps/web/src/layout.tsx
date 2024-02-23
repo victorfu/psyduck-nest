@@ -24,6 +24,7 @@ import { TailwindIndicator } from "@/components/ui/tailwind-indicator";
 import { useWebSocket } from "./hooks/use-websocket";
 import { useRootUser } from "./hooks/use-root-user";
 import { CircleUserIcon, SettingsIcon } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 function Layout() {
   const location = useLocation();
@@ -322,7 +323,13 @@ function Layout() {
                 <Menu as="div" className="relative">
                   <Menu.Button className="-m-1.5 flex items-center p-1.5">
                     <span className="sr-only">Open user menu</span>
-                    <div className="h-8 w-8 rounded-full bg-gray-200" />
+                    {/* <div className="h-8 w-8 rounded-full bg-gray-200"></div> */}
+                    <Avatar>
+                      <AvatarImage src={user?.picture} alt="avatar" />
+                      <AvatarFallback>
+                        {user?.username?.at(0)?.toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
                     <span className="hidden lg:flex lg:items-center">
                       <span
                         className="ml-4 text-sm font-semibold leading-6 text-gray-900"

@@ -56,6 +56,11 @@ export class User {
   })
   picture: string;
 
+  @Column({
+    nullable: true,
+  })
+  oauthGoogleRaw: string;
+
   @CreateDateColumn()
   createdAt: Date;
 

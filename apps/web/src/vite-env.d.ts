@@ -9,10 +9,14 @@ interface User {
   username: string;
   isActive: boolean;
   roles: string[];
+  createdAt: Date;
+  updatedAt: Date;
+
+  // Optional fields
   email?: string;
   emailVerified?: boolean;
   firstName?: string;
   lastName?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  picture?: string;
+  oauthGoogleRaw?: string;
 }

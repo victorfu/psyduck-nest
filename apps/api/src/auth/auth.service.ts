@@ -41,22 +41,24 @@ export class AuthService {
   }
 
   async validateGoogleUser(profile: any): Promise<any> {
-    const { id, emails, photos, name } = profile;
+    const { emails, photos, name } = profile;
     const user = await this.usersService.findOneByEmail(emails[0].value);
     if (user) {
       const result = { ...user };
       delete result.password;
       return result;
     }
+    console.log(profile);
     const newUser = await this.usersService.create({
       username: emails[0].value,
       email: emails[0].value,
-      // TODO: how to handle the password for google users?
-      password: `-1${id}`,
+      emailVerified: true,
+      password: "TODO: how to config this",
       firstName: name.givenName,
       lastName: name.familyName,
       picture: photos[0].value,
       isActive: true,
+      oauthGoogleRaw: profile._raw,
     });
     const result = { ...newUser };
     delete result.password;

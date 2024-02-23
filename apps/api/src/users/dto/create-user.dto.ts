@@ -7,6 +7,7 @@ import {
   IsString,
   Length,
 } from "class-validator";
+import { User } from "../entities/user.entity";
 
 export class CreateUserDto {
   @IsNotEmpty()
@@ -52,4 +53,24 @@ export class CreateUserDto {
   @IsBoolean()
   @ApiProperty()
   isActive?: boolean;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty()
+  oauthGoogleRaw?: string;
+
+  public static async toUser(dto: CreateUserDto) {
+    const user = new User();
+    user.username = dto.username;
+    user.password = dto.password;
+    user.email = dto.email;
+    user.emailVerified = dto.emailVerified;
+    user.firstName = dto.firstName;
+    user.lastName = dto.lastName;
+    user.roles = dto.roles;
+    user.picture = dto.picture;
+    user.isActive = dto.isActive;
+    user.oauthGoogleRaw = dto.oauthGoogleRaw;
+    return user;
+  }
 }
