@@ -53,7 +53,6 @@ export class AuthService {
       username: emails[0].value,
       email: emails[0].value,
       emailVerified: true,
-      password: "TODO: how to config this",
       firstName: name.givenName,
       lastName: name.familyName,
       picture: photos[0].value,

@@ -30,10 +30,12 @@ export class UsersService {
     }
 
     const bcryptConfig = this.configService.get<BcryptConfig>("bcrypt");
-    createUserDto.password = await bcrypt.hash(
-      createUserDto.password,
-      bcryptConfig.saltRounds,
-    );
+    if (createUserDto.password) {
+      createUserDto.password = await bcrypt.hash(
+        createUserDto.password,
+        bcryptConfig.saltRounds,
+      );
+    }
     const user = await CreateUserDto.toUser(createUserDto);
     return this.usersRepository.save(user);
   }

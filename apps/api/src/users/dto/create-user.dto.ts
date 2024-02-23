@@ -15,10 +15,10 @@ export class CreateUserDto {
   @ApiProperty()
   username: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @Length(4, 20)
   @ApiProperty()
-  password: string;
+  password?: string;
 
   @IsOptional()
   @IsEmail()
