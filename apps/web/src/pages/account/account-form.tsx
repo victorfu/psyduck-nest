@@ -83,6 +83,19 @@ function AccountForm() {
           <CardContent className="space-y-2">
             <FormField
               control={accountForm.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input {...field} disabled />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={accountForm.control}
               name="email"
               render={({ field }) => (
                 <FormItem>

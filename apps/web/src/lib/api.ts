@@ -26,6 +26,12 @@ export default class Api {
     });
   }
 
+  public static async setLocalPassword(newPassword: string) {
+    return authenticatedFetch("/api/set-local-password", "POST", {
+      newPassword,
+    });
+  }
+
   // Account endpoints
   public static async getAccount() {
     return authenticatedFetch<User>("/api/account");
@@ -33,6 +39,13 @@ export default class Api {
 
   public static async updateAccount(user: Partial<User>) {
     return authenticatedFetch<User>("/api/account", "PATCH", user);
+  }
+
+  public static async hasLocalAuth() {
+    return authenticatedFetch<{ hasLocalAuth: boolean }>(
+      "/api/account/has-local-auth",
+      "POST",
+    );
   }
 
   // Users endpoints

@@ -22,15 +22,34 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useToast } from "@/components/ui/use-toast";
+import { useEffect, useState } from "react";
+import { useRevalidator } from "react-router-dom";
 
 const passwordFormSchema = z.object({
-  currentPassword: z.string().min(4),
+  currentPassword: z.string(),
   newPassword: z.string().min(4),
 });
 
+function useLocalAuth() {
+  const [hasLocalAuth, setHasLocalAuth] = useState<boolean | undefined>(
+    undefined,
+  );
+
+  useEffect(() => {
+    Api.hasLocalAuth()
+      .then((data) => setHasLocalAuth(data.hasLocalAuth))
+      .catch(console.error);
+  }, []);
+
+  return { hasLocalAuth };
+}
+
 function PasswordForm() {
   const { user } = useRootUser();
+  const { hasLocalAuth } = useLocalAuth();
+  const hasGoogleAuth = !!user?.oauthGoogleRaw;
   const { toast } = useToast();
+  const revalidator = useRevalidator();
 
   const passwordForm = useForm<z.infer<typeof passwordFormSchema>>({
     resolver: zodResolver(passwordFormSchema),
@@ -42,36 +61,77 @@ function PasswordForm() {
 
   async function onPasswordSubmit(values: z.infer<typeof passwordFormSchema>) {
     if (!user) return;
+
+    if (hasLocalAuth) {
+      if (!values.currentPassword) {
+        passwordForm.setError("currentPassword", {
+          type: "manual",
+          message: "Current password is required",
+        });
+        return;
+      }
+
+      try {
+        await Api.changePassword(values.currentPassword, values.newPassword);
+        toast({
+          title: "Password changed",
+          description: "You have successfully changed your password.",
+        });
+
+        passwordForm.reset();
+      } catch (error) {
+        console.error(error);
+        toast({
+          title: "Password change failed",
+          description: "There was an error changing your password.",
+          variant: "destructive",
+        });
+      } finally {
+        revalidator.revalidate();
+      }
+
+      return;
+    }
+
+    if (!hasGoogleAuth) return;
+
     try {
-      await Api.changePassword(values.currentPassword, values.newPassword);
+      await Api.setLocalPassword(values.newPassword);
       toast({
-        title: "Password changed",
-        description: "You have successfully changed your password.",
+        title: "Password set",
+        description: "You have successfully set your password.",
       });
 
       passwordForm.reset();
+
+      window.location.reload();
     } catch (error) {
       console.error(error);
       toast({
-        title: "Password change failed",
-        description: "There was an error changing your password.",
+        title: "Password set failed",
+        description: "There was an error setting your password.",
         variant: "destructive",
       });
+    } finally {
+      revalidator.revalidate();
     }
   }
-
-  const oauthGoogleRaw = user?.oauthGoogleRaw;
-
-  // password 1, oauthGoogleRaw 1 -> both local and google auth
-  // password 1, oauthGoogleRaw 0 -> only local auth
-  // password 0, oauthGoogleRaw 1 -> only google auth
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>Password</CardTitle>
         <CardDescription>
-          Change your password here. After saving, you will be logged out.
+          {hasLocalAuth ? (
+            <>
+              Change your password here. After saving, you will be logged out.
+            </>
+          ) : (
+            <>
+              You are using Google to sign in. You can set a password to support
+              username and password sign in.
+            </>
+          )}
         </CardDescription>
       </CardHeader>
       <Form {...passwordForm}>
@@ -80,19 +140,21 @@ function PasswordForm() {
           className="space-y-2"
         >
           <CardContent className="space-y-2">
-            <FormField
-              control={passwordForm.control}
-              name="currentPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Current password</FormLabel>
-                  <FormControl>
-                    <Input {...field} type="password" autoComplete="off" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {hasLocalAuth && (
+              <FormField
+                control={passwordForm.control}
+                name="currentPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Current password</FormLabel>
+                    <FormControl>
+                      <Input {...field} type="password" autoComplete="off" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
             <FormField
               control={passwordForm.control}
               name="newPassword"

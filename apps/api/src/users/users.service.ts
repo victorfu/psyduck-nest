@@ -99,6 +99,11 @@ export class UsersService {
     });
   }
 
+  async hasLocalAuth(id: number): Promise<boolean> {
+    const user = await this.usersRepository.findOneBy({ id: id });
+    return !!user.password;
+  }
+
   async initializeDefaultAdmin() {
     const userCount = await this.usersRepository.count();
     if (userCount === 0) {

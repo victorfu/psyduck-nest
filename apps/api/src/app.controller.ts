@@ -17,6 +17,7 @@ import { ApiBearerAuth, ApiBody, ApiConsumes } from "@nestjs/swagger";
 import { ChangePasswordDto } from "./auth/dto/change-password.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { FirebaseAdminService } from "./firebase-admin/firebase-admin.service";
+import { SetLocalPasswordDto } from "./auth/dto/set-local-password.dto";
 
 @Controller()
 export class AppController {
@@ -56,6 +57,12 @@ export class AppController {
   @Post("change-password")
   async changePassword(@Request() req, @Body() body: ChangePasswordDto) {
     return await this.authService.changePassword(req.user, body);
+  }
+
+  @ApiBearerAuth()
+  @Post("set-local-password")
+  async setLocalPassword(@Request() req, @Body() body: SetLocalPasswordDto) {
+    return await this.authService.setLocalPassword(req.user, body);
   }
 
   @ApiBearerAuth()

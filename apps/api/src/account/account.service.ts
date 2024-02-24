@@ -9,4 +9,8 @@ export class AccountService {
   update(id: number, updateAccountDto: UpdateAccountDto) {
     return this.usersService.update(id, updateAccountDto);
   }
+
+  hasLocalAuth(id: number) {
+    return this.usersService.hasLocalAuth(id);
+  }
 }

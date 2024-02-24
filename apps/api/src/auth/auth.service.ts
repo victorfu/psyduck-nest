@@ -7,6 +7,7 @@ import * as bcrypt from "bcrypt";
 import { UsersService } from "../users/users.service";
 import { JwtService } from "@nestjs/jwt";
 import { ChangePasswordDto } from "./dto/change-password.dto";
+import { SetLocalPasswordDto } from "./dto/set-local-password.dto";
 
 @Injectable()
 export class AuthService {
@@ -91,5 +92,21 @@ export class AuthService {
 
     await this.usersService.update(userEntity.id, { password: newPassword });
     return { message: "Password updated" };
+  }
+
+  async setLocalPassword(user: any, setLocalPasswordDto: SetLocalPasswordDto) {
+    const userEntity = await this.usersService.findOneByUsername(user.username);
+    if (!userEntity) {
+      throw new NotFoundException("User not found");
+    }
+
+    if (!userEntity.oauthGoogleRaw) {
+      throw new BadRequestException("Only Google OAuth users can set password");
+    }
+
+    await this.usersService.update(userEntity.id, {
+      password: setLocalPasswordDto.newPassword,
+    });
+    return { message: "Password set" };
   }
 }
