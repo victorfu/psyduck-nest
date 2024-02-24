@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from "@nestjs/common";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -9,14 +13,19 @@ import { ConfigService } from "@nestjs/config";
 import {
   BcryptConfig,
   DefaultUserConfig,
+  NodemailerConfig,
+  ServerConfig,
 } from "../config/configuration.interface";
+import { MailerService } from "@/mailer/mailer.service";
+import * as crypto from "crypto";
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
-    private configService: ConfigService,
+    private readonly configService: ConfigService,
+    private readonly mailerService: MailerService,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -26,18 +35,13 @@ export class UsersService {
     }
 
     const bcryptConfig = this.configService.get<BcryptConfig>("bcrypt");
-    const user = new User();
-    user.username = createUserDto.username;
-    user.password = await bcrypt.hash(
-      createUserDto.password,
-      bcryptConfig.saltRounds,
-    );
-    user.email = createUserDto.email;
-    user.firstName = createUserDto.firstName;
-    user.lastName = createUserDto.lastName;
-    if (createUserDto.roles) {
-      user.roles = createUserDto.roles;
+    if (createUserDto.password) {
+      createUserDto.password = await bcrypt.hash(
+        createUserDto.password,
+        bcryptConfig.saltRounds,
+      );
     }
+    const user = await CreateUserDto.toUser(createUserDto);
     return this.usersRepository.save(user);
   }
 
@@ -64,6 +68,19 @@ export class UsersService {
         throw new ConflictException("Username already exists");
       }
     }
+    if (updateUserDto.email) {
+      const found = await this.findOneByEmail(updateUserDto.email);
+      if (found && found.id !== id) {
+        throw new ConflictException("Email already exists");
+      }
+
+      updateUserDto.emailVerified = false;
+      if (updateUserDto.oauthGoogleRaw) {
+        throw new BadRequestException(
+          "Cannot update email for Google OAuth user",
+        );
+      }
+    }
     if (updateUserDto.password) {
       const bcryptConfig = this.configService.get<BcryptConfig>("bcrypt");
       updateUserDto.password = await bcrypt.hash(
@@ -84,6 +101,45 @@ export class UsersService {
       this.configService.get<DefaultUserConfig>("user");
     return this.usersRepository.update(id, {
       password: await bcrypt.hash(defaultPassword, bcryptConfig.saltRounds),
+    });
+  }
+
+  async hasLocalAuth(id: number): Promise<boolean> {
+    const user = await this.usersRepository.findOneBy({ id: id });
+    return !!user.password;
+  }
+
+  async sendVerificationEmail(user: User) {
+    const mailerConfig = this.configService.get<NodemailerConfig>("nodemailer");
+    const serverConfig = this.configService.get<ServerConfig>("server");
+
+    const verificationToken = crypto.randomBytes(16).toString("hex");
+    await this.update(user.id, { emailVerificationToken: verificationToken });
+
+    const verificationUrl = `${serverConfig.protocol}://${serverConfig.host}:${serverConfig.port}/verify-email?token=${verificationToken}`;
+    await this.mailerService.sendMail({
+      from: mailerConfig.user,
+      to: user.email,
+      subject: "Verify Your Email",
+      text: `Please click this link to verify your email: ${verificationUrl}`,
+      html: `Please click this link to verify your email: <a href="${verificationUrl}">${verificationUrl}</a>`,
+    });
+  }
+
+  async verifyEmail(token: string) {
+    if (!token) {
+      throw new BadRequestException("Token is required");
+    }
+    const user = await this.usersRepository.findOneBy({
+      emailVerificationToken: token,
+    });
+    if (!user) {
+      throw new Error("User not found or token is invalid");
+    }
+
+    return this.update(user.id, {
+      emailVerified: true,
+      emailVerificationToken: null,
     });
   }
 

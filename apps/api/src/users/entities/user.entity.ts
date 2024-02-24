@@ -20,8 +20,10 @@ export class User {
   username: string;
 
   @Exclude()
-  @Column()
-  password: string;
+  @Column({
+    nullable: true,
+  })
+  password?: string;
 
   @Column({
     nullable: true,
@@ -32,6 +34,11 @@ export class User {
     nullable: true,
   })
   emailVerified: boolean;
+
+  @Column({
+    nullable: true,
+  })
+  emailVerificationToken: string;
 
   @Column({
     nullable: true,
@@ -55,6 +62,11 @@ export class User {
     nullable: true,
   })
   picture: string;
+
+  @Column({
+    nullable: true,
+  })
+  oauthGoogleRaw: string;
 
   @CreateDateColumn()
   createdAt: Date;

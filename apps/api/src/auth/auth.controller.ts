@@ -3,7 +3,9 @@ import { GoogleOauthGuard } from "./google-auth.guard";
 import { Public } from "../decorators/public.decorator";
 import { AuthService } from "./auth.service";
 import { ConfigService } from "@nestjs/config";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags("auth")
 @Controller("auth")
 export class AuthController {
   constructor(

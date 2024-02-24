@@ -25,6 +25,33 @@ export default class Api {
     return authenticatedFetch<User>("/api/account", "PATCH", user);
   }
 
+  public static async hasLocalAuth() {
+    return authenticatedFetch<{ hasLocalAuth: boolean }>(
+      "/api/account/has-local-auth",
+      "POST",
+    );
+  }
+
+  public static async changePassword(
+    currentPassword: string,
+    newPassword: string,
+  ) {
+    return authenticatedFetch("/api/account/change-password", "POST", {
+      currentPassword,
+      newPassword,
+    });
+  }
+
+  public static async setLocalPassword(newPassword: string) {
+    return authenticatedFetch("/api/account/set-local-password", "POST", {
+      newPassword,
+    });
+  }
+
+  public static async sendVerificationEmail() {
+    return authenticatedFetch("/api/account/send-verification-email", "POST");
+  }
+
   // Users endpoints
   public static async getUsers() {
     return authenticatedFetch<User[]>("/api/users");

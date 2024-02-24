@@ -7,6 +7,7 @@ import * as bcrypt from "bcrypt";
 import { UsersService } from "../users/users.service";
 import { JwtService } from "@nestjs/jwt";
 import { ChangePasswordDto } from "./dto/change-password.dto";
+import { SetLocalPasswordDto } from "./dto/set-local-password.dto";
 
 @Injectable()
 export class AuthService {
@@ -41,7 +42,7 @@ export class AuthService {
   }
 
   async validateGoogleUser(profile: any): Promise<any> {
-    const { id, emails, photos, name } = profile;
+    const { emails, photos, name } = profile;
     const user = await this.usersService.findOneByEmail(emails[0].value);
     if (user) {
       const result = { ...user };
@@ -51,12 +52,12 @@ export class AuthService {
     const newUser = await this.usersService.create({
       username: emails[0].value,
       email: emails[0].value,
-      // TODO: how to handle the password for google users?
-      password: `-1${id}`,
+      emailVerified: true,
       firstName: name.givenName,
       lastName: name.familyName,
       picture: photos[0].value,
       isActive: true,
+      oauthGoogleRaw: profile._raw,
     });
     const result = { ...newUser };
     delete result.password;
@@ -90,5 +91,25 @@ export class AuthService {
 
     await this.usersService.update(userEntity.id, { password: newPassword });
     return { message: "Password updated" };
+  }
+
+  async setLocalPassword(user: any, setLocalPasswordDto: SetLocalPasswordDto) {
+    const userEntity = await this.usersService.findOneByUsername(user.username);
+    if (!userEntity) {
+      throw new NotFoundException("User not found");
+    }
+
+    if (!userEntity.oauthGoogleRaw) {
+      throw new BadRequestException("Only Google OAuth users can set password");
+    }
+
+    await this.usersService.update(userEntity.id, {
+      password: setLocalPasswordDto.newPassword,
+    });
+    return { message: "Password set" };
+  }
+
+  verifyEmail(token: string) {
+    return this.usersService.verifyEmail(token);
   }
 }

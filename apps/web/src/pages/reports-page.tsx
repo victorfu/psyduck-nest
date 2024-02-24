@@ -2,7 +2,7 @@ function ReportsPage() {
   return (
     <div>
       <article className="prose lg:prose-xl">
-        <h1>Reports</h1>
+        <h2>Reports</h2>
       </article>
     </div>
   );
