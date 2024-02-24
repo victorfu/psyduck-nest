@@ -49,7 +49,6 @@ export class AuthService {
       delete result.password;
       return result;
     }
-    console.log(profile);
     const newUser = await this.usersService.create({
       username: emails[0].value,
       email: emails[0].value,
