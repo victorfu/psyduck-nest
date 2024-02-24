@@ -22,6 +22,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useToast } from "@/components/ui/use-toast";
+import { MailCheckIcon, MailQuestionIcon } from "lucide-react";
+import { useRevalidator } from "react-router-dom";
 
 const accountFormSchema = z.object({
   username: z.string(),
@@ -33,14 +35,15 @@ const accountFormSchema = z.object({
 function AccountForm() {
   const { user } = useRootUser();
   const { toast } = useToast();
+  const revalidator = useRevalidator();
 
   const accountForm = useForm<z.infer<typeof accountFormSchema>>({
     resolver: zodResolver(accountFormSchema),
     defaultValues: {
       username: user?.username,
-      email: user?.email ?? undefined,
-      firstName: user?.firstName ?? undefined,
-      lastName: user?.lastName ?? undefined,
+      email: user?.email ?? "",
+      firstName: user?.firstName ?? "",
+      lastName: user?.lastName ?? "",
     },
   });
 
@@ -64,10 +67,25 @@ function AccountForm() {
         description: "There was an error updating your account.",
         variant: "destructive",
       });
+    } finally {
+      revalidator.revalidate();
     }
   }
 
   const oauthGoogleRaw = user?.oauthGoogleRaw;
+
+  const EmailVerification = () => {
+    if (!user?.email) return null;
+    return (
+      <>
+        {!user?.emailVerified ? (
+          <MailQuestionIcon className="w-4 h-4 ml-1 text-red-500" />
+        ) : (
+          <MailCheckIcon className="w-4 h-4 ml-1 text-green-500" />
+        )}
+      </>
+    );
+  };
 
   return (
     <Card>
@@ -99,7 +117,10 @@ function AccountForm() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel className="flex">
+                    Email
+                    <EmailVerification />
+                  </FormLabel>
                   <FormControl>
                     <Input {...field} disabled={!!oauthGoogleRaw} />
                   </FormControl>
