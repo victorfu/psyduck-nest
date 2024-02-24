@@ -38,6 +38,11 @@ export class User {
   @Column({
     nullable: true,
   })
+  emailVerificationToken: string;
+
+  @Column({
+    nullable: true,
+  })
   firstName: string;
 
   @Column({

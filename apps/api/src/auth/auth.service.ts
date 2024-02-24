@@ -108,4 +108,8 @@ export class AuthService {
     });
     return { message: "Password set" };
   }
+
+  verifyEmail(token: string) {
+    return this.usersService.verifyEmail(token);
+  }
 }

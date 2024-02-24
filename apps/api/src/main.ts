@@ -4,13 +4,22 @@ import { ConfigService } from "@nestjs/config";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { getPackageVersion } from "./utils";
 import { ServerConfig, SwaggerConfig } from "./config/configuration.interface";
-import { ValidationPipe } from "@nestjs/common";
+import { RequestMethod, ValidationPipe } from "@nestjs/common";
 import { WsAdapter } from "@nestjs/platform-ws";
 import { UsersService } from "./users/users.service";
+import { NestExpressApplication } from "@nestjs/platform-express";
+import { join } from "path";
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix("api");
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  app.setGlobalPrefix("api", {
+    exclude: [
+      {
+        path: "verify-email",
+        method: RequestMethod.GET,
+      },
+    ],
+  });
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -18,6 +27,8 @@ async function bootstrap() {
     }),
   );
   app.useWebSocketAdapter(new WsAdapter(app));
+  app.setBaseViewsDir(join(__dirname, "..", "views"));
+  app.setViewEngine("hbs");
 
   const configService = app.get(ConfigService);
   const swaggerConfig = configService.get<SwaggerConfig>("swagger");

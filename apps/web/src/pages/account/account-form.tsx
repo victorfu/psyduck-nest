@@ -41,7 +41,7 @@ function AccountForm() {
     resolver: zodResolver(accountFormSchema),
     defaultValues: {
       username: user?.username,
-      email: user?.email ?? "",
+      email: user?.email ?? undefined,
       firstName: user?.firstName ?? "",
       lastName: user?.lastName ?? "",
     },
@@ -77,13 +77,31 @@ function AccountForm() {
   const EmailVerification = () => {
     if (!user?.email) return null;
     return (
-      <>
+      <div
+        className="cursor-pointer"
+        onClick={(event) => {
+          event.preventDefault();
+
+          if (!user?.emailVerified) {
+            Api.sendVerificationEmail().catch(console.error);
+            toast({
+              title: "Email verification sent",
+              description: "Please check your email for a verification link.",
+            });
+          } else {
+            toast({
+              title: "Email already verified",
+              description: "Your email is already verified.",
+            });
+          }
+        }}
+      >
         {!user?.emailVerified ? (
           <MailQuestionIcon className="w-4 h-4 ml-1 text-red-500" />
         ) : (
           <MailCheckIcon className="w-4 h-4 ml-1 text-green-500" />
         )}
-      </>
+      </div>
     );
   };
 

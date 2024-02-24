@@ -4,6 +4,7 @@ import { UsersService } from "./users.service";
 import { Repository } from "typeorm";
 import { User } from "./entities/user.entity";
 import { ConfigService } from "@nestjs/config";
+import { MailerService } from "@/mailer/mailer.service";
 
 const userArray = [
   {
@@ -52,6 +53,12 @@ describe("UserService", () => {
                 };
               return null;
             }),
+          },
+        },
+        {
+          provide: MailerService,
+          useValue: {
+            sendMail: jest.fn(),
           },
         },
       ],

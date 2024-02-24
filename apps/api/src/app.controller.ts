@@ -4,9 +4,10 @@ import {
   Post,
   UseGuards,
   Request,
-  Body,
   UploadedFile,
   UseInterceptors,
+  Query,
+  Render,
 } from "@nestjs/common";
 import { AppService } from "./app.service";
 import { LocalAuthGuard } from "./auth/local-auth.guard";
@@ -14,10 +15,8 @@ import { AuthService } from "./auth/auth.service";
 import { Public } from "./decorators/public.decorator";
 import { UserLoginDto } from "./auth/dto/user-login.dto";
 import { ApiBearerAuth, ApiBody, ApiConsumes } from "@nestjs/swagger";
-import { ChangePasswordDto } from "./auth/dto/change-password.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { FirebaseAdminService } from "./firebase-admin/firebase-admin.service";
-import { SetLocalPasswordDto } from "./auth/dto/set-local-password.dto";
 
 @Controller()
 export class AppController {
@@ -53,16 +52,22 @@ export class AppController {
     return await this.authService.generateToken(req.user);
   }
 
-  @ApiBearerAuth()
-  @Post("change-password")
-  async changePassword(@Request() req, @Body() body: ChangePasswordDto) {
-    return await this.authService.changePassword(req.user, body);
-  }
+  @Public()
+  @Get("verify-email")
+  @Render("verify-email")
+  async verifyEmail(@Query("token") token: string) {
+    try {
+      await this.authService.verifyEmail(token);
+    } catch (error) {
+      console.error(error);
+      return {
+        message: "Failed to verify email. Please try again later.",
+      };
+    }
 
-  @ApiBearerAuth()
-  @Post("set-local-password")
-  async setLocalPassword(@Request() req, @Body() body: SetLocalPasswordDto) {
-    return await this.authService.setLocalPassword(req.user, body);
+    return {
+      message: "Email verified successfully.",
+    };
   }
 
   @ApiBearerAuth()

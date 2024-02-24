@@ -33,6 +33,11 @@ export class CreateUserDto {
   @IsOptional()
   @IsString()
   @ApiProperty()
+  emailVerificationToken?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty()
   firstName?: string;
 
   @IsOptional()

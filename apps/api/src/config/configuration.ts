@@ -2,6 +2,8 @@ export default () => ({
   env: process.env.NODE_ENV || "development",
   server: {
     port: parseInt(process.env.PORT, 10) || 8080,
+    host: process.env.HOST || "localhost",
+    protocol: process.env.PROTOCOL || "http",
   },
   cors: {
     enabled: process.env.CORS_ENABLED === "true",

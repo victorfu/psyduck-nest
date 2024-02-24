@@ -15,14 +15,13 @@ import { JwtAuthGuard } from "./auth/jwt-auth.guard";
 import { RolesGuard } from "./auth/roles.guard";
 import { EventsModule } from "./events/events.module";
 import { FirebaseAdminModule } from "./firebase-admin/firebase-admin.module";
-import { AccountModule } from './account/account.module';
+import { AccountModule } from "./account/account.module";
 
 @Module({
   imports: [
     ServeStaticModule.forRoot({
       // __dirname is dist when using npm start
       rootPath: join(__dirname, "../", "web", "dist"),
-      exclude: ["/api/(.*)"],
     }),
     ConfigModule.forRoot({
       isGlobal: true,

@@ -16,22 +16,6 @@ export default class Api {
     return fetch("/api/version").then((res) => res.json());
   }
 
-  public static async changePassword(
-    currentPassword: string,
-    newPassword: string,
-  ) {
-    return authenticatedFetch("/api/change-password", "POST", {
-      currentPassword,
-      newPassword,
-    });
-  }
-
-  public static async setLocalPassword(newPassword: string) {
-    return authenticatedFetch("/api/set-local-password", "POST", {
-      newPassword,
-    });
-  }
-
   // Account endpoints
   public static async getAccount() {
     return authenticatedFetch<User>("/api/account");
@@ -46,6 +30,26 @@ export default class Api {
       "/api/account/has-local-auth",
       "POST",
     );
+  }
+
+  public static async changePassword(
+    currentPassword: string,
+    newPassword: string,
+  ) {
+    return authenticatedFetch("/api/account/change-password", "POST", {
+      currentPassword,
+      newPassword,
+    });
+  }
+
+  public static async setLocalPassword(newPassword: string) {
+    return authenticatedFetch("/api/account/set-local-password", "POST", {
+      newPassword,
+    });
+  }
+
+  public static async sendVerificationEmail() {
+    return authenticatedFetch("/api/account/send-verification-email", "POST");
   }
 
   // Users endpoints

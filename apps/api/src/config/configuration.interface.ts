@@ -1,5 +1,7 @@
 export interface ServerConfig {
   port: number;
+  host: string;
+  protocol: string;
 }
 
 export interface CorsConfig {
