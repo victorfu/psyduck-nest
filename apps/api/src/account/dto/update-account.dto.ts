@@ -26,4 +26,9 @@ export class UpdateAccountDto {
   @IsString()
   @ApiProperty()
   picture?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty()
+  birthday?: string;
 }

@@ -58,6 +58,6 @@ export class UsersController {
   @Roles(Role.Admin)
   @Post(":id/reset-password")
   resetPassword(@Param("id") id: string) {
-    return this.usersService.resetPassword(+id);
+    return this.usersService.setDefaultPassword(+id);
   }
 }

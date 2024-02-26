@@ -2,13 +2,27 @@ import { authenticatedFetch } from "./authenticated-fetch";
 
 export default class Api {
   // Root endpoints
-  public static async login(username: string, password: string) {
+  public static async login(
+    username: string,
+    password: string,
+    rememberMe: boolean,
+  ) {
     return fetch("/api/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ username, password, rememberMe }),
+    });
+  }
+
+  public static async forgotPassword(email: string) {
+    return fetch("/api/forgot-password", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
     });
   }
 

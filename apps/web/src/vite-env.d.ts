@@ -18,5 +18,6 @@ interface User {
   firstName?: string;
   lastName?: string;
   picture?: string;
+  birthday?: string;
   oauthGoogleRaw?: string;
 }

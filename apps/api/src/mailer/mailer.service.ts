@@ -12,9 +12,15 @@ export class MailerService {
 
     this.transporter = nodemailer.createTransport({
       service: nodemailerConfig.service,
+      // https://github.com/nodemailer/nodemailer/issues/406#issuecomment-83941225
+      // TODO: use secure: true in production
+      secure: false,
       auth: {
         user: nodemailerConfig.user,
         pass: nodemailerConfig.pass,
+      },
+      tls: {
+        rejectUnauthorized: false,
       },
     });
   }

@@ -18,6 +18,14 @@ async function bootstrap() {
         path: "verify-email",
         method: RequestMethod.GET,
       },
+      {
+        path: "reset-password",
+        method: RequestMethod.GET,
+      },
+      {
+        path: "reset-password",
+        method: RequestMethod.POST,
+      },
     ],
   });
   app.useGlobalPipes(

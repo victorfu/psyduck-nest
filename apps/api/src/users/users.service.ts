@@ -95,7 +95,7 @@ export class UsersService {
     await this.usersRepository.delete(id);
   }
 
-  async resetPassword(id: number) {
+  async setDefaultPassword(id: number) {
     const bcryptConfig = this.configService.get<BcryptConfig>("bcrypt");
     const { defaultPassword } =
       this.configService.get<DefaultUserConfig>("user");
@@ -111,18 +111,56 @@ export class UsersService {
 
   async sendVerificationEmail(user: User) {
     const mailerConfig = this.configService.get<NodemailerConfig>("nodemailer");
-    const serverConfig = this.configService.get<ServerConfig>("server");
+    const appUrl = this.configService.get<ServerConfig>("appUrl");
 
     const verificationToken = crypto.randomBytes(16).toString("hex");
     await this.update(user.id, { emailVerificationToken: verificationToken });
 
-    const verificationUrl = `${serverConfig.protocol}://${serverConfig.host}:${serverConfig.port}/verify-email?token=${verificationToken}`;
+    const verificationUrl = `${appUrl}/verify-email?token=${verificationToken}`;
     await this.mailerService.sendMail({
       from: mailerConfig.user,
       to: user.email,
       subject: "Verify Your Email",
       text: `Please click this link to verify your email: ${verificationUrl}`,
       html: `Please click this link to verify your email: <a href="${verificationUrl}">${verificationUrl}</a>`,
+    });
+  }
+
+  async sendPasswordResetEmail(user: User) {
+    const mailerConfig = this.configService.get<NodemailerConfig>("nodemailer");
+    const appUrl = this.configService.get<ServerConfig>("appUrl");
+
+    const resetToken = crypto.randomBytes(16).toString("hex");
+    const expirationDate = new Date();
+    expirationDate.setMinutes(expirationDate.getMinutes() + 10);
+    await this.update(user.id, {
+      passwordResetToken: resetToken,
+      passwordResetTokenExpiration: expirationDate,
+    });
+
+    const resetUrl = `${appUrl}/reset-password?token=${resetToken}`;
+    await this.mailerService.sendMail({
+      from: mailerConfig.user,
+      to: user.email,
+      subject: "Reset Your Password",
+      text: `Please click this link to reset your password: ${resetUrl}`,
+      html: `Please click this link to reset your password: <a href="${resetUrl}">${resetUrl}</a>`,
+    });
+  }
+
+  async resetPassword(token: string, newPassword: string) {
+    const user = await this.usersRepository.findOneBy({
+      passwordResetToken: token,
+    });
+
+    if (!user || user.passwordResetTokenExpiration < new Date()) {
+      throw new BadRequestException("Invalid or expired token");
+    }
+
+    return this.update(user.id, {
+      password: newPassword,
+      passwordResetToken: null,
+      passwordResetTokenExpiration: null,
     });
   }
 

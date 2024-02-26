@@ -7,8 +7,6 @@ import { Dialog, Menu, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
   BellIcon,
-  CalendarIcon,
-  ChartPieIcon,
   FolderIcon,
   HomeIcon,
   UsersIcon,
@@ -49,18 +47,6 @@ function Layout() {
       href: "/workspaces",
       icon: FolderIcon,
       current: pathname === "/workspaces",
-    },
-    {
-      name: "Calendar",
-      href: "/calendar",
-      icon: CalendarIcon,
-      current: pathname === "/calendar",
-    },
-    {
-      name: "Reports",
-      href: "/reports",
-      icon: ChartPieIcon,
-      current: pathname === "/reports",
     },
   ];
 

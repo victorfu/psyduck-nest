@@ -8,6 +8,7 @@ import {
   UseInterceptors,
   Query,
   Render,
+  Body,
 } from "@nestjs/common";
 import { AppService } from "./app.service";
 import { LocalAuthGuard } from "./auth/local-auth.guard";
@@ -17,12 +18,14 @@ import { UserLoginDto } from "./auth/dto/user-login.dto";
 import { ApiBearerAuth, ApiBody, ApiConsumes } from "@nestjs/swagger";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { FirebaseAdminService } from "./firebase-admin/firebase-admin.service";
+import { UsersService } from "./users/users.service";
 
 @Controller()
 export class AppController {
   constructor(
     private readonly appService: AppService,
     private readonly authService: AuthService,
+    private readonly usersService: UsersService,
     private readonly firebaseAdminService: FirebaseAdminService,
   ) {}
 
@@ -53,21 +56,9 @@ export class AppController {
   }
 
   @Public()
-  @Get("verify-email")
-  @Render("verify-email")
-  async verifyEmail(@Query("token") token: string) {
-    try {
-      await this.authService.verifyEmail(token);
-    } catch (error) {
-      console.error(error);
-      return {
-        message: "Failed to verify email. Please try again later.",
-      };
-    }
-
-    return {
-      message: "Email verified successfully.",
-    };
+  @Post("forgot-password")
+  async forgotPassword(@Body("email") email: string) {
+    return await this.authService.forgotPassword(email);
   }
 
   @ApiBearerAuth()
@@ -92,5 +83,52 @@ export class AppController {
       `${timestamp}-${file.originalname}`,
     );
     return { url };
+  }
+
+  // Views
+  @Public()
+  @Get("reset-password")
+  @Render("reset-password")
+  async resetPasswordPage(@Query("token") token: string) {
+    return { token };
+  }
+
+  @Public()
+  @Post("reset-password")
+  @Render("reset-password-result")
+  async resetPassword(
+    @Body("token") token: string,
+    @Body("password") password: string,
+  ) {
+    try {
+      await this.authService.resetPassword(token, password);
+    } catch (error) {
+      console.error(error);
+      return {
+        error: "Failed to reset password.",
+      };
+    }
+
+    return {
+      message: "Password reset successfully.",
+    };
+  }
+
+  @Public()
+  @Get("verify-email")
+  @Render("verify-email")
+  async verifyEmailPage(@Query("token") token: string) {
+    try {
+      await this.usersService.verifyEmail(token);
+    } catch (error) {
+      console.error(error);
+      return {
+        message: "Failed to verify email. Please try again later.",
+      };
+    }
+
+    return {
+      message: "Email verified successfully.",
+    };
   }
 }

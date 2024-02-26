@@ -35,10 +35,23 @@ export class User {
   })
   emailVerified: boolean;
 
+  @Exclude()
   @Column({
     nullable: true,
   })
   emailVerificationToken: string;
+
+  @Exclude()
+  @Column({
+    nullable: true,
+  })
+  passwordResetToken: string;
+
+  @Exclude()
+  @Column({
+    nullable: true,
+  })
+  passwordResetTokenExpiration: Date;
 
   @Column({
     nullable: true,
@@ -62,6 +75,11 @@ export class User {
     nullable: true,
   })
   picture: string;
+
+  @Column({
+    nullable: true,
+  })
+  birthday: string;
 
   @Column({
     nullable: true,

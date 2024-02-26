@@ -1,11 +1,16 @@
 import { LoaderFunctionArgs, redirect } from "react-router-dom";
 import localForage from "localforage";
 import Api from "./lib/api";
+import { z } from "zod";
 
 interface AuthProvider {
   isAuthenticated: boolean;
   user: User | null;
-  signin(username: string, password: string): Promise<void>;
+  signin(
+    username: string,
+    password: string,
+    rememberMe: boolean,
+  ): Promise<void>;
   signinWithToken(): Promise<void>;
   signout(): Promise<void>;
 }
@@ -18,9 +23,9 @@ export const authProvider: AuthProvider = {
   isAuthenticated: false,
   user: null,
 
-  async signin(username: string, password: string) {
+  async signin(username: string, password: string, rememberMe: boolean) {
     try {
-      const response = await Api.login(username, password);
+      const response = await Api.login(username, password, rememberMe);
       if (response.ok) {
         const responseJson = (await response.json()) as TokenResponse;
         const { access_token } = responseJson;
@@ -75,9 +80,10 @@ export async function loginAction({ request }: LoaderFunctionArgs) {
       error: "You must provide a password to log in",
     };
   }
+  const rememberMe = formData.get("remember-me") === "on";
 
   try {
-    await authProvider.signin(username, password);
+    await authProvider.signin(username, password, rememberMe);
   } catch (error) {
     return {
       error:
@@ -120,5 +126,41 @@ export async function rootLoader() {
   if (!authProvider.isAuthenticated) return redirect("/login");
   return {
     user: authProvider.user,
+  };
+}
+
+export async function forgotPasswordAction({ request }: LoaderFunctionArgs) {
+  const formData = await request.formData();
+  const email = formData.get("email") as string | null;
+
+  if (!email) {
+    return {
+      error: "You must provide an email to reset your password.",
+    };
+  }
+
+  const emailSchema = z.string().email();
+  const { success } = emailSchema.safeParse(email);
+  if (!success) {
+    return {
+      error: "You must provide a valid email address.",
+    };
+  }
+
+  try {
+    const result = await Api.forgotPassword(email);
+    if (result.ok) {
+      return {
+        message:
+          "An email has been sent with instructions to reset your password.",
+      };
+    }
+  } catch (error) {
+    // ignore
+  }
+
+  return {
+    error:
+      "There was an error sending the password reset email. Please try again.",
   };
 }
