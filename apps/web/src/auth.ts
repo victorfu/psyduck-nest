@@ -5,7 +5,11 @@ import Api from "./lib/api";
 interface AuthProvider {
   isAuthenticated: boolean;
   user: User | null;
-  signin(username: string, password: string): Promise<void>;
+  signin(
+    username: string,
+    password: string,
+    rememberMe: boolean,
+  ): Promise<void>;
   signinWithToken(): Promise<void>;
   signout(): Promise<void>;
 }
@@ -18,9 +22,9 @@ export const authProvider: AuthProvider = {
   isAuthenticated: false,
   user: null,
 
-  async signin(username: string, password: string) {
+  async signin(username: string, password: string, rememberMe: boolean) {
     try {
-      const response = await Api.login(username, password);
+      const response = await Api.login(username, password, rememberMe);
       if (response.ok) {
         const responseJson = (await response.json()) as TokenResponse;
         const { access_token } = responseJson;
@@ -75,9 +79,10 @@ export async function loginAction({ request }: LoaderFunctionArgs) {
       error: "You must provide a password to log in",
     };
   }
+  const rememberMe = formData.get("remember-me") === "on";
 
   try {
-    await authProvider.signin(username, password);
+    await authProvider.signin(username, password, rememberMe);
   } catch (error) {
     return {
       error:
