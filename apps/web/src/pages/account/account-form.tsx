@@ -22,14 +22,23 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useToast } from "@/components/ui/use-toast";
-import { MailCheckIcon, MailQuestionIcon } from "lucide-react";
+import { CalendarIcon, MailCheckIcon, MailQuestionIcon } from "lucide-react";
 import { useRevalidator } from "react-router-dom";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
+import { twMerge } from "tailwind-merge";
 
 const accountFormSchema = z.object({
   username: z.string(),
   email: z.string().email().optional(),
   firstName: z.string().optional(),
   lastName: z.string().optional(),
+  birthday: z.date().optional(),
 });
 
 function AccountForm() {
@@ -44,6 +53,7 @@ function AccountForm() {
       email: user?.email ?? undefined,
       firstName: user?.firstName ?? "",
       lastName: user?.lastName ?? "",
+      birthday: user?.birthday ? new Date(user.birthday) : undefined,
     },
   });
 
@@ -53,6 +63,7 @@ function AccountForm() {
       email: values.email,
       firstName: values.firstName,
       lastName: values.lastName,
+      birthday: values.birthday?.toISOString().split("T")[0] ?? undefined,
     };
     try {
       await Api.updateAccount(noUsernameValues);
@@ -168,6 +179,47 @@ function AccountForm() {
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={accountForm.control}
+              name="birthday"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Date of birth</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={twMerge(
+                            "w-[240px] pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground",
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) =>
+                          date > new Date() || date < new Date("1900-01-01")
+                        }
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
                   <FormMessage />
                 </FormItem>
               )}

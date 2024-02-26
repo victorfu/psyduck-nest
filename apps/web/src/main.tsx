@@ -17,6 +17,7 @@ import SettingsPage from "./pages/settings/page.tsx";
 import Layout from "./layout.tsx";
 import { loadUsers } from "./lib/loaders.ts";
 import AuthSuccessPage from "./pages/auth-success-page.tsx";
+import ForgotPasswordPage from "./pages/forgot-password-page.tsx";
 import { CookiesProvider } from "react-cookie";
 
 const router = createBrowserRouter([
@@ -71,6 +72,10 @@ const router = createBrowserRouter([
         <AuthSuccessPage />
       </CookiesProvider>
     ),
+  },
+  {
+    path: "forgot-password",
+    element: <ForgotPasswordPage />,
   },
 ]);
 

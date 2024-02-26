@@ -66,6 +66,11 @@ export class User {
   @Column({
     nullable: true,
   })
+  birthday: string;
+
+  @Column({
+    nullable: true,
+  })
   oauthGoogleRaw: string;
 
   @CreateDateColumn()
