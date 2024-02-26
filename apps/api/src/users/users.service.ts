@@ -157,9 +157,8 @@ export class UsersService {
       throw new BadRequestException("Invalid or expired token");
     }
 
-    const bcryptConfig = this.configService.get<BcryptConfig>("bcrypt");
     return this.update(user.id, {
-      password: await bcrypt.hash(newPassword, bcryptConfig.saltRounds),
+      password: newPassword,
       passwordResetToken: null,
       passwordResetTokenExpiration: null,
     });

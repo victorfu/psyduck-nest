@@ -61,33 +61,6 @@ export class AppController {
     return await this.authService.forgotPassword(email);
   }
 
-  @Public()
-  @Post("reset-password")
-  async resetPassword(
-    @Body("token") token: string,
-    @Body("password") password: string,
-  ) {
-    return await this.authService.resetPassword(token, password);
-  }
-
-  @Public()
-  @Get("verify-email")
-  @Render("verify-email")
-  async verifyEmail(@Query("token") token: string) {
-    try {
-      await this.usersService.verifyEmail(token);
-    } catch (error) {
-      console.error(error);
-      return {
-        message: "Failed to verify email. Please try again later.",
-      };
-    }
-
-    return {
-      message: "Email verified successfully.",
-    };
-  }
-
   @ApiBearerAuth()
   @ApiConsumes("multipart/form-data")
   @ApiBody({
@@ -110,5 +83,52 @@ export class AppController {
       `${timestamp}-${file.originalname}`,
     );
     return { url };
+  }
+
+  // Views
+  @Public()
+  @Get("reset-password")
+  @Render("reset-password")
+  async resetPasswordPage(@Query("token") token: string) {
+    return { token };
+  }
+
+  @Public()
+  @Post("reset-password")
+  @Render("reset-password-result")
+  async resetPassword(
+    @Body("token") token: string,
+    @Body("password") password: string,
+  ) {
+    try {
+      await this.authService.resetPassword(token, password);
+    } catch (error) {
+      console.error(error);
+      return {
+        error: "Failed to reset password.",
+      };
+    }
+
+    return {
+      message: "Password reset successfully.",
+    };
+  }
+
+  @Public()
+  @Get("verify-email")
+  @Render("verify-email")
+  async verifyEmailPage(@Query("token") token: string) {
+    try {
+      await this.usersService.verifyEmail(token);
+    } catch (error) {
+      console.error(error);
+      return {
+        message: "Failed to verify email. Please try again later.",
+      };
+    }
+
+    return {
+      message: "Email verified successfully.",
+    };
   }
 }
