@@ -13,8 +13,6 @@ import AccountPage from "./pages/account/page.tsx";
 import LoginPage from "./pages/login-page.tsx";
 import ErrorPage from "./pages/error-page.tsx";
 import WorkspacePage from "./pages/workspace/page.tsx";
-import CalendarPage from "./pages/calendar-page.tsx";
-import ReportsPage from "./pages/reports-page.tsx";
 import SettingsPage from "./pages/settings/page.tsx";
 import Layout from "./layout.tsx";
 import { loadUsers } from "./lib/loaders.ts";
@@ -42,14 +40,6 @@ const router = createBrowserRouter([
       {
         path: "workspaces",
         element: <WorkspacePage />,
-      },
-      {
-        path: "calendar",
-        element: <CalendarPage />,
-      },
-      {
-        path: "reports",
-        element: <ReportsPage />,
       },
       {
         path: "account",
