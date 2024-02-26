@@ -3,6 +3,7 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { AuthService } from "./auth/auth.service";
 import { FirebaseAdminService } from "./firebase-admin/firebase-admin.service";
+import { UsersService } from "./users/users.service";
 
 describe("AppController", () => {
   let appController: AppController;
@@ -29,6 +30,13 @@ describe("AppController", () => {
           provide: FirebaseAdminService,
           useValue: {
             uploadFile: jest.fn().mockResolvedValue("url"),
+          },
+        },
+        {
+          provide: UsersService,
+          useValue: {
+            findOneByEmail: jest.fn().mockResolvedValue(null),
+            create: jest.fn().mockResolvedValue({}),
           },
         },
       ],

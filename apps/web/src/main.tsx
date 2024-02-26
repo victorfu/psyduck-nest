@@ -6,7 +6,13 @@ import {
   redirect,
   RouterProvider,
 } from "react-router-dom";
-import { authProvider, loginAction, loginLoader, rootLoader } from "./auth.ts";
+import {
+  authProvider,
+  forgotPasswordAction,
+  loginAction,
+  loginLoader,
+  rootLoader,
+} from "./auth.ts";
 import DashboardPage from "./pages/dashboard/page.tsx";
 import UserPage from "./pages/user/page.tsx";
 import AccountPage from "./pages/account/page.tsx";
@@ -75,6 +81,7 @@ const router = createBrowserRouter([
   },
   {
     path: "forgot-password",
+    action: forgotPasswordAction,
     element: <ForgotPasswordPage />,
   },
 ]);

@@ -8,6 +8,7 @@ import {
   UseInterceptors,
   Query,
   Render,
+  Body,
 } from "@nestjs/common";
 import { AppService } from "./app.service";
 import { LocalAuthGuard } from "./auth/local-auth.guard";
@@ -17,12 +18,14 @@ import { UserLoginDto } from "./auth/dto/user-login.dto";
 import { ApiBearerAuth, ApiBody, ApiConsumes } from "@nestjs/swagger";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { FirebaseAdminService } from "./firebase-admin/firebase-admin.service";
+import { UsersService } from "./users/users.service";
 
 @Controller()
 export class AppController {
   constructor(
     private readonly appService: AppService,
     private readonly authService: AuthService,
+    private readonly usersService: UsersService,
     private readonly firebaseAdminService: FirebaseAdminService,
   ) {}
 
@@ -53,11 +56,26 @@ export class AppController {
   }
 
   @Public()
+  @Post("forgot-password")
+  async forgotPassword(@Body("email") email: string) {
+    return await this.authService.forgotPassword(email);
+  }
+
+  @Public()
+  @Post("reset-password")
+  async resetPassword(
+    @Body("token") token: string,
+    @Body("password") password: string,
+  ) {
+    return await this.authService.resetPassword(token, password);
+  }
+
+  @Public()
   @Get("verify-email")
   @Render("verify-email")
   async verifyEmail(@Query("token") token: string) {
     try {
-      await this.authService.verifyEmail(token);
+      await this.usersService.verifyEmail(token);
     } catch (error) {
       console.error(error);
       return {

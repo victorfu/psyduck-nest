@@ -8,6 +8,7 @@ import { UsersService } from "../users/users.service";
 import { JwtService } from "@nestjs/jwt";
 import { ChangePasswordDto } from "./dto/change-password.dto";
 import { SetLocalPasswordDto } from "./dto/set-local-password.dto";
+import { User } from "@/users/entities/user.entity";
 
 @Injectable()
 export class AuthService {
@@ -16,6 +17,15 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
+  private removeSensitiveData(user: User) {
+    const result = { ...user };
+    delete result.password;
+    delete result.emailVerificationToken;
+    delete result.passwordResetToken;
+    delete result.passwordResetTokenExpiration;
+    return result;
+  }
+
   async validateUser(username: string, pass: string): Promise<any> {
     const user = await this.usersService.findOneByUsername(username);
     if (
@@ -23,9 +33,7 @@ export class AuthService {
       (await bcrypt.compare(pass, user.password)) &&
       user.isActive === true
     ) {
-      const result = { ...user };
-      delete result.password;
-      return result;
+      return this.removeSensitiveData(user);
     }
     return null;
   }
@@ -34,9 +42,7 @@ export class AuthService {
     const { sub: username } = token;
     const user = await this.usersService.findOneByUsername(username);
     if (user && user.isActive === true) {
-      const result = { ...user };
-      delete result.password;
-      return result;
+      return this.removeSensitiveData(user);
     }
     return null;
   }
@@ -109,7 +115,15 @@ export class AuthService {
     return { message: "Password set" };
   }
 
-  verifyEmail(token: string) {
-    return this.usersService.verifyEmail(token);
+  async forgotPassword(email: string) {
+    const user = await this.usersService.findOneByEmail(email);
+    if (!user) {
+      return;
+    }
+    return this.usersService.sendPasswordResetEmail(user);
+  }
+
+  async resetPassword(token: string, newPassword: string) {
+    return this.usersService.resetPassword(token, newPassword);
   }
 }

@@ -16,6 +16,16 @@ export default class Api {
     });
   }
 
+  public static async forgotPassword(email: string) {
+    return fetch("/api/forgot-password", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    });
+  }
+
   public static async version(): Promise<{ version: string }> {
     return fetch("/api/version").then((res) => res.json());
   }

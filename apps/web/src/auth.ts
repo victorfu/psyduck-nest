@@ -1,6 +1,7 @@
 import { LoaderFunctionArgs, redirect } from "react-router-dom";
 import localForage from "localforage";
 import Api from "./lib/api";
+import { z } from "zod";
 
 interface AuthProvider {
   isAuthenticated: boolean;
@@ -125,5 +126,41 @@ export async function rootLoader() {
   if (!authProvider.isAuthenticated) return redirect("/login");
   return {
     user: authProvider.user,
+  };
+}
+
+export async function forgotPasswordAction({ request }: LoaderFunctionArgs) {
+  const formData = await request.formData();
+  const email = formData.get("email") as string | null;
+
+  if (!email) {
+    return {
+      error: "You must provide an email to reset your password.",
+    };
+  }
+
+  const emailSchema = z.string().email();
+  const { success } = emailSchema.safeParse(email);
+  if (!success) {
+    return {
+      error: "You must provide a valid email address.",
+    };
+  }
+
+  try {
+    const result = await Api.forgotPassword(email);
+    if (result.ok) {
+      return {
+        message:
+          "An email has been sent with instructions to reset your password.",
+      };
+    }
+  } catch (error) {
+    // ignore
+  }
+
+  return {
+    error:
+      "There was an error sending the password reset email. Please try again.",
   };
 }

@@ -7,4 +7,18 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsString()
   @ApiProperty()
   birthday?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty()
+  emailVerificationToken?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty()
+  passwordResetToken?: string;
+
+  @IsOptional()
+  @ApiProperty()
+  passwordResetTokenExpiration?: Date;
 }

@@ -1,4 +1,13 @@
-import { Controller, Get, Body, Patch, Request, Post } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  Body,
+  Patch,
+  Request,
+  Post,
+  ClassSerializerInterceptor,
+  UseInterceptors,
+} from "@nestjs/common";
 import { AccountService } from "./account.service";
 import { UpdateAccountDto } from "./dto/update-account.dto";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
@@ -14,6 +23,7 @@ export class AccountController {
     private readonly authService: AuthService,
   ) {}
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @ApiBearerAuth()
   @Get()
   get(@Request() req) {
