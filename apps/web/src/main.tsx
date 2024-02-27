@@ -21,7 +21,7 @@ import ErrorPage from "./pages/error-page.tsx";
 import WorkspacePage from "./pages/workspace/page.tsx";
 import SettingsPage from "./pages/settings/page.tsx";
 import Layout from "./layout.tsx";
-import { loadUsers, loadWorkspaces } from "./lib/loaders.ts";
+import { loadDashboard, loadUsers, loadWorkspaces } from "./lib/loaders.ts";
 import AuthSuccessPage from "./pages/auth-success-page.tsx";
 import ForgotPasswordPage from "./pages/forgot-password-page.tsx";
 import { CookiesProvider } from "react-cookie";
@@ -37,6 +37,7 @@ const router = createBrowserRouter([
       { index: true, element: <Navigate to="/dashboard" replace /> },
       {
         path: "dashboard",
+        loader: loadDashboard,
         element: <DashboardPage />,
       },
       {
