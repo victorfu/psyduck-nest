@@ -62,25 +62,34 @@ export class UsersService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
-    if (updateUserDto.username) {
-      const found = await this.findOneByUsername(updateUserDto.username);
-      if (found && found.id !== id) {
-        throw new ConflictException("Username already exists");
-      }
+    const origin = await this.findOne(id);
+    if (!origin) {
+      throw new BadRequestException("User not found");
     }
-    if (updateUserDto.email) {
-      const found = await this.findOneByEmail(updateUserDto.email);
-      if (found && found.id !== id) {
-        throw new ConflictException("Email already exists");
-      }
 
-      updateUserDto.emailVerified = false;
-      if (updateUserDto.oauthGoogleRaw) {
-        throw new BadRequestException(
-          "Cannot update email for Google OAuth user",
-        );
+    if (updateUserDto.username) {
+      throw new BadRequestException("Cannot update username");
+    }
+
+    if (updateUserDto.email) {
+      if (updateUserDto.email !== origin.email) {
+        const found = await this.findOneByEmail(updateUserDto.email);
+        if (found && found.id !== id) {
+          throw new ConflictException("Email already exists");
+        }
+        if (updateUserDto.oauthGoogleRaw) {
+          throw new BadRequestException(
+            "Cannot update email for Google OAuth user",
+          );
+        }
+        if (origin.email !== updateUserDto.email) {
+          updateUserDto.emailVerified = false;
+        }
+      } else {
+        delete updateUserDto.email;
       }
     }
+
     if (updateUserDto.password) {
       const bcryptConfig = this.configService.get<BcryptConfig>("bcrypt");
       updateUserDto.password = await bcrypt.hash(
@@ -88,7 +97,15 @@ export class UsersService {
         bcryptConfig.saltRounds,
       );
     }
-    return this.usersRepository.update(id, updateUserDto);
+
+    const updatePayload = {};
+    Object.keys(updateUserDto).forEach((key) => {
+      if (updateUserDto[key] !== origin[key]) {
+        updatePayload[key] = updateUserDto[key];
+      }
+    });
+
+    return this.usersRepository.update(id, updatePayload);
   }
 
   async remove(id: number): Promise<void> {

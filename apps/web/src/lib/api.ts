@@ -66,6 +66,13 @@ export default class Api {
     return authenticatedFetch("/api/account/send-verification-email", "POST");
   }
 
+  public static async uploadPicture(file: File) {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    return authenticatedFetch("/api/account/picture", "POST", formData, false);
+  }
+
   // Users endpoints
   public static async getUsers() {
     return authenticatedFetch<User[]>("/api/users");

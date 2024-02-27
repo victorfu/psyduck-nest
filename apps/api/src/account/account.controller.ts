@@ -7,13 +7,16 @@ import {
   Post,
   ClassSerializerInterceptor,
   UseInterceptors,
+  UploadedFile,
 } from "@nestjs/common";
 import { AccountService } from "./account.service";
 import { UpdateAccountDto } from "./dto/update-account.dto";
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from "@nestjs/swagger";
 import { ChangePasswordDto } from "@/auth/dto/change-password.dto";
 import { SetLocalPasswordDto } from "@/auth/dto/set-local-password.dto";
 import { AuthService } from "@/auth/auth.service";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { FirebaseAdminService } from "@/firebase-admin/firebase-admin.service";
 
 @ApiTags("account")
 @Controller("account")
@@ -21,6 +24,7 @@ export class AccountController {
   constructor(
     private readonly accountService: AccountService,
     private readonly authService: AuthService,
+    private readonly firebaseAdminService: FirebaseAdminService,
   ) {}
 
   @UseInterceptors(ClassSerializerInterceptor)
@@ -60,5 +64,30 @@ export class AccountController {
   @Post("set-local-password")
   async setLocalPassword(@Request() req, @Body() body: SetLocalPasswordDto) {
     return await this.authService.setLocalPassword(req.user, body);
+  }
+
+  @ApiBearerAuth()
+  @ApiConsumes("multipart/form-data")
+  @ApiBody({
+    schema: {
+      type: "object",
+      properties: {
+        file: {
+          type: "string",
+          format: "binary",
+        },
+      },
+    },
+  })
+  @Post("picture")
+  @UseInterceptors(FileInterceptor("file"))
+  async picture(@Request() req, @UploadedFile() file: Express.Multer.File) {
+    const timestamp = new Date().getTime();
+    const url = await this.firebaseAdminService.uploadFile(
+      file,
+      `${timestamp}.${file.originalname.split(".").pop()}`,
+    );
+    await this.accountService.update(req.user.id, { picture: url });
+    return { url };
   }
 }

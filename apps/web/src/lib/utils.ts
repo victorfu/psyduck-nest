@@ -37,3 +37,11 @@ export async function copyToClipboard(text?: string): Promise<void> {
     console.error("Failed to copy to clipboard: ", err);
   }
 }
+
+export const toBase64 = (file: File) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+  });

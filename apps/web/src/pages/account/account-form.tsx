@@ -32,6 +32,7 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { twMerge } from "tailwind-merge";
+import AccountPicture from "./account-picture";
 
 const accountFormSchema = z.object({
   username: z.string(),
@@ -39,6 +40,15 @@ const accountFormSchema = z.object({
   firstName: z.string().optional(),
   lastName: z.string().optional(),
   birthday: z.date().optional(),
+  picture: z
+    // .union([z.instanceof(File), z.string()])
+    .any()
+    .refine((data) => {
+      if (typeof data === "string") return data.startsWith("http");
+      if (data instanceof File) return data.type.startsWith("image/");
+      return false;
+    })
+    .optional(),
 });
 
 function AccountForm() {
@@ -54,23 +64,30 @@ function AccountForm() {
       firstName: user?.firstName ?? "",
       lastName: user?.lastName ?? "",
       birthday: user?.birthday ? new Date(user.birthday) : undefined,
+      picture: user?.picture ?? undefined,
     },
   });
 
   async function onAccountSubmit(values: z.infer<typeof accountFormSchema>) {
     if (!user) return;
+
     const noUsernameValues = {
       email: values.email,
       firstName: values.firstName,
       lastName: values.lastName,
       birthday: values.birthday?.toISOString().split("T")[0] ?? undefined,
     };
+
     try {
       await Api.updateAccount(noUsernameValues);
+      if (values.picture && values.picture instanceof File) {
+        await Api.uploadPicture(values.picture);
+      }
       toast({
         title: "Account updated",
         description: "You have successfully updated your account.",
       });
+      revalidator.revalidate();
     } catch (error) {
       console.error(error);
       toast({
@@ -78,8 +95,6 @@ function AccountForm() {
         description: "There was an error updating your account.",
         variant: "destructive",
       });
-    } finally {
-      revalidator.revalidate();
     }
   }
 
@@ -220,6 +235,24 @@ function AccountForm() {
                       />
                     </PopoverContent>
                   </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={accountForm.control}
+              name="picture"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Profile picture</FormLabel>
+                  <AccountPicture
+                    value={field.value}
+                    fallback={user?.username?.slice(0, 2).toUpperCase() ?? ""}
+                    onChange={(file) => {
+                      field.onChange(file);
+                    }}
+                  />
                   <FormMessage />
                 </FormItem>
               )}
