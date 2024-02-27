@@ -1,9 +1,12 @@
+import { useLoaderData } from "react-router-dom";
+import { WorkspaceTable } from "./workspace-table";
+
 function WorkspacePage() {
+  const { workspaces } = useLoaderData() as { workspaces: Workspace[] };
+
   return (
     <div>
-      <div className="prose lg:prose-xl">
-        <h2>Workspace</h2>
-      </div>
+      <WorkspaceTable workspaces={workspaces} />
     </div>
   );
 }

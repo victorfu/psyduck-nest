@@ -16,6 +16,7 @@ import { RolesGuard } from "./auth/roles.guard";
 import { EventsModule } from "./events/events.module";
 import { FirebaseAdminModule } from "./firebase-admin/firebase-admin.module";
 import { AccountModule } from "./account/account.module";
+import { WorkspacesModule } from "./workspaces/workspaces.module";
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { AccountModule } from "./account/account.module";
     EventsModule,
     FirebaseAdminModule,
     AccountModule,
+    WorkspacesModule,
   ],
   controllers: [AppController],
   providers: [

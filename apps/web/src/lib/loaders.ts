@@ -8,3 +8,12 @@ export async function loadUsers() {
     return { users: [] };
   }
 }
+
+export async function loadWorkspaces() {
+  try {
+    const workspaces = await Api.getWorkspaces();
+    return { workspaces };
+  } catch (error) {
+    return { workspaces: [] };
+  }
+}

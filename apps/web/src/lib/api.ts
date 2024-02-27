@@ -89,4 +89,28 @@ export default class Api {
   public static async resetPassword(id: number) {
     return authenticatedFetch(`/api/users/${id}/reset-password`, "POST");
   }
+
+  // Workspaces endpoints
+  public static async getWorkspaces() {
+    return authenticatedFetch<Workspace[]>("/api/workspaces");
+  }
+
+  public static async createWorkspace(workspace: Partial<Workspace>) {
+    return authenticatedFetch<Workspace>("/api/workspaces", "POST", workspace);
+  }
+
+  public static async updateWorkspace(
+    id: number,
+    workspace: Partial<Workspace>,
+  ) {
+    return authenticatedFetch<Workspace>(
+      `/api/workspaces/${id}`,
+      "PATCH",
+      workspace,
+    );
+  }
+
+  public static async deleteWorkspace(id: number) {
+    return authenticatedFetch(`/api/workspaces/${id}`, "DELETE");
+  }
 }
