@@ -96,12 +96,18 @@ export class AppController {
   @Public()
   @Post("reset-password")
   @Render("reset-password-result")
-  async resetPassword(
+  async resetPasswordAction(
     @Body("token") token: string,
-    @Body("password") password: string,
+    @Body("newPassword") newPassword: string,
+    @Body("confirmPassword") confirmPassword: string,
   ) {
+    if (newPassword !== confirmPassword) {
+      return {
+        error: "Passwords do not match.",
+      };
+    }
     try {
-      await this.authService.resetPassword(token, password);
+      await this.authService.resetPassword(token, newPassword);
     } catch (error) {
       console.error(error);
       return {
