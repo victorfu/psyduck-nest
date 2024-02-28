@@ -9,20 +9,14 @@ import {
 
 @Entity()
 export class Workspace {
-  @PrimaryColumn({
-    update: false,
-  })
+  @PrimaryColumn({ update: false })
   @Generated("increment")
   id: number;
 
-  @Column({
-    nullable: true,
-  })
+  @Column({ nullable: true })
   name: string;
 
-  @Column({
-    nullable: true,
-  })
+  @Column({ nullable: true })
   description: string;
 
   @CreateDateColumn()
