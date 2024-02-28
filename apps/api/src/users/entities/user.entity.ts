@@ -19,7 +19,7 @@ export class User {
 
   @Exclude()
   @Column({ nullable: true })
-  password?: string;
+  password: string;
 
   @Column({ nullable: true })
   email: string;

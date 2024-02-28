@@ -17,6 +17,7 @@ import { EventsModule } from "./events/events.module";
 import { FirebaseAdminModule } from "./firebase-admin/firebase-admin.module";
 import { AccountModule } from "./account/account.module";
 import { WorkspacesModule } from "./workspaces/workspaces.module";
+import { ClientsModule } from "./clients/clients.module";
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { WorkspacesModule } from "./workspaces/workspaces.module";
     FirebaseAdminModule,
     AccountModule,
     WorkspacesModule,
+    ClientsModule,
   ],
   controllers: [AppController],
   providers: [

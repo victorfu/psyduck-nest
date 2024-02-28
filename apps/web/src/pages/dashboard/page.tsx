@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User2Icon, CpuIcon, LandPlotIcon } from "lucide-react";
+import { User2Icon, LandPlotIcon } from "lucide-react";
 import { useLoaderData } from "react-router-dom";
 
 function DashboardPage() {
