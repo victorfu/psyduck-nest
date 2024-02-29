@@ -16,10 +16,5 @@ export class UpdateClientDto extends PartialType(CreateClientDto) {
   @IsOptional()
   @IsString()
   @ApiProperty()
-  note?: string;
-
-  @IsOptional()
-  @IsString()
-  @ApiProperty()
   address?: string;
 }

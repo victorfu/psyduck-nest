@@ -30,3 +30,13 @@ export async function loadDashboard() {
     return { users: [], workspaces: [] };
   }
 }
+
+export async function loadClients() {
+  try {
+    const clients = await Api.getClients();
+    return { clients };
+  } catch (error) {
+    console.error(error);
+    return { clients: [] };
+  }
+}

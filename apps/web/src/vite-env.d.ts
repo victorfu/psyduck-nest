@@ -29,3 +29,14 @@ interface Workspace {
   createdAt: Date;
   updatedAt: Date;
 }
+
+interface Client {
+  id: number;
+  name?: string;
+  birthday?: string;
+  email?: string;
+  note?: string;
+  address?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}

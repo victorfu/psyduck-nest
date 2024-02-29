@@ -15,7 +15,7 @@ import Api from "@/lib/api";
 import { useToast } from "@/components/ui/use-toast";
 import { useRevalidator } from "react-router-dom";
 
-export default function WorkspaceDialog() {
+export default function ClientDialog() {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -26,7 +26,7 @@ export default function WorkspaceDialog() {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const name = formData.get("name") as string;
-    const description = formData.get("description") as string;
+    const note = formData.get("note") as string;
     if (!name) {
       toast({
         title: "Please enter a name",
@@ -36,17 +36,17 @@ export default function WorkspaceDialog() {
     }
 
     setLoading(true);
-    Api.createWorkspace({ name, description })
+    Api.createClient({ name, note })
       .then(() => {
         toast({
-          title: "Workspace created",
-          description: `Workspace ${name} has been created.`,
+          title: "Client created",
+          description: `Client ${name} has been created.`,
         });
       })
       .catch(() => {
         toast({
-          title: "Failed to create workspace",
-          description: `Workspace ${name} could not be created.`,
+          title: "Failed to create client",
+          description: `Client ${name} could not be created.`,
           variant: "destructive",
         });
       })
@@ -61,12 +61,12 @@ export default function WorkspaceDialog() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="h-8" variant="outline">
-          Add Workspace
+          Add Client
         </Button>
       </DialogTrigger>
       <DialogContent className="flex flex-col min-w-[30vw] min-h-32">
         <DialogHeader>
-          <DialogTitle>Add Workspace</DialogTitle>
+          <DialogTitle>Add Client</DialogTitle>
         </DialogHeader>
 
         <div className="flex items-start space-x-4">
@@ -78,8 +78,8 @@ export default function WorkspaceDialog() {
                   <Input name="name" id="name" />
                 </div>
                 <div>
-                  <label htmlFor="description">Description</label>
-                  <Textarea name="description" id="description" />
+                  <label htmlFor="note">Note</label>
+                  <Textarea name="note" id="description" />
                 </div>
 
                 <Button type="submit" disabled={loading}>

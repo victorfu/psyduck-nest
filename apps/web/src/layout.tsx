@@ -18,7 +18,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TailwindIndicator } from "@/components/ui/tailwind-indicator";
 import { useWebSocket } from "./hooks/use-websocket";
 import { useRootUser } from "./hooks/use-root-user";
-import { CircleUserIcon, SettingsIcon } from "lucide-react";
+import { CircleUserIcon, SettingsIcon, UserRoundIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 function Layout() {
@@ -44,6 +44,12 @@ function Layout() {
       href: "/workspaces",
       icon: FolderIcon,
       current: pathname === "/workspaces",
+    },
+    {
+      name: "Clients",
+      href: "/clients",
+      icon: UserRoundIcon,
+      current: pathname === "/clients",
     },
   ];
 

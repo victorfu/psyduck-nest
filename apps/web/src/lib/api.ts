@@ -113,4 +113,21 @@ export default class Api {
   public static async deleteWorkspace(id: number) {
     return authenticatedFetch(`/api/workspaces/${id}`, "DELETE");
   }
+
+  // Clients endpoints
+  public static async getClients() {
+    return authenticatedFetch<Client[]>("/api/clients");
+  }
+
+  public static async createClient(client: Partial<Client>) {
+    return authenticatedFetch<Client>("/api/clients", "POST", client);
+  }
+
+  public static async updateClient(id: number, client: Partial<Client>) {
+    return authenticatedFetch<Client>(`/api/clients/${id}`, "PATCH", client);
+  }
+
+  public static async deleteClient(id: number) {
+    return authenticatedFetch(`/api/clients/${id}`, "DELETE");
+  }
 }
