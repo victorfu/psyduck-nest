@@ -28,6 +28,18 @@ export class Client {
   @Column({ nullable: true })
   address: string;
 
+  @Column({ nullable: true })
+  phone: string;
+
+  @Column({ nullable: true })
+  gender: string;
+
+  @Column({ nullable: true })
+  height: number;
+
+  @Column({ nullable: true })
+  weight: number;
+
   @CreateDateColumn()
   createdAt: Date;
 
