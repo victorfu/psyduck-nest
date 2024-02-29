@@ -40,9 +40,9 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     loader: rootLoader,
     children: [
-      { index: true, element: <Navigate to="/my-workspace" replace /> },
+      { index: true, element: <Navigate to="/my-workspaces" replace /> },
       {
-        path: "my-workspace",
+        path: "my-workspaces",
         element: <MyWorkspacePage />,
       },
       {

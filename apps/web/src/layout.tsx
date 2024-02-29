@@ -27,8 +27,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const routes = {
   myworkspace: {
-    name: "My Workspace",
-    href: "/my-workspace",
+    name: "My Workspaces",
+    href: "/my-workspaces",
     icon: FolderKanbanIcon,
     isPrimary: true,
     isSecondary: false,
