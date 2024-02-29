@@ -21,6 +21,8 @@ import { useRootUser } from "./hooks/use-root-user";
 import {
   CircleUserIcon,
   LogOutIcon,
+  PanelLeftCloseIcon,
+  PanelRightCloseIcon,
   SettingsIcon,
   UserRoundIcon,
 } from "lucide-react";
@@ -100,6 +102,7 @@ function Layout() {
   const fetcher = useFetcher();
   const isLoggingOut = fetcher.formData != null;
   const isAdmin = user?.roles.includes("admin");
+  const [fullSidebar, setFullSidebar] = useState(true);
 
   useWebSocket();
 
@@ -245,11 +248,25 @@ function Layout() {
         </Transition.Root>
 
         {/* Static sidebar for desktop */}
-        <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-60 lg:flex-col">
+        <div
+          className={twMerge(
+            "hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:flex-col",
+            fullSidebar ? "lg:w-52" : "lg:w-16",
+          )}
+        >
           {/* Sidebar component */}
           <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-4">
             <div className="flex h-16 shrink-0 items-center">
-              <img className="h-8 w-auto logo" src={logo} alt="psyduck" />
+              <div className="flex-1 w-full">
+                <img className="h-8 w-auto logo" src={logo} alt="psyduck" />
+              </div>
+              <button onClick={() => setFullSidebar(!fullSidebar)}>
+                {fullSidebar ? (
+                  <PanelLeftCloseIcon className="h-5 w-5 text-white " />
+                ) : (
+                  <PanelRightCloseIcon className="h-5 w-5 text-white " />
+                )}
+              </button>
             </div>
             <nav className="flex flex-1 flex-col">
               <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -264,13 +281,14 @@ function Layout() {
                               ? "bg-gray-800 text-white"
                               : "text-gray-400 hover:text-white hover:bg-gray-800",
                             "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold",
+                            fullSidebar ? "p-2" : "p-1",
                           )}
                         >
                           <item.icon
                             className="h-6 w-6 shrink-0"
                             aria-hidden="true"
                           />
-                          {item.name}
+                          {fullSidebar && item.name}
                         </Link>
                       </li>
                     ))}
@@ -285,14 +303,15 @@ function Layout() {
                           item.current
                             ? "bg-gray-800 text-white"
                             : "text-gray-400 hover:text-white hover:bg-gray-800",
-                          "-mx-2 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold",
+                          "-mx-2 group flex gap-x-3 rounded-md text-sm leading-6 font-semibold",
+                          fullSidebar ? "p-2" : "p-1",
                         )}
                       >
                         <item.icon
                           className="h-6 w-6 shrink-0"
                           aria-hidden="true"
                         />
-                        {item.name}
+                        {fullSidebar && item.name}
                       </Link>
                     </li>
                   ))}
