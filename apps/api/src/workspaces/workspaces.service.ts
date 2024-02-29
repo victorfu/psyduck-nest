@@ -28,7 +28,7 @@ export class WorkspacesService {
     return this.workspacesRepository.update(id, updateWorkspaceDto);
   }
 
-  async remove(id: number) {
-    await this.workspacesRepository.delete(id);
+  remove(id: number) {
+    this.workspacesRepository.delete(id);
   }
 }

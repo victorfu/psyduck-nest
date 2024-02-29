@@ -40,3 +40,11 @@ interface Client {
   createdAt: Date;
   updatedAt: Date;
 }
+
+interface Organization {
+  id: number;
+  name?: string;
+  description?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}

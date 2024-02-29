@@ -14,6 +14,7 @@ import { useRootUser } from "./hooks/use-root-user";
 import {
   BarChart2Icon,
   BookUserIcon,
+  Building2Icon,
   CircleUserIcon,
   FolderKanbanIcon,
   LogOutIcon,
@@ -39,6 +40,15 @@ const routes = {
     name: "Dashboard",
     href: "/dashboard",
     icon: BarChart2Icon,
+    isPrimary: false,
+    isSecondary: false,
+    isAdmin: true,
+    isMenu: false,
+  },
+  organization: {
+    name: "Organizations",
+    href: "/organizations",
+    icon: Building2Icon,
     isPrimary: false,
     isSecondary: false,
     isAdmin: true,

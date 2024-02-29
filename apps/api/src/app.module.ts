@@ -18,6 +18,7 @@ import { FirebaseAdminModule } from "./firebase-admin/firebase-admin.module";
 import { AccountModule } from "./account/account.module";
 import { WorkspacesModule } from "./workspaces/workspaces.module";
 import { ClientsModule } from "./clients/clients.module";
+import { OrganizationsModule } from "./organizations/organizations.module";
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { ClientsModule } from "./clients/clients.module";
     AccountModule,
     WorkspacesModule,
     ClientsModule,
+    OrganizationsModule,
   ],
   controllers: [AppController],
   providers: [

@@ -23,6 +23,7 @@ import Layout from "./layout.tsx";
 import {
   loadClients,
   loadDashboard,
+  loadOrganizations,
   loadUsers,
   loadWorkspaces,
 } from "./lib/loaders.ts";
@@ -31,6 +32,7 @@ import ForgotPasswordPage from "./pages/forgot-password-page.tsx";
 import { CookiesProvider } from "react-cookie";
 import ClientPage from "./pages/admin/client/page.tsx";
 import MyWorkspacePage from "./pages/my-workspace/page.tsx";
+import OrganizationPage from "./pages/admin/organization/page.tsx";
 
 const router = createBrowserRouter([
   {
@@ -62,6 +64,11 @@ const router = createBrowserRouter([
         path: "users",
         loader: loadUsers,
         element: <UserPage />,
+      },
+      {
+        path: "organizations",
+        loader: loadOrganizations,
+        element: <OrganizationPage />,
       },
       {
         path: "workspaces",

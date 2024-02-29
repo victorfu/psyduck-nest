@@ -40,3 +40,13 @@ export async function loadClients() {
     return { clients: [] };
   }
 }
+
+export async function loadOrganizations() {
+  try {
+    const organizations = await Api.getOrganizations();
+    return { organizations };
+  } catch (error) {
+    console.error(error);
+    return { organizations: [] };
+  }
+}

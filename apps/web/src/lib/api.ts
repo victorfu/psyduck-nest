@@ -130,4 +130,32 @@ export default class Api {
   public static async deleteClient(id: number) {
     return authenticatedFetch(`/api/clients/${id}`, "DELETE");
   }
+
+  // Organizations endpoints
+  public static async getOrganizations() {
+    return authenticatedFetch<Organization[]>("/api/organizations");
+  }
+
+  public static async createOrganization(organization: Partial<Organization>) {
+    return authenticatedFetch<Organization>(
+      "/api/organizations",
+      "POST",
+      organization,
+    );
+  }
+
+  public static async updateOrganization(
+    id: number,
+    organization: Partial<Organization>,
+  ) {
+    return authenticatedFetch<Organization>(
+      `/api/organizations/${id}`,
+      "PATCH",
+      organization,
+    );
+  }
+
+  public static async deleteOrganization(id: number) {
+    return authenticatedFetch(`/api/organizations/${id}`, "DELETE");
+  }
 }
