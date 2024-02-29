@@ -1,10 +1,7 @@
-import UserTable from "@/pages/user/user-table";
 import { useRootUser } from "@/hooks/use-root-user";
-import { useLoaderData } from "react-router-dom";
 
-function UserPage() {
+function AdminLayout({ children }: { children: React.ReactNode }) {
   const { user } = useRootUser();
-  const { users } = useLoaderData() as { users: User[] };
 
   if (!user) return null;
   if (!user.roles.includes("admin")) {
@@ -14,12 +11,11 @@ function UserPage() {
       </div>
     );
   }
-
   return (
     <div>
-      <UserTable users={users} />
+      <>{children}</>
     </div>
   );
 }
 
-export default UserPage;
+export default AdminLayout;

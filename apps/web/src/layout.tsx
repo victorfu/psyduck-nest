@@ -4,14 +4,7 @@ import { useState } from "react";
 import { Link, Outlet, useFetcher, useLocation } from "react-router-dom";
 import { Fragment } from "react";
 import { Dialog, Menu, Transition } from "@headlessui/react";
-import {
-  Bars3Icon,
-  BellIcon,
-  FolderIcon,
-  HomeIcon,
-  UsersIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
+import { Bars3Icon, BellIcon, FolderIcon } from "@heroicons/react/24/outline";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { twMerge } from "tailwind-merge";
 import { Toaster } from "@/components/ui/toaster";
@@ -19,41 +12,54 @@ import { TailwindIndicator } from "@/components/ui/tailwind-indicator";
 import { useWebSocket } from "./hooks/use-websocket";
 import { useRootUser } from "./hooks/use-root-user";
 import {
+  BarChart2Icon,
+  BookUserIcon,
   CircleUserIcon,
+  FolderKanbanIcon,
   LogOutIcon,
   PanelLeftCloseIcon,
   PanelRightCloseIcon,
   SettingsIcon,
-  UserRoundIcon,
+  UsersIcon,
+  XIcon,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const routes = {
-  dashboard: {
-    name: "Dashboard",
-    href: "/dashboard",
-    icon: HomeIcon,
+  myworkspace: {
+    name: "My Workspace",
+    href: "/my-workspace",
+    icon: FolderKanbanIcon,
     isPrimary: true,
     isSecondary: false,
     isAdmin: false,
+    isMenu: false,
+  },
+  dashboard: {
+    name: "Dashboard",
+    href: "/dashboard",
+    icon: BarChart2Icon,
+    isPrimary: false,
+    isSecondary: false,
+    isAdmin: true,
     isMenu: false,
   },
   workspaces: {
     name: "Workspaces",
     href: "/workspaces",
     icon: FolderIcon,
-    isPrimary: true,
+    isPrimary: false,
     isSecondary: false,
-    isAdmin: false,
+    isAdmin: true,
     isMenu: false,
   },
   clients: {
     name: "Clients",
     href: "/clients",
-    icon: UserRoundIcon,
-    isPrimary: true,
+    icon: BookUserIcon,
+    isPrimary: false,
     isSecondary: false,
-    isAdmin: false,
+    isAdmin: true,
     isMenu: false,
   },
   users: {
@@ -61,7 +67,7 @@ const routes = {
     href: "/users",
     icon: UsersIcon,
     isPrimary: false,
-    isSecondary: true,
+    isSecondary: false,
     isAdmin: true,
     isMenu: false,
   },
@@ -94,6 +100,8 @@ const routes = {
   },
 };
 
+const entries = Object.entries(routes);
+
 function Layout() {
   const location = useLocation();
   const { pathname } = location;
@@ -106,27 +114,35 @@ function Layout() {
 
   useWebSocket();
 
-  const navigation = Object.entries(routes)
+  const navigation = entries
     .filter(([, value]) => value.isPrimary)
     .map(([, value]) => ({
       ...value,
       current: pathname === value.href,
     }));
 
-  const secondaryNavigation = Object.entries(routes)
+  const secondaryNavigation = entries
     .filter(([, value]) => value.isSecondary)
-    .filter(([, value]) => (value.isAdmin ? isAdmin : true))
     .map(([, value]) => ({
       ...value,
       current: pathname === value.href,
     }));
 
-  const userNavigation = Object.entries(routes)
+  const userNavigation = entries
     .filter(([, value]) => value.isMenu)
     .map(([key, value]) => ({
       ...value,
       key: key,
     }));
+
+  const adminNavigation = isAdmin
+    ? entries
+        .filter(([, value]) => value.isAdmin)
+        .map(([, value]) => ({
+          ...value,
+          current: pathname === value.href,
+        }))
+    : [];
 
   return (
     <>
@@ -176,7 +192,7 @@ function Layout() {
                         onClick={() => setSidebarOpen(false)}
                       >
                         <span className="sr-only">Close sidebar</span>
-                        <XMarkIcon
+                        <XIcon
                           className="h-6 w-6 text-white"
                           aria-hidden="true"
                         />
@@ -217,6 +233,39 @@ function Layout() {
                             ))}
                           </ul>
                         </li>
+                        {
+                          // Admin navigation
+                          isAdmin && (
+                            <li>
+                              <div className="text-xs font-semibold leading-6 text-indigo-200">
+                                Administration
+                              </div>
+                              <ul role="list" className="-mx-2 mt-2 space-y-1">
+                                {adminNavigation.map((item) => (
+                                  <li key={item.name}>
+                                    <a
+                                      href={item.href}
+                                      className={twMerge(
+                                        item.current
+                                          ? "bg-gray-800 text-white"
+                                          : "text-gray-400 hover:text-white hover:bg-gray-800",
+                                        "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold",
+                                        fullSidebar ? "p-2" : "p-1",
+                                      )}
+                                    >
+                                      <item.icon
+                                        className="h-6 w-6 shrink-0"
+                                        aria-hidden="true"
+                                      />
+                                      {fullSidebar && item.name}
+                                    </a>
+                                  </li>
+                                ))}
+                              </ul>
+                            </li>
+                          )
+                        }
+
                         <div className="mt-auto">
                           {secondaryNavigation.map((item) => (
                             <li key={item.name}>
@@ -294,6 +343,38 @@ function Layout() {
                     ))}
                   </ul>
                 </li>
+                {
+                  // Admin navigation
+                  isAdmin && (
+                    <li>
+                      <div className="text-xs font-semibold leading-6 text-indigo-200">
+                        Administration
+                      </div>
+                      <ul role="list" className="-mx-2 mt-2 space-y-1">
+                        {adminNavigation.map((item) => (
+                          <li key={item.name}>
+                            <a
+                              href={item.href}
+                              className={twMerge(
+                                item.current
+                                  ? "bg-gray-800 text-white"
+                                  : "text-gray-400 hover:text-white hover:bg-gray-800",
+                                "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold",
+                                fullSidebar ? "p-2" : "p-1",
+                              )}
+                            >
+                              <item.icon
+                                className="h-6 w-6 shrink-0"
+                                aria-hidden="true"
+                              />
+                              {fullSidebar && item.name}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </li>
+                  )
+                }
                 <div className="mt-auto">
                   {secondaryNavigation.map((item) => (
                     <li key={item.name}>

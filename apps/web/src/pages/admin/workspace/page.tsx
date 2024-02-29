@@ -1,13 +1,14 @@
 import { useLoaderData } from "react-router-dom";
 import { WorkspaceTable } from "./workspace-table";
+import AdminLayout from "../admin-layout";
 
 function WorkspacePage() {
   const { workspaces } = useLoaderData() as { workspaces: Workspace[] };
 
   return (
-    <div>
+    <AdminLayout>
       <WorkspaceTable workspaces={workspaces} />
-    </div>
+    </AdminLayout>
   );
 }
 

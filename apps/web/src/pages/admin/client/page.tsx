@@ -1,13 +1,14 @@
 import { useLoaderData } from "react-router-dom";
 import { ClientTable } from "./client-table";
+import AdminLayout from "../admin-layout";
 
 function ClientPage() {
   const { clients } = useLoaderData() as { clients: Client[] };
 
   return (
-    <div>
+    <AdminLayout>
       <ClientTable clients={clients} />
-    </div>
+    </AdminLayout>
   );
 }
 
