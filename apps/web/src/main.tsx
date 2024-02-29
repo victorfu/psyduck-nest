@@ -3,14 +3,13 @@ import ReactDOM from "react-dom/client";
 import {
   createBrowserRouter,
   Navigate,
-  redirect,
   RouterProvider,
 } from "react-router-dom";
 import {
-  authProvider,
   forgotPasswordAction,
   loginAction,
   loginLoader,
+  logoutAction,
   rootLoader,
 } from "./auth.ts";
 import DashboardPage from "./pages/dashboard/page.tsx";
@@ -79,10 +78,7 @@ const router = createBrowserRouter([
   },
   {
     path: "logout",
-    action: async () => {
-      await authProvider.signout();
-      return redirect("/");
-    },
+    action: logoutAction,
   },
   {
     path: "auth/google/success",

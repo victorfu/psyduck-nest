@@ -95,6 +95,11 @@ export async function loginAction({ request }: LoaderFunctionArgs) {
   return redirect(redirectTo ?? "/");
 }
 
+export async function logoutAction() {
+  await authProvider.signout();
+  return redirect("/login");
+}
+
 export async function loginLoader({ request }: LoaderFunctionArgs) {
   try {
     await authProvider.signinWithToken();
