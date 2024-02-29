@@ -18,8 +18,79 @@ import { Toaster } from "@/components/ui/toaster";
 import { TailwindIndicator } from "@/components/ui/tailwind-indicator";
 import { useWebSocket } from "./hooks/use-websocket";
 import { useRootUser } from "./hooks/use-root-user";
-import { CircleUserIcon, SettingsIcon, UserRoundIcon } from "lucide-react";
+import {
+  CircleUserIcon,
+  LogOutIcon,
+  SettingsIcon,
+  UserRoundIcon,
+} from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+const routes = {
+  dashboard: {
+    name: "Dashboard",
+    href: "/dashboard",
+    icon: HomeIcon,
+    isPrimary: true,
+    isSecondary: false,
+    isAdmin: false,
+    isMenu: false,
+  },
+  workspaces: {
+    name: "Workspaces",
+    href: "/workspaces",
+    icon: FolderIcon,
+    isPrimary: true,
+    isSecondary: false,
+    isAdmin: false,
+    isMenu: false,
+  },
+  clients: {
+    name: "Clients",
+    href: "/clients",
+    icon: UserRoundIcon,
+    isPrimary: true,
+    isSecondary: false,
+    isAdmin: false,
+    isMenu: false,
+  },
+  users: {
+    name: "Users",
+    href: "/users",
+    icon: UsersIcon,
+    isPrimary: false,
+    isSecondary: true,
+    isAdmin: true,
+    isMenu: false,
+  },
+  settings: {
+    name: "Settings",
+    href: "/settings",
+    icon: SettingsIcon,
+    isPrimary: false,
+    isSecondary: true,
+    isAdmin: false,
+    isMenu: false,
+  },
+  account: {
+    name: "Account",
+    href: "/account",
+    icon: CircleUserIcon,
+    isPrimary: false,
+    isSecondary: false,
+    isAdmin: false,
+    isMenu: true,
+  },
+  signout: {
+    name: "Sign out",
+    href: "/signout",
+    icon: LogOutIcon,
+    isPrimary: false,
+    isSecondary: false,
+    isAdmin: false,
+    isMenu: true,
+  },
+};
 
 function Layout() {
   const location = useLocation();
@@ -32,55 +103,27 @@ function Layout() {
 
   useWebSocket();
 
-  const navigation = [
-    {
-      name: "Dashboard",
-      href: "/dashboard",
-      icon: HomeIcon,
-      current: pathname === "/dashboard",
-    },
-    {
-      name: "Workspaces",
-      href: "/workspaces",
-      icon: FolderIcon,
-      current: pathname === "/workspaces",
-    },
-    {
-      name: "Clients",
-      href: "/clients",
-      icon: UserRoundIcon,
-      current: pathname === "/clients",
-    },
-  ];
+  const navigation = Object.entries(routes)
+    .filter(([, value]) => value.isPrimary)
+    .map(([, value]) => ({
+      ...value,
+      current: pathname === value.href,
+    }));
 
-  const secondaryNavigation = [
-    {
-      name: "Account",
-      href: "/account",
-      icon: CircleUserIcon,
-      current: pathname === "/account",
-    },
-    {
-      name: "Settings",
-      href: "/settings",
-      icon: SettingsIcon,
-      current: pathname === "/settings",
-    },
-  ];
+  const secondaryNavigation = Object.entries(routes)
+    .filter(([, value]) => value.isSecondary)
+    .filter(([, value]) => (value.isAdmin ? isAdmin : true))
+    .map(([, value]) => ({
+      ...value,
+      current: pathname === value.href,
+    }));
 
-  if (isAdmin) {
-    secondaryNavigation.unshift({
-      name: "Users",
-      href: "/users",
-      icon: UsersIcon,
-      current: pathname === "/users",
-    });
-  }
-
-  const userNavigation = [
-    { key: "account", name: "Your profile", href: "/account" },
-    { key: "signout", name: "Sign out", href: "/signout" },
-  ];
+  const userNavigation = Object.entries(routes)
+    .filter(([, value]) => value.isMenu)
+    .map(([key, value]) => ({
+      ...value,
+      key: key,
+    }));
 
   return (
     <>
@@ -338,15 +381,21 @@ function Layout() {
                                     "block px-3 py-1 text-sm leading-6 text-gray-900",
                                   )}
                                 >
-                                  <button
-                                    type="submit"
-                                    disabled={isLoggingOut}
-                                    className="w-full text-start"
-                                  >
-                                    {isLoggingOut
-                                      ? "Signing out..."
-                                      : "Sign out"}
-                                  </button>
+                                  <div className="flex items-center w-full">
+                                    <item.icon
+                                      className="h-4 w-4 shrink-0 mr-1"
+                                      aria-hidden="true"
+                                    />
+                                    <button
+                                      type="submit"
+                                      disabled={isLoggingOut}
+                                      className="w-full text-start"
+                                    >
+                                      {isLoggingOut
+                                        ? "Signing out..."
+                                        : "Sign out"}
+                                    </button>
+                                  </div>
                                 </fetcher.Form>
                               );
                             }
@@ -359,7 +408,13 @@ function Layout() {
                                   "block px-3 py-1 text-sm leading-6 text-gray-900",
                                 )}
                               >
-                                {item.name}
+                                <div className="flex items-center w-full">
+                                  <item.icon
+                                    className="h-4 w-4 shrink-0 mr-1"
+                                    aria-hidden="true"
+                                  />
+                                  {item.name}
+                                </div>
                               </Link>
                             );
                           }}
