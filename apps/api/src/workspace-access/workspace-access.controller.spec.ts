@@ -1,19 +1,19 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { OrganizationsController } from "./organizations.controller";
-import { OrganizationsService } from "./organizations.service";
-import { Organization } from "./entities/organization.entity";
+import { WorkspaceAccessController } from "./workspace-access.controller";
+import { WorkspaceAccessService } from "./workspace-access.service";
+import { WorkspaceAccess } from "./entities/workspace-access.entity";
 import { getRepositoryToken } from "@nestjs/typeorm";
 
-describe("OrganizationsController", () => {
-  let controller: OrganizationsController;
+describe("WorkspaceAccessController", () => {
+  let controller: WorkspaceAccessController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [OrganizationsController],
+      controllers: [WorkspaceAccessController],
       providers: [
-        OrganizationsService,
+        WorkspaceAccessService,
         {
-          provide: getRepositoryToken(Organization),
+          provide: getRepositoryToken(WorkspaceAccess),
           useValue: {
             find: jest.fn().mockResolvedValue([]),
             findOneBy: jest.fn().mockResolvedValue({}),
@@ -25,7 +25,9 @@ describe("OrganizationsController", () => {
       ],
     }).compile();
 
-    controller = module.get<OrganizationsController>(OrganizationsController);
+    controller = module.get<WorkspaceAccessController>(
+      WorkspaceAccessController,
+    );
   });
 
   it("should be defined", () => {

@@ -1,19 +1,17 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { OrganizationsController } from "./organizations.controller";
-import { OrganizationsService } from "./organizations.service";
-import { Organization } from "./entities/organization.entity";
+import { WorkspaceAccessService } from "./workspace-access.service";
+import { WorkspaceAccess } from "./entities/workspace-access.entity";
 import { getRepositoryToken } from "@nestjs/typeorm";
 
-describe("OrganizationsController", () => {
-  let controller: OrganizationsController;
+describe("WorkspaceAccessService", () => {
+  let service: WorkspaceAccessService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [OrganizationsController],
       providers: [
-        OrganizationsService,
+        WorkspaceAccessService,
         {
-          provide: getRepositoryToken(Organization),
+          provide: getRepositoryToken(WorkspaceAccess),
           useValue: {
             find: jest.fn().mockResolvedValue([]),
             findOneBy: jest.fn().mockResolvedValue({}),
@@ -25,10 +23,10 @@ describe("OrganizationsController", () => {
       ],
     }).compile();
 
-    controller = module.get<OrganizationsController>(OrganizationsController);
+    service = module.get<WorkspaceAccessService>(WorkspaceAccessService);
   });
 
   it("should be defined", () => {
-    expect(controller).toBeDefined();
+    expect(service).toBeDefined();
   });
 });

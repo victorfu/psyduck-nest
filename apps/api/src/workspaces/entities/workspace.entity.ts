@@ -1,8 +1,10 @@
+import { WorkspaceAccess } from "@/workspace-access/entities/workspace-access.entity";
 import {
   Column,
   CreateDateColumn,
   Entity,
   Generated,
+  OneToMany,
   PrimaryColumn,
   UpdateDateColumn,
 } from "typeorm";
@@ -24,4 +26,11 @@ export class Workspace {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  // relations
+  @OneToMany(
+    () => WorkspaceAccess,
+    (workspaceAccess) => workspaceAccess.workspace,
+  )
+  workspaceAccesses: WorkspaceAccess[];
 }
