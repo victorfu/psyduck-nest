@@ -10,11 +10,8 @@ import {
 import { OrganizationsService } from "./organizations.service";
 import { CreateOrganizationDto } from "./dto/create-organization.dto";
 import { UpdateOrganizationDto } from "./dto/update-organization.dto";
-import { Public } from "@/decorators/public.decorator";
 import { ApiTags } from "@nestjs/swagger";
 
-// TODO: remove Public decorator
-@Public()
 @ApiTags("organizations")
 @Controller("organizations")
 export class OrganizationsController {

@@ -248,7 +248,7 @@ function Layout() {
                           isAdmin && (
                             <li>
                               <div className="text-xs font-semibold leading-6 text-indigo-200">
-                                Administration
+                                {fullSidebar ? "Administration" : "Adm"}
                               </div>
                               <ul role="list" className="-mx-2 mt-2 space-y-1">
                                 {adminNavigation.map((item) => (
@@ -358,7 +358,7 @@ function Layout() {
                   isAdmin && (
                     <li>
                       <div className="text-xs font-semibold leading-6 text-indigo-200">
-                        Administration
+                        {fullSidebar ? "Administration" : "Adm"}
                       </div>
                       <ul role="list" className="-mx-2 mt-2 space-y-1">
                         {adminNavigation.map((item) => (
