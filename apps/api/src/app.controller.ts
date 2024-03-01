@@ -4,8 +4,6 @@ import {
   Post,
   UseGuards,
   Request,
-  UploadedFile,
-  UseInterceptors,
   Query,
   Render,
   Body,
@@ -15,9 +13,7 @@ import { LocalAuthGuard } from "./auth/local-auth.guard";
 import { AuthService } from "./auth/auth.service";
 import { Public } from "./decorators/public.decorator";
 import { UserLoginDto } from "./auth/dto/user-login.dto";
-import { ApiBearerAuth, ApiBody, ApiConsumes } from "@nestjs/swagger";
-import { FileInterceptor } from "@nestjs/platform-express";
-import { FirebaseAdminService } from "./firebase-admin/firebase-admin.service";
+import { ApiBody, ApiExcludeEndpoint } from "@nestjs/swagger";
 import { UsersService } from "./users/users.service";
 
 @Controller()
@@ -26,7 +22,6 @@ export class AppController {
     private readonly appService: AppService,
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
-    private readonly firebaseAdminService: FirebaseAdminService,
   ) {}
 
   @Public()
@@ -61,31 +56,9 @@ export class AppController {
     return await this.authService.forgotPassword(email);
   }
 
-  @ApiBearerAuth()
-  @ApiConsumes("multipart/form-data")
-  @ApiBody({
-    schema: {
-      type: "object",
-      properties: {
-        file: {
-          type: "string",
-          format: "binary",
-        },
-      },
-    },
-  })
-  @Post("upload")
-  @UseInterceptors(FileInterceptor("file"))
-  async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    const timestamp = new Date().getTime();
-    const url = await this.firebaseAdminService.uploadFile(
-      file,
-      `${timestamp}-${file.originalname}`,
-    );
-    return { url };
-  }
-
   // Views
+
+  @ApiExcludeEndpoint()
   @Public()
   @Get("reset-password")
   @Render("reset-password")
@@ -93,15 +66,22 @@ export class AppController {
     return { token };
   }
 
+  @ApiExcludeEndpoint()
   @Public()
   @Post("reset-password")
   @Render("reset-password-result")
-  async resetPassword(
+  async resetPasswordAction(
     @Body("token") token: string,
-    @Body("password") password: string,
+    @Body("newPassword") newPassword: string,
+    @Body("confirmPassword") confirmPassword: string,
   ) {
+    if (newPassword !== confirmPassword) {
+      return {
+        error: "Passwords do not match.",
+      };
+    }
     try {
-      await this.authService.resetPassword(token, password);
+      await this.authService.resetPassword(token, newPassword);
     } catch (error) {
       console.error(error);
       return {
@@ -114,6 +94,7 @@ export class AppController {
     };
   }
 
+  @ApiExcludeEndpoint()
   @Public()
   @Get("verify-email")
   @Render("verify-email")

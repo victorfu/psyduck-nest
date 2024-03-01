@@ -66,6 +66,13 @@ export default class Api {
     return authenticatedFetch("/api/account/send-verification-email", "POST");
   }
 
+  public static async uploadPicture(file: File) {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    return authenticatedFetch("/api/account/picture", "POST", formData, false);
+  }
+
   // Users endpoints
   public static async getUsers() {
     return authenticatedFetch<User[]>("/api/users");
@@ -81,5 +88,74 @@ export default class Api {
 
   public static async resetPassword(id: number) {
     return authenticatedFetch(`/api/users/${id}/reset-password`, "POST");
+  }
+
+  // Workspaces endpoints
+  public static async getWorkspaces() {
+    return authenticatedFetch<Workspace[]>("/api/workspaces");
+  }
+
+  public static async createWorkspace(workspace: Partial<Workspace>) {
+    return authenticatedFetch<Workspace>("/api/workspaces", "POST", workspace);
+  }
+
+  public static async updateWorkspace(
+    id: number,
+    workspace: Partial<Workspace>,
+  ) {
+    return authenticatedFetch<Workspace>(
+      `/api/workspaces/${id}`,
+      "PATCH",
+      workspace,
+    );
+  }
+
+  public static async deleteWorkspace(id: number) {
+    return authenticatedFetch(`/api/workspaces/${id}`, "DELETE");
+  }
+
+  // Clients endpoints
+  public static async getClients() {
+    return authenticatedFetch<Client[]>("/api/clients");
+  }
+
+  public static async createClient(client: Partial<Client>) {
+    return authenticatedFetch<Client>("/api/clients", "POST", client);
+  }
+
+  public static async updateClient(id: number, client: Partial<Client>) {
+    return authenticatedFetch<Client>(`/api/clients/${id}`, "PATCH", client);
+  }
+
+  public static async deleteClient(id: number) {
+    return authenticatedFetch(`/api/clients/${id}`, "DELETE");
+  }
+
+  // Organizations endpoints
+  public static async getOrganizations() {
+    return authenticatedFetch<Organization[]>("/api/organizations");
+  }
+
+  public static async createOrganization(organization: Partial<Organization>) {
+    return authenticatedFetch<Organization>(
+      "/api/organizations",
+      "POST",
+      organization,
+    );
+  }
+
+  public static async updateOrganization(
+    id: number,
+    organization: Partial<Organization>,
+  ) {
+    return authenticatedFetch<Organization>(
+      `/api/organizations/${id}`,
+      "PATCH",
+      organization,
+    );
+  }
+
+  public static async deleteOrganization(id: number) {
+    return authenticatedFetch(`/api/organizations/${id}`, "DELETE");
   }
 }

@@ -6,6 +6,7 @@ export async function authenticatedFetch<T = unknown>(
   endpoint: string,
   method: HttpMethod = "GET",
   body: object | null = null,
+  applicationJson = true,
 ): Promise<T> {
   const access_token: string | null = await localForage.getItem("access_token");
   if (!access_token) {
@@ -16,12 +17,20 @@ export async function authenticatedFetch<T = unknown>(
     method,
     headers: {
       Authorization: `Bearer ${access_token}`,
-      "Content-Type": "application/json",
     },
   };
 
-  if (body) {
+  if (applicationJson) {
+    options.headers = {
+      ...options.headers,
+      "Content-Type": "application/json",
+    };
+  }
+
+  if (body && applicationJson) {
     options.body = JSON.stringify(body);
+  } else if (body) {
+    options.body = body as unknown as BodyInit;
   }
 
   const response = await fetch(endpoint, options);

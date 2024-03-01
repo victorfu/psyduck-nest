@@ -1,83 +1,41 @@
 import "./layout.css";
 import logo from "/logo.png";
 import { useState } from "react";
-import { Link, Outlet, useFetcher, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import { Fragment } from "react";
-import { Dialog, Menu, Transition } from "@headlessui/react";
-import {
-  Bars3Icon,
-  BellIcon,
-  FolderIcon,
-  HomeIcon,
-  UsersIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
-import {
-  ChevronDownIcon,
-  MagnifyingGlassIcon,
-} from "@heroicons/react/20/solid";
+import { Dialog, Transition } from "@headlessui/react";
+import { Bars3Icon, BellIcon } from "@heroicons/react/24/outline";
 import { twMerge } from "tailwind-merge";
 import { Toaster } from "@/components/ui/toaster";
 import { TailwindIndicator } from "@/components/ui/tailwind-indicator";
 import { useWebSocket } from "./hooks/use-websocket";
 import { useRootUser } from "./hooks/use-root-user";
-import { CircleUserIcon, SettingsIcon } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { PanelLeftCloseIcon, PanelRightCloseIcon, XIcon } from "lucide-react";
+import routes from "./routes";
+import { AccountMenu } from "./components/account-menu";
 
 function Layout() {
   const location = useLocation();
   const { pathname } = location;
   const { user } = useRootUser();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const fetcher = useFetcher();
-  const isLoggingOut = fetcher.formData != null;
-  const isAdmin = user?.roles.includes("admin");
+  const [fullSidebar, setFullSidebar] = useState(true);
 
   useWebSocket();
 
-  const navigation = [
-    {
-      name: "Dashboard",
-      href: "/dashboard",
-      icon: HomeIcon,
-      current: pathname === "/dashboard",
-    },
-    {
-      name: "Workspaces",
-      href: "/workspaces",
-      icon: FolderIcon,
-      current: pathname === "/workspaces",
-    },
-  ];
+  const navigation = routes
+    .filter(([, value]) => value.isPrimary)
+    .map(([, value]) => ({
+      ...value,
+      current: pathname === value.href,
+    }));
 
-  const secondaryNavigation = [
-    {
-      name: "Account",
-      href: "/account",
-      icon: CircleUserIcon,
-      current: pathname === "/account",
-    },
-    {
-      name: "Settings",
-      href: "/settings",
-      icon: SettingsIcon,
-      current: pathname === "/settings",
-    },
-  ];
-
-  if (isAdmin) {
-    secondaryNavigation.unshift({
-      name: "Users",
-      href: "/users",
-      icon: UsersIcon,
-      current: pathname === "/users",
-    });
-  }
-
-  const userNavigation = [
-    { key: "account", name: "Your profile", href: "/account" },
-    { key: "signout", name: "Sign out", href: "/signout" },
-  ];
+  const secondaryNavigation = routes
+    .filter(([, value]) => value.isSecondary)
+    .map(([, value]) => ({
+      ...value,
+      current: pathname === value.href,
+    }));
 
   return (
     <>
@@ -127,7 +85,7 @@ function Layout() {
                         onClick={() => setSidebarOpen(false)}
                       >
                         <span className="sr-only">Close sidebar</span>
-                        <XMarkIcon
+                        <XIcon
                           className="h-6 w-6 text-white"
                           aria-hidden="true"
                         />
@@ -199,11 +157,25 @@ function Layout() {
         </Transition.Root>
 
         {/* Static sidebar for desktop */}
-        <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-60 lg:flex-col">
+        <div
+          className={twMerge(
+            "hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:flex-col",
+            fullSidebar ? "lg:w-52" : "lg:w-16",
+          )}
+        >
           {/* Sidebar component */}
           <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-4">
             <div className="flex h-16 shrink-0 items-center">
-              <img className="h-8 w-auto logo" src={logo} alt="psyduck" />
+              <div className="flex-1 w-full">
+                <img className="h-8 w-auto logo" src={logo} alt="psyduck" />
+              </div>
+              <button onClick={() => setFullSidebar(!fullSidebar)}>
+                {fullSidebar ? (
+                  <PanelLeftCloseIcon className="h-5 w-5 text-white " />
+                ) : (
+                  <PanelRightCloseIcon className="h-5 w-5 text-white " />
+                )}
+              </button>
             </div>
             <nav className="flex flex-1 flex-col">
               <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -218,13 +190,14 @@ function Layout() {
                               ? "bg-gray-800 text-white"
                               : "text-gray-400 hover:text-white hover:bg-gray-800",
                             "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold",
+                            fullSidebar ? "p-2" : "p-1",
                           )}
                         >
                           <item.icon
                             className="h-6 w-6 shrink-0"
                             aria-hidden="true"
                           />
-                          {item.name}
+                          {fullSidebar && item.name}
                         </Link>
                       </li>
                     ))}
@@ -239,14 +212,15 @@ function Layout() {
                           item.current
                             ? "bg-gray-800 text-white"
                             : "text-gray-400 hover:text-white hover:bg-gray-800",
-                          "-mx-2 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold",
+                          "-mx-2 group flex gap-x-3 rounded-md text-sm leading-6 font-semibold",
+                          fullSidebar ? "p-2" : "p-1",
                         )}
                       >
                         <item.icon
                           className="h-6 w-6 shrink-0"
                           aria-hidden="true"
                         />
-                        {item.name}
+                        {fullSidebar && item.name}
                       </Link>
                     </li>
                   ))}
@@ -256,7 +230,7 @@ function Layout() {
           </div>
         </div>
 
-        <div className="lg:pl-60">
+        <div className={fullSidebar ? "lg:pl-52" : "lg:pl-16"}>
           <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
             <button
               type="button"
@@ -274,22 +248,7 @@ function Layout() {
             />
 
             <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
-              <form className="relative flex flex-1" action="#" method="GET">
-                <label htmlFor="search-field" className="sr-only">
-                  Search
-                </label>
-                <MagnifyingGlassIcon
-                  className="pointer-events-none absolute inset-y-0 left-0 h-full w-5 text-gray-400"
-                  aria-hidden="true"
-                />
-                <input
-                  id="search-field"
-                  className="block h-full w-full border-0 py-0 pl-8 pr-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm"
-                  placeholder="Search..."
-                  type="search"
-                  name="search"
-                />
-              </form>
+              <div className="flex-1" />
               <div className="flex items-center gap-x-4 lg:gap-x-6">
                 <button
                   type="button"
@@ -298,90 +257,13 @@ function Layout() {
                   <span className="sr-only">View notifications</span>
                   <BellIcon className="h-6 w-6" aria-hidden="true" />
                 </button>
-
                 {/* Separator */}
                 <div
                   className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-900/10"
                   aria-hidden="true"
                 />
-
                 {/* Profile dropdown */}
-                <Menu as="div" className="relative">
-                  <Menu.Button className="-m-1.5 flex items-center p-1.5">
-                    <span className="sr-only">Open user menu</span>
-                    {/* <div className="h-8 w-8 rounded-full bg-gray-200"></div> */}
-                    <Avatar>
-                      <AvatarImage src={user?.picture} alt="avatar" />
-                      <AvatarFallback>
-                        {user?.username?.at(0)?.toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <span className="hidden lg:flex lg:items-center">
-                      <span
-                        className="ml-4 text-sm font-semibold leading-6 text-gray-900"
-                        aria-hidden="true"
-                      >
-                        {user?.username}
-                      </span>
-                      <ChevronDownIcon
-                        className="ml-2 h-5 w-5 text-gray-400"
-                        aria-hidden="true"
-                      />
-                    </span>
-                  </Menu.Button>
-                  <Transition
-                    as={Fragment}
-                    enter="transition ease-out duration-100"
-                    enterFrom="transform opacity-0 scale-95"
-                    enterTo="transform opacity-100 scale-100"
-                    leave="transition ease-in duration-75"
-                    leaveFrom="transform opacity-100 scale-100"
-                    leaveTo="transform opacity-0 scale-95"
-                  >
-                    <Menu.Items className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
-                      {userNavigation.map((item) => (
-                        <Menu.Item key={item.name}>
-                          {({ active }) => {
-                            if (item.key === "signout") {
-                              return (
-                                <fetcher.Form
-                                  method="post"
-                                  action="/logout"
-                                  className={twMerge(
-                                    active ? "bg-gray-50" : "",
-                                    "block px-3 py-1 text-sm leading-6 text-gray-900",
-                                  )}
-                                >
-                                  <button
-                                    type="submit"
-                                    disabled={isLoggingOut}
-                                    className="w-full text-start"
-                                  >
-                                    {isLoggingOut
-                                      ? "Signing out..."
-                                      : "Sign out"}
-                                  </button>
-                                </fetcher.Form>
-                              );
-                            }
-
-                            return (
-                              <Link
-                                to={item.href}
-                                className={twMerge(
-                                  active ? "bg-gray-50" : "",
-                                  "block px-3 py-1 text-sm leading-6 text-gray-900",
-                                )}
-                              >
-                                {item.name}
-                              </Link>
-                            );
-                          }}
-                        </Menu.Item>
-                      ))}
-                    </Menu.Items>
-                  </Transition>
-                </Menu>
+                <AccountMenu user={user} />
               </div>
             </div>
           </div>

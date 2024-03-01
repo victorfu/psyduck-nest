@@ -28,8 +28,10 @@ export class FirebaseAdminService {
     }
   }
 
-  private getUrl(fileName: string) {
-    return getStorage().bucket().file(fileName).publicUrl();
+  private async getUrl(fileName: string) {
+    const fileRef = getStorage().bucket().file(fileName);
+    await fileRef.makePublic();
+    return fileRef.publicUrl();
   }
 
   async uploadFile(file: Express.Multer.File, destination: string) {
@@ -43,6 +45,6 @@ export class FirebaseAdminService {
       },
     });
 
-    return this.getUrl(destination);
+    return await this.getUrl(destination);
   }
 }

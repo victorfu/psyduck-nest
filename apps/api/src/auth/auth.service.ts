@@ -51,9 +51,12 @@ export class AuthService {
     const { emails, photos, name } = profile;
     const user = await this.usersService.findOneByEmail(emails[0].value);
     if (user) {
-      const result = { ...user };
-      delete result.password;
-      return result;
+      await this.usersService.update(user.id, {
+        picture: photos[0].value,
+        emailVerified: true,
+        oauthGoogleRaw: profile._raw,
+      });
+      return this.removeSensitiveData(user);
     }
     const newUser = await this.usersService.create({
       username: emails[0].value,
@@ -65,9 +68,7 @@ export class AuthService {
       isActive: true,
       oauthGoogleRaw: profile._raw,
     });
-    const result = { ...newUser };
-    delete result.password;
-    return result;
+    return this.removeSensitiveData(newUser);
   }
 
   generateToken(user: any) {

@@ -21,3 +21,30 @@ interface User {
   birthday?: string;
   oauthGoogleRaw?: string;
 }
+
+interface Workspace {
+  id: number;
+  name?: string;
+  description?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface Client {
+  id: number;
+  name?: string;
+  birthday?: string;
+  email?: string;
+  note?: string;
+  address?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface Organization {
+  id: number;
+  name?: string;
+  description?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
