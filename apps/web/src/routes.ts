@@ -12,8 +12,8 @@ import { FolderIcon } from "@heroicons/react/24/outline";
 
 const routes = {
   myworkspace: {
-    name: "My Workspaces",
-    href: "/my-workspaces",
+    name: "Workspaces",
+    href: "/workspaces",
     icon: FolderKanbanIcon,
     isPrimary: true,
     isSecondary: false,

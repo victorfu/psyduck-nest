@@ -31,7 +31,7 @@ import AuthSuccessPage from "./pages/auth-success-page.tsx";
 import ForgotPasswordPage from "./pages/forgot-password-page.tsx";
 import { CookiesProvider } from "react-cookie";
 import ClientPage from "./pages/admin/client/page.tsx";
-import MyWorkspacePage from "./pages/my-workspace/page.tsx";
+import UserWorkspacePage from "./pages/workspace/page.tsx";
 import OrganizationPage from "./pages/admin/organization/page.tsx";
 import AdminLayout from "./admin-layout.tsx";
 
@@ -43,10 +43,10 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     loader: rootLoader,
     children: [
-      { index: true, element: <Navigate to="/my-workspaces" replace /> },
+      { index: true, element: <Navigate to="/workspaces" replace /> },
       {
-        path: "my-workspaces",
-        element: <MyWorkspacePage />,
+        path: "workspaces",
+        element: <UserWorkspacePage />,
       },
       {
         path: "account",
