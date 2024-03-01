@@ -1,6 +1,6 @@
 import { useLoaderData } from "react-router-dom";
 import { OrganizationTable } from "./organization-table";
-import AdminLayout from "../admin-layout";
+import CheckAdmin from "../check-admin";
 
 function OrganizationPage() {
   const { organizations } = useLoaderData() as {
@@ -8,9 +8,9 @@ function OrganizationPage() {
   };
 
   return (
-    <AdminLayout>
+    <CheckAdmin>
       <OrganizationTable organizations={organizations} />
-    </AdminLayout>
+    </CheckAdmin>
   );
 }
 

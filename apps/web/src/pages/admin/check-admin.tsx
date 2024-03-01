@@ -1,7 +1,7 @@
-import { useRootUser } from "@/hooks/use-root-user";
+import { useAdminRootUser } from "@/hooks/use-root-user";
 
-function AdminLayout({ children }: { children: React.ReactNode }) {
-  const { user } = useRootUser();
+function CheckAdmin({ children }: { children: React.ReactNode }) {
+  const { user } = useAdminRootUser();
 
   if (!user) return null;
   if (!user.roles.includes("admin")) {
@@ -18,4 +18,4 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default AdminLayout;
+export default CheckAdmin;

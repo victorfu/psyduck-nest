@@ -1,14 +1,14 @@
 import UserTable from "@/pages/admin/user/user-table";
 import { useLoaderData } from "react-router-dom";
-import AdminLayout from "../admin-layout";
+import CheckAdmin from "../check-admin";
 
 function UserPage() {
   const { users } = useLoaderData() as { users: User[] };
 
   return (
-    <AdminLayout>
+    <CheckAdmin>
       <UserTable users={users} />
-    </AdminLayout>
+    </CheckAdmin>
   );
 }
 

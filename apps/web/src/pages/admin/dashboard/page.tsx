@@ -4,7 +4,7 @@ import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { User2Icon, LandPlotIcon } from "lucide-react";
 import { useLoaderData } from "react-router-dom";
-import AdminLayout from "../admin-layout";
+import CheckAdmin from "../check-admin";
 
 function DashboardPage() {
   const { users, workspaces } = useLoaderData() as {
@@ -13,7 +13,7 @@ function DashboardPage() {
   };
 
   return (
-    <AdminLayout>
+    <CheckAdmin>
       <div className="container mx-auto">
         <div className="flex flex-col md:flex-row items-center justify-between px-4 py-8">
           <div className="prose lg:prose-xl">
@@ -62,7 +62,7 @@ function DashboardPage() {
           </TabsContent>
         </Tabs>
       </div>
-    </AdminLayout>
+    </CheckAdmin>
   );
 }
 

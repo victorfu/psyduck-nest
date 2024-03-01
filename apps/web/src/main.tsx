@@ -33,6 +33,7 @@ import { CookiesProvider } from "react-cookie";
 import ClientPage from "./pages/admin/client/page.tsx";
 import MyWorkspacePage from "./pages/my-workspace/page.tsx";
 import OrganizationPage from "./pages/admin/organization/page.tsx";
+import AdminLayout from "./admin-layout.tsx";
 
 const router = createBrowserRouter([
   {
@@ -47,6 +48,24 @@ const router = createBrowserRouter([
         path: "my-workspaces",
         element: <MyWorkspacePage />,
       },
+      {
+        path: "account",
+        element: <AccountPage />,
+      },
+      {
+        path: "settings",
+        element: <SettingsPage />,
+      },
+    ],
+  },
+  {
+    id: "adminRoot",
+    path: "/admin",
+    element: <AdminLayout />,
+    errorElement: <ErrorPage />,
+    loader: rootLoader,
+    children: [
+      { index: true, element: <Navigate to="/admin/dashboard" replace /> },
       {
         path: "account",
         element: <AccountPage />,
