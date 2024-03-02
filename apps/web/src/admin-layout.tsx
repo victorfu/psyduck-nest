@@ -28,14 +28,14 @@ function AdminLayout() {
     .filter(([, value]) => value.isPrimary && value.isAdmin)
     .map(([, value]) => ({
       ...value,
-      current: pathname === value.href,
+      current: pathname.includes(value.href),
     }));
 
   const secondaryNavigation = routes
     .filter(([, value]) => value.isSecondary && value.isAdmin)
     .map(([, value]) => ({
       ...value,
-      current: pathname === value.href,
+      current: pathname.includes(value.href),
     }));
 
   const adminNavigation = isAdmin
@@ -43,7 +43,7 @@ function AdminLayout() {
         .filter(([, value]) => value.isAdmin)
         .map(([, value]) => ({
           ...value,
-          current: pathname === value.href,
+          current: pathname.includes(value.href),
         }))
     : [];
 

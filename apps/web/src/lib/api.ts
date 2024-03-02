@@ -74,8 +74,9 @@ export default class Api {
   }
 
   // Users endpoints
-  public static async getUsers() {
-    return authenticatedFetch<User[]>("/api/users");
+  public static async getUsers(username?: string) {
+    if (!username) return authenticatedFetch<User[]>("/api/users");
+    return authenticatedFetch<User[]>(`/api/users?username=${username}`);
   }
 
   public static async createUser(user: { username: string; password: string }) {
@@ -95,6 +96,10 @@ export default class Api {
     return authenticatedFetch<Workspace[]>("/api/workspaces");
   }
 
+  public static async getWorkspace(id: number) {
+    return authenticatedFetch<Workspace>(`/api/workspaces/${id}`);
+  }
+
   public static async createWorkspace(workspace: Partial<Workspace>) {
     return authenticatedFetch<Workspace>("/api/workspaces", "POST", workspace);
   }
@@ -112,6 +117,36 @@ export default class Api {
 
   public static async deleteWorkspace(id: number) {
     return authenticatedFetch(`/api/workspaces/${id}`, "DELETE");
+  }
+
+  // Workspace access endpoints
+  public static async getWorkspaceAccess() {
+    return authenticatedFetch<WorkspaceAccess[]>(`/api/workspace-access`);
+  }
+
+  public static async createWorkspaceAccess(
+    workspaceAccess: Partial<WorkspaceAccess>,
+  ) {
+    return authenticatedFetch<WorkspaceAccess>(
+      `/api/workspace-access`,
+      "POST",
+      workspaceAccess,
+    );
+  }
+
+  public static async updateWorkspaceAccess(
+    id: number,
+    workspaceAccess: Partial<WorkspaceAccess>,
+  ) {
+    return authenticatedFetch<WorkspaceAccess>(
+      `/api/workspace-access/${id}`,
+      "PATCH",
+      workspaceAccess,
+    );
+  }
+
+  public static async deleteWorkspaceAccess(id: number) {
+    return authenticatedFetch(`/api/workspace-access/${id}`, "DELETE");
   }
 
   // Clients endpoints

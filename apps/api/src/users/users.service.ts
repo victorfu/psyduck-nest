@@ -53,6 +53,12 @@ export class UsersService {
     });
   }
 
+  findAllByUsername(username: string): Promise<User[]> {
+    return this.usersRepository.find({
+      where: { username: username },
+    });
+  }
+
   findOne(id: number): Promise<User> {
     return this.usersRepository.findOneBy({ id: id });
   }

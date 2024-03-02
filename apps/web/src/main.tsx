@@ -25,6 +25,7 @@ import {
   loadDashboard,
   loadOrganizations,
   loadUsers,
+  loadWorkspace,
   loadWorkspaces,
 } from "./lib/loaders.ts";
 import AuthSuccessPage from "./pages/auth-success-page.tsx";
@@ -34,6 +35,7 @@ import ClientPage from "./pages/admin/client/page.tsx";
 import UserWorkspacePage from "./pages/workspace/page.tsx";
 import OrganizationPage from "./pages/admin/organization/page.tsx";
 import AdminLayout from "./admin-layout.tsx";
+import WorkspaceAccessPage from "./pages/admin/workspace-access/page.tsx";
 
 const router = createBrowserRouter([
   {
@@ -93,6 +95,11 @@ const router = createBrowserRouter([
         path: "workspaces",
         loader: loadWorkspaces,
         element: <WorkspacePage />,
+      },
+      {
+        path: "workspaces/:wid",
+        loader: loadWorkspace,
+        element: <WorkspaceAccessPage />,
       },
       {
         path: "clients",

@@ -1,5 +1,3 @@
-"use client";
-
 import { DataTableViewOptions } from "@/components/ui/data-table-view-options";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";

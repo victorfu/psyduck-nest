@@ -1,5 +1,3 @@
-"use client";
-
 import { Table } from "@tanstack/react-table";
 import { DataTableViewOptions } from "@/components/ui/data-table-view-options";
 import { Input } from "@/components/ui/input";

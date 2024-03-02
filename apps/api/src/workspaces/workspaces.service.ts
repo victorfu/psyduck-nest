@@ -21,7 +21,14 @@ export class WorkspacesService {
   }
 
   findOne(id: number) {
-    return this.workspacesRepository.findOneBy({ id: id });
+    return this.workspacesRepository.findOne({
+      where: {
+        id: id,
+      },
+      relations: {
+        workspaceAccesses: true,
+      },
+    });
   }
 
   update(id: number, updateWorkspaceDto: UpdateWorkspaceDto) {

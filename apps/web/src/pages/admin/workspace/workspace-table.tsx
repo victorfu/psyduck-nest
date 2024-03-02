@@ -1,5 +1,3 @@
-"use client";
-
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import {
@@ -27,7 +25,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import Api from "@/lib/api";
-import { useRevalidator } from "react-router-dom";
+import { Link, useRevalidator } from "react-router-dom";
 
 function WorkspaceSheet({
   open,
@@ -131,6 +129,17 @@ export function WorkspaceTable({ workspaces }: { workspaces: Workspace[] }) {
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Name" />
       ),
+      cell: ({ row }) => {
+        const workspace = row.original;
+        return (
+          <Link
+            className="text-blue-600 hover:underline"
+            to={`/admin/workspaces/${workspace.id}`}
+          >
+            {workspace.name}
+          </Link>
+        );
+      },
     },
     {
       accessorKey: "description",

@@ -8,6 +8,7 @@ import {
   Delete,
   UseInterceptors,
   ClassSerializerInterceptor,
+  Query,
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { CreateUserDto } from "./dto/create-user.dto";
@@ -32,7 +33,10 @@ export class UsersController {
   @Roles(Role.Admin)
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  findAll() {
+  findAll(@Query("username") username) {
+    if (username && username.length > 0) {
+      return this.usersService.findAllByUsername(username);
+    }
     return this.usersService.findAll();
   }
 

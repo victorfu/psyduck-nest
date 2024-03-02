@@ -1,5 +1,9 @@
 import Api from "./api";
 
+type Params<Key extends string = string> = {
+  readonly [key in Key]: string | undefined;
+};
+
 export async function loadUsers() {
   try {
     const users = await Api.getUsers();
@@ -17,6 +21,19 @@ export async function loadWorkspaces() {
   } catch (error) {
     console.error(error);
     return { workspaces: [] };
+  }
+}
+
+export async function loadWorkspace({ params }: { params: Params }) {
+  const id = params.wid;
+  if (!id) throw new Error("No workspace id");
+
+  try {
+    const workspace = await Api.getWorkspace(+id);
+    return { workspace };
+  } catch (error) {
+    console.error(error);
+    return { workspace: {} };
   }
 }
 

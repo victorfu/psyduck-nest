@@ -27,14 +27,14 @@ function Layout() {
     .filter(([, value]) => value.isPrimary)
     .map(([, value]) => ({
       ...value,
-      current: pathname === value.href,
+      current: pathname.includes(value.href),
     }));
 
   const secondaryNavigation = routes
     .filter(([, value]) => value.isSecondary)
     .map(([, value]) => ({
       ...value,
-      current: pathname === value.href,
+      current: pathname.includes(value.href),
     }));
 
   return (

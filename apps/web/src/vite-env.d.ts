@@ -24,8 +24,18 @@ interface User {
 
 interface Workspace {
   id: number;
-  name?: string;
-  description?: string;
+  name: string;
+  description: string;
+  createdAt: Date;
+  updatedAt: Date;
+  workspaceAccesses: WorkspaceAccess[];
+}
+
+interface WorkspaceAccess {
+  id: number;
+  user: Partial<User>;
+  workspace: Partial<Workspace>;
+  role: string;
   createdAt: Date;
   updatedAt: Date;
 }
