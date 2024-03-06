@@ -10,10 +10,14 @@ import {
 import { OrganizationsService } from "./organizations.service";
 import { CreateOrganizationDto } from "./dto/create-organization.dto";
 import { UpdateOrganizationDto } from "./dto/update-organization.dto";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { Roles } from "@/decorators/roles.decorator";
+import { Role } from "@/enums/role.enum";
 
-@ApiTags("organizations")
-@Controller("organizations")
+@ApiTags("admin")
+@Controller("admin/organizations")
+@Roles(Role.Admin)
+@ApiBearerAuth()
 export class OrganizationsController {
   constructor(private readonly organizationsService: OrganizationsService) {}
 

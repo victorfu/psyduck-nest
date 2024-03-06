@@ -18,8 +18,8 @@ import { Roles } from "../decorators/roles.decorator";
 import { Role } from "../enums/role.enum";
 
 @ApiBearerAuth()
-@ApiTags("users")
-@Controller("users")
+@ApiTags("admin")
+@Controller("admin/users")
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 

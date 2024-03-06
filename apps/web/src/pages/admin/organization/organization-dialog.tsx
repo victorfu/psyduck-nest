@@ -34,7 +34,7 @@ export default function OrganizationDialog() {
     }
 
     setLoading(true);
-    Api.createOrganization({ name, description })
+    Api.adminCreateOrganization({ name, description })
       .then(() => {
         toast({
           title: "Organization created",

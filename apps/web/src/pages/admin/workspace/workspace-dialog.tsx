@@ -34,7 +34,7 @@ export default function WorkspaceDialog() {
     }
 
     setLoading(true);
-    Api.createWorkspace({ name, description })
+    Api.adminCreateWorkspace({ name, description })
       .then(() => {
         toast({
           title: "Workspace created",

@@ -70,7 +70,7 @@ export default function UserTable({ users = [] }: { users: User[] }) {
           <Switch
             checked={isAdmin}
             onCheckedChange={() => {
-              Api.updateUser(user.id, {
+              Api.adminUpdateUser(user.id, {
                 roles: isAdmin ? ["user"] : ["admin"],
               })
                 .then(() => {
@@ -150,7 +150,7 @@ export default function UserTable({ users = [] }: { users: User[] }) {
               <DropdownMenuItem
                 onClick={async () => {
                   try {
-                    await Api.resetPassword(user.id);
+                    await Api.adminResetPassword(user.id);
                     toast({
                       title: `${user.username} password is reset to the default password`,
                     });
@@ -168,7 +168,7 @@ export default function UserTable({ users = [] }: { users: User[] }) {
               <DropdownMenuItem
                 onClick={async () => {
                   try {
-                    await Api.updateUser(user.id, {
+                    await Api.adminUpdateUser(user.id, {
                       isActive: !user.isActive,
                     });
                     toast({

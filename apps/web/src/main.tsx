@@ -21,12 +21,13 @@ import WorkspacePage from "./pages/admin/workspace/page.tsx";
 import SettingsPage from "./pages/settings/page.tsx";
 import Layout from "./layout.tsx";
 import {
-  loadClients,
-  loadDashboard,
-  loadOrganizations,
-  loadUsers,
-  loadWorkspace,
+  adminLoadClients,
+  adminLoadDashboard,
+  adminLoadOrganizations,
+  adminLoadUsers,
   loadWorkspaces,
+  adminLoadWorkspace,
+  adminLoadWorkspaces,
 } from "./lib/loaders.ts";
 import AuthSuccessPage from "./pages/auth-success-page.tsx";
 import ForgotPasswordPage from "./pages/forgot-password-page.tsx";
@@ -48,6 +49,7 @@ const router = createBrowserRouter([
       { index: true, element: <Navigate to="/workspaces" replace /> },
       {
         path: "workspaces",
+        loader: loadWorkspaces,
         element: <UserWorkspacePage />,
       },
       {
@@ -69,41 +71,33 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="/admin/dashboard" replace /> },
       {
-        path: "account",
-        element: <AccountPage />,
-      },
-      {
-        path: "settings",
-        element: <SettingsPage />,
-      },
-      {
         path: "dashboard",
-        loader: loadDashboard,
+        loader: adminLoadDashboard,
         element: <DashboardPage />,
       },
       {
         path: "users",
-        loader: loadUsers,
+        loader: adminLoadUsers,
         element: <UserPage />,
       },
       {
         path: "organizations",
-        loader: loadOrganizations,
+        loader: adminLoadOrganizations,
         element: <OrganizationPage />,
       },
       {
         path: "workspaces",
-        loader: loadWorkspaces,
+        loader: adminLoadWorkspaces,
         element: <WorkspacePage />,
       },
       {
         path: "workspaces/:wid",
-        loader: loadWorkspace,
+        loader: adminLoadWorkspace,
         element: <WorkspaceAccessPage />,
       },
       {
         path: "clients",
-        loader: loadClients,
+        loader: adminLoadClients,
         element: <ClientPage />,
       },
     ],

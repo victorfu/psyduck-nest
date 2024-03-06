@@ -4,13 +4,36 @@ type Params<Key extends string = string> = {
   readonly [key in Key]: string | undefined;
 };
 
-export async function loadUsers() {
+export async function adminLoadUsers() {
   try {
-    const users = await Api.getUsers();
+    const users = await Api.adminGetUsers();
     return { users };
   } catch (error) {
     console.error(error);
     return { users: [] };
+  }
+}
+
+export async function adminLoadWorkspaces() {
+  try {
+    const workspaces = await Api.adminGetWorkspaces();
+    return { workspaces };
+  } catch (error) {
+    console.error(error);
+    return { workspaces: [] };
+  }
+}
+
+export async function adminLoadWorkspace({ params }: { params: Params }) {
+  const id = params.wid;
+  if (!id) throw new Error("No workspace id");
+
+  try {
+    const workspace = await Api.adminGetWorkspace(+id);
+    return { workspace };
+  } catch (error) {
+    console.error(error);
+    return { workspace: {} };
   }
 }
 
@@ -24,23 +47,10 @@ export async function loadWorkspaces() {
   }
 }
 
-export async function loadWorkspace({ params }: { params: Params }) {
-  const id = params.wid;
-  if (!id) throw new Error("No workspace id");
-
+export async function adminLoadDashboard() {
   try {
-    const workspace = await Api.getWorkspace(+id);
-    return { workspace };
-  } catch (error) {
-    console.error(error);
-    return { workspace: {} };
-  }
-}
-
-export async function loadDashboard() {
-  try {
-    const users = await Api.getUsers();
-    const workspaces = await Api.getWorkspaces();
+    const users = await Api.adminGetUsers();
+    const workspaces = await Api.adminGetWorkspaces();
     return { users, workspaces };
   } catch (error) {
     console.error(error);
@@ -48,9 +58,9 @@ export async function loadDashboard() {
   }
 }
 
-export async function loadClients() {
+export async function adminLoadClients() {
   try {
-    const clients = await Api.getClients();
+    const clients = await Api.adminGetClients();
     return { clients };
   } catch (error) {
     console.error(error);
@@ -58,9 +68,9 @@ export async function loadClients() {
   }
 }
 
-export async function loadOrganizations() {
+export async function adminLoadOrganizations() {
   try {
-    const organizations = await Api.getOrganizations();
+    const organizations = await Api.adminGetOrganizations();
     return { organizations };
   } catch (error) {
     console.error(error);

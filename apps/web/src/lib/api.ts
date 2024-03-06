@@ -73,24 +73,6 @@ export default class Api {
     return authenticatedFetch("/api/account/picture", "POST", formData, false);
   }
 
-  // Users endpoints
-  public static async getUsers(username?: string) {
-    if (!username) return authenticatedFetch<User[]>("/api/users");
-    return authenticatedFetch<User[]>(`/api/users?username=${username}`);
-  }
-
-  public static async createUser(user: { username: string; password: string }) {
-    return authenticatedFetch<User>("/api/users", "POST", user);
-  }
-
-  public static async updateUser(id: number, user: Partial<User>) {
-    return authenticatedFetch<User>(`/api/users/${id}`, "PATCH", user);
-  }
-
-  public static async resetPassword(id: number) {
-    return authenticatedFetch(`/api/users/${id}/reset-password`, "POST");
-  }
-
   // Workspaces endpoints
   public static async getWorkspaces() {
     return authenticatedFetch<Workspace[]>("/api/workspaces");
@@ -149,48 +131,107 @@ export default class Api {
     return authenticatedFetch(`/api/workspace-access/${id}`, "DELETE");
   }
 
-  // Clients endpoints
-  public static async getClients() {
-    return authenticatedFetch<Client[]>("/api/clients");
+  // Admin Users endpoints
+  public static async adminGetUsers(username?: string) {
+    if (!username) return authenticatedFetch<User[]>("/api/admin/users");
+    return authenticatedFetch<User[]>(`/api/admin/users?username=${username}`);
   }
 
-  public static async createClient(client: Partial<Client>) {
-    return authenticatedFetch<Client>("/api/clients", "POST", client);
+  public static async adminCreateUser(user: {
+    username: string;
+    password: string;
+  }) {
+    return authenticatedFetch<User>("/api/admin/users", "POST", user);
   }
 
-  public static async updateClient(id: number, client: Partial<Client>) {
-    return authenticatedFetch<Client>(`/api/clients/${id}`, "PATCH", client);
+  public static async adminUpdateUser(id: number, user: Partial<User>) {
+    return authenticatedFetch<User>(`/api/admin/users/${id}`, "PATCH", user);
   }
 
-  public static async deleteClient(id: number) {
-    return authenticatedFetch(`/api/clients/${id}`, "DELETE");
+  public static async adminResetPassword(id: number) {
+    return authenticatedFetch(`/api/admin/users/${id}/reset-password`, "POST");
   }
 
-  // Organizations endpoints
-  public static async getOrganizations() {
-    return authenticatedFetch<Organization[]>("/api/organizations");
+  // Admin Workspaces endpoints
+  public static async adminGetWorkspaces() {
+    return authenticatedFetch<Workspace[]>("/api/admin/workspaces");
   }
 
-  public static async createOrganization(organization: Partial<Organization>) {
+  public static async adminGetWorkspace(id: number) {
+    return authenticatedFetch<Workspace>(`/api/admin/workspaces/${id}`);
+  }
+
+  public static async adminCreateWorkspace(workspace: Partial<Workspace>) {
+    return authenticatedFetch<Workspace>(
+      "/api/admin/workspaces",
+      "POST",
+      workspace,
+    );
+  }
+
+  public static async adminUpdateWorkspace(
+    id: number,
+    workspace: Partial<Workspace>,
+  ) {
+    return authenticatedFetch<Workspace>(
+      `/api/admin/workspaces/${id}`,
+      "PATCH",
+      workspace,
+    );
+  }
+
+  public static async adminDeleteWorkspace(id: number) {
+    return authenticatedFetch(`/api/admin/workspaces/${id}`, "DELETE");
+  }
+
+  // Admin Clients endpoints
+  public static async adminGetClients() {
+    return authenticatedFetch<Client[]>("/api/admin/clients");
+  }
+
+  public static async adminCreateClient(client: Partial<Client>) {
+    return authenticatedFetch<Client>("/api/admin/clients", "POST", client);
+  }
+
+  public static async adminUpdateClient(id: number, client: Partial<Client>) {
+    return authenticatedFetch<Client>(
+      `/api/admin/clients/${id}`,
+      "PATCH",
+      client,
+    );
+  }
+
+  public static async adminDeleteClient(id: number) {
+    return authenticatedFetch(`/api/admin/clients/${id}`, "DELETE");
+  }
+
+  // Admin Organizations endpoints
+  public static async adminGetOrganizations() {
+    return authenticatedFetch<Organization[]>("/api/admin/organizations");
+  }
+
+  public static async adminCreateOrganization(
+    organization: Partial<Organization>,
+  ) {
     return authenticatedFetch<Organization>(
-      "/api/organizations",
+      "/api/admin/organizations",
       "POST",
       organization,
     );
   }
 
-  public static async updateOrganization(
+  public static async adminUpdateOrganization(
     id: number,
     organization: Partial<Organization>,
   ) {
     return authenticatedFetch<Organization>(
-      `/api/organizations/${id}`,
+      `/api/admin/organizations/${id}`,
       "PATCH",
       organization,
     );
   }
 
-  public static async deleteOrganization(id: number) {
-    return authenticatedFetch(`/api/organizations/${id}`, "DELETE");
+  public static async adminDeleteOrganization(id: number) {
+    return authenticatedFetch(`/api/admin/organizations/${id}`, "DELETE");
   }
 }

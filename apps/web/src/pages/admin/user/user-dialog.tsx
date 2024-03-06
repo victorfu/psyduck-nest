@@ -33,7 +33,7 @@ export default function UserDialog() {
     }
 
     setLoading(true);
-    Api.createUser({ username, password })
+    Api.adminCreateUser({ username, password })
       .then(() => {
         toast({
           title: "User created",

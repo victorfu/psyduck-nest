@@ -47,7 +47,7 @@ function WorkspaceSheet({
 
     if (!selectedWorkspace) return;
 
-    Api.updateWorkspace(selectedWorkspace.id, { name, description })
+    Api.adminUpdateWorkspace(selectedWorkspace.id, { name, description })
       .then(() => {
         toast({
           title: "Workspace updated",
@@ -178,7 +178,7 @@ export function WorkspaceTable({ workspaces }: { workspaces: Workspace[] }) {
                     return;
                   }
 
-                  Api.deleteWorkspace(workspace.id)
+                  Api.adminDeleteWorkspace(workspace.id)
                     .then(() => {
                       toast({
                         title: `${workspace.name} deleted.`,

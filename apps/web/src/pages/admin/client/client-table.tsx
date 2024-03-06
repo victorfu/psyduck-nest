@@ -47,7 +47,7 @@ function ClientSheet({
 
     if (!selectedClient) return;
 
-    Api.updateClient(selectedClient.id, { name, note })
+    Api.adminUpdateClient(selectedClient.id, { name, note })
       .then(() => {
         toast({
           title: "Client updated",
@@ -164,7 +164,7 @@ export function ClientTable({ clients }: { clients: Client[] }) {
                     return;
                   }
 
-                  Api.deleteClient(client.id)
+                  Api.adminDeleteClient(client.id)
                     .then(() => {
                       toast({
                         title: `${client.name} deleted.`,

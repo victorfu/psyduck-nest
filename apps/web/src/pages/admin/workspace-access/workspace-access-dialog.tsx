@@ -37,7 +37,7 @@ export default function WorkspaceAccessDialog() {
   }, [open]);
 
   const fetchUsers = (searchValue: string) => {
-    Api.getUsers(searchValue)
+    Api.adminGetUsers(searchValue)
       .then((users) => {
         setUsers(users);
       })
