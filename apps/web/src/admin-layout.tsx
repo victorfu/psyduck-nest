@@ -104,13 +104,15 @@ function AdminLayout() {
                   </Transition.Child>
                   {/* Sidebar component */}
                   <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-blue-900 px-6 pb-4 ring-1 ring-white/10">
-                    <div className="flex h-16 shrink-0 items-center">
-                      <img
-                        className="h-8 w-auto logo"
-                        src={logo}
-                        alt="psyduck"
-                      />
-                    </div>
+                    <Link to="/" className="flex h-16 shrink-0 items-center">
+                      <div className="flex h-16 shrink-0 items-center">
+                        <img
+                          className="h-8 w-auto logo"
+                          src={logo}
+                          alt="psyduck"
+                        />
+                      </div>
+                    </Link>
                     <nav className="flex flex-1 flex-col">
                       <ul role="list" className="flex flex-1 flex-col gap-y-7">
                         <li>
@@ -210,7 +212,9 @@ function AdminLayout() {
           <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-blue-900 px-6 pb-4">
             <div className="flex h-16 shrink-0 items-center">
               <div className="flex-1 w-full">
-                <img className="h-8 w-auto logo" src={logo} alt="psyduck" />
+                <Link to="/" className="flex h-16 shrink-0 items-center">
+                  <img className="h-8 w-auto logo" src={logo} alt="psyduck" />
+                </Link>
               </div>
               <button onClick={() => setFullSidebar(!fullSidebar)}>
                 {fullSidebar ? (
