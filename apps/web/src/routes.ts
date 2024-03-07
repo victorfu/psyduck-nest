@@ -18,6 +18,7 @@ const routes = [
     isPrimary: true,
     isSecondary: false,
     isAdmin: false,
+    isWorkspace: false,
     isMenu: false,
   },
   {
@@ -27,6 +28,7 @@ const routes = [
     isPrimary: false,
     isSecondary: false,
     isAdmin: true,
+    isWorkspace: false,
     isMenu: false,
   },
   {
@@ -36,6 +38,7 @@ const routes = [
     isPrimary: false,
     isSecondary: false,
     isAdmin: true,
+    isWorkspace: false,
     isMenu: false,
   },
   {
@@ -45,6 +48,7 @@ const routes = [
     isPrimary: false,
     isSecondary: false,
     isAdmin: true,
+    isWorkspace: false,
     isMenu: false,
   },
   {
@@ -54,6 +58,7 @@ const routes = [
     isPrimary: false,
     isSecondary: false,
     isAdmin: true,
+    isWorkspace: false,
     isMenu: false,
   },
   {
@@ -63,6 +68,7 @@ const routes = [
     isPrimary: false,
     isSecondary: false,
     isAdmin: true,
+    isWorkspace: false,
     isMenu: false,
   },
   {
@@ -72,6 +78,7 @@ const routes = [
     isPrimary: false,
     isSecondary: true,
     isAdmin: false,
+    isWorkspace: false,
     isMenu: false,
   },
   {
@@ -81,6 +88,7 @@ const routes = [
     isPrimary: false,
     isSecondary: false,
     isAdmin: false,
+    isWorkspace: false,
     isMenu: true,
   },
   {
@@ -90,8 +98,9 @@ const routes = [
     isPrimary: false,
     isSecondary: false,
     isAdmin: false,
+    isWorkspace: false,
     isMenu: true,
   },
 ];
 
-export default Object.entries(routes);
+export default routes;

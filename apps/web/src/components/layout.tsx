@@ -19,15 +19,15 @@ function Layout() {
   const [fullSidebar, setFullSidebar] = useState(true);
 
   const navigation = routes
-    .filter(([, value]) => value.isPrimary)
-    .map(([, value]) => ({
+    .filter((value) => value.isPrimary)
+    .map((value) => ({
       ...value,
       current: pathname.includes(value.href),
     }));
 
   const secondaryNavigation = routes
-    .filter(([, value]) => value.isSecondary)
-    .map(([, value]) => ({
+    .filter((value) => value.isSecondary)
+    .map((value) => ({
       ...value,
       current: pathname.includes(value.href),
     }));

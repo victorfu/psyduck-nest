@@ -7,10 +7,10 @@ import routes from "@/routes";
 import { LockIcon } from "lucide-react";
 
 const userNavigation = routes
-  .filter(([, value]) => value.isMenu)
-  .map(([key, value]) => ({
+  .filter((value) => value.isMenu)
+  .map((value) => ({
     ...value,
-    key: key,
+    key: value.href.replace("/", ""),
   }));
 
 export function AccountMenu({ user }: { user: User }) {

@@ -20,23 +20,23 @@ function AdminLayout() {
   const [fullSidebar, setFullSidebar] = useState(true);
 
   const navigation = routes
-    .filter(([, value]) => value.isPrimary && value.isAdmin)
-    .map(([, value]) => ({
+    .filter((value) => value.isPrimary && value.isAdmin)
+    .map((value) => ({
       ...value,
       current: pathname.includes(value.href),
     }));
 
   const secondaryNavigation = routes
-    .filter(([, value]) => value.isSecondary && value.isAdmin)
-    .map(([, value]) => ({
+    .filter((value) => value.isSecondary && value.isAdmin)
+    .map((value) => ({
       ...value,
       current: pathname.includes(value.href),
     }));
 
   const adminNavigation = isAdmin
     ? routes
-        .filter(([, value]) => value.isAdmin)
-        .map(([, value]) => ({
+        .filter((value) => value.isAdmin)
+        .map((value) => ({
           ...value,
           current: pathname.includes(value.href),
         }))
