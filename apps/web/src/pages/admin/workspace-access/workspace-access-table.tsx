@@ -14,6 +14,13 @@ import { WorkspaceAccessTableToolbar } from "./workspace-access-table-toolbar";
 import { useRevalidator } from "react-router-dom";
 import Api from "@/lib/api";
 import { useToast } from "@/components/ui/use-toast";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export function WorkspaceAccessTable({
   workspaceAccesses,
@@ -61,6 +68,34 @@ export function WorkspaceAccessTable({
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Role" />
       ),
+      cell: ({ row }) => {
+        const access = row.original;
+        const handleRoleChange = async (role: string) => {
+          try {
+            await Api.adminUpdateWorkspaceAccess(access.id, { role });
+            toast({
+              title: `Workspace role updated.`,
+            });
+            revalidator.revalidate();
+          } catch (error) {
+            toast({
+              title: `Failed to update workspace role.`,
+              variant: "destructive",
+            });
+          }
+        };
+        return (
+          <Select defaultValue={access.role} onValueChange={handleRoleChange}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select role" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="read">Read</SelectItem>
+              <SelectItem value="write">Write</SelectItem>
+            </SelectContent>
+          </Select>
+        );
+      },
     },
     {
       id: "actions",
@@ -86,7 +121,7 @@ export function WorkspaceAccessTable({
                   }
 
                   try {
-                    await Api.deleteWorkspaceAccess(access.id);
+                    await Api.adminDeleteWorkspaceAccess(access.id);
                     toast({
                       title: `Workspace access deleted.`,
                     });

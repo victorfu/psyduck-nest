@@ -2,7 +2,7 @@ import { useLoaderData } from "react-router-dom";
 import { OrganizationTable } from "./organization-table";
 import CheckAdmin from "../check-admin";
 
-function OrganizationPage() {
+function AdminOrganizationPage() {
   const { organizations } = useLoaderData() as {
     organizations: Organization[];
   };
@@ -14,4 +14,4 @@ function OrganizationPage() {
   );
 }
 
-export default OrganizationPage;
+export default AdminOrganizationPage;

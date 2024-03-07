@@ -10,14 +10,13 @@ import {
 import { WorkspacesService } from "./workspaces.service";
 import { CreateWorkspaceDto } from "./dto/create-workspace.dto";
 import { UpdateWorkspaceDto } from "./dto/update-workspace.dto";
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { ApiTags } from "@nestjs/swagger";
 import { Roles } from "@/decorators/roles.decorator";
 import { Role } from "@/enums/role.enum";
 
 @ApiTags("admin")
-@Controller("admin/workspaces")
 @Roles(Role.Admin)
-@ApiBearerAuth()
+@Controller("admin/workspaces")
 export class AdminWorkspacesController {
   constructor(private readonly workspacesService: WorkspacesService) {}
 

@@ -47,6 +47,19 @@ export async function loadWorkspaces() {
   }
 }
 
+export async function loadWorkspace({ params }: { params: Params }) {
+  const id = params.wid;
+  if (!id) throw new Error("No workspace id");
+
+  try {
+    const workspace = await Api.getWorkspace(+id);
+    return { workspace };
+  } catch (error) {
+    console.error(error);
+    return { workspace: {} };
+  }
+}
+
 export async function adminLoadDashboard() {
   try {
     const users = await Api.adminGetUsers();

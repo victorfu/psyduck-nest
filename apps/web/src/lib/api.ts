@@ -101,36 +101,6 @@ export default class Api {
     return authenticatedFetch(`/api/workspaces/${id}`, "DELETE");
   }
 
-  // Workspace access endpoints
-  public static async getWorkspaceAccess() {
-    return authenticatedFetch<WorkspaceAccess[]>(`/api/workspace-access`);
-  }
-
-  public static async createWorkspaceAccess(
-    workspaceAccess: Partial<WorkspaceAccess>,
-  ) {
-    return authenticatedFetch<WorkspaceAccess>(
-      `/api/workspace-access`,
-      "POST",
-      workspaceAccess,
-    );
-  }
-
-  public static async updateWorkspaceAccess(
-    id: number,
-    workspaceAccess: Partial<WorkspaceAccess>,
-  ) {
-    return authenticatedFetch<WorkspaceAccess>(
-      `/api/workspace-access/${id}`,
-      "PATCH",
-      workspaceAccess,
-    );
-  }
-
-  public static async deleteWorkspaceAccess(id: number) {
-    return authenticatedFetch(`/api/workspace-access/${id}`, "DELETE");
-  }
-
   // Admin Users endpoints
   public static async adminGetUsers(username?: string) {
     if (!username) return authenticatedFetch<User[]>("/api/admin/users");
@@ -233,5 +203,35 @@ export default class Api {
 
   public static async adminDeleteOrganization(id: number) {
     return authenticatedFetch(`/api/admin/organizations/${id}`, "DELETE");
+  }
+
+  // Admin Workspace access endpoints
+  public static async adminGetWorkspaceAccess() {
+    return authenticatedFetch<WorkspaceAccess[]>(`/api/admin/workspace-access`);
+  }
+
+  public static async adminCreateWorkspaceAccess(
+    workspaceAccess: Partial<WorkspaceAccess>,
+  ) {
+    return authenticatedFetch<WorkspaceAccess>(
+      `/api/admin/workspace-access`,
+      "POST",
+      workspaceAccess,
+    );
+  }
+
+  public static async adminUpdateWorkspaceAccess(
+    id: number,
+    workspaceAccess: Partial<WorkspaceAccess>,
+  ) {
+    return authenticatedFetch<WorkspaceAccess>(
+      `/api/admin/workspace-access/${id}`,
+      "PATCH",
+      workspaceAccess,
+    );
+  }
+
+  public static async adminDeleteWorkspaceAccess(id: number) {
+    return authenticatedFetch(`/api/admin/workspace-access/${id}`, "DELETE");
   }
 }

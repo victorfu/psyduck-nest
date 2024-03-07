@@ -70,7 +70,7 @@ export default function WorkspaceAccessDialog() {
 
     try {
       setLoading(true);
-      await Api.createWorkspaceAccess({
+      await Api.adminCreateWorkspaceAccess({
         user: {
           id: selectedUser.id,
         },

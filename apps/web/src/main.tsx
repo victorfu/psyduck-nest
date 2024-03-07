@@ -12,12 +12,12 @@ import {
   logoutAction,
   rootLoader,
 } from "./auth.ts";
-import DashboardPage from "./pages/admin/dashboard/page.tsx";
-import UserPage from "./pages/admin/user/page.tsx";
+import AdminDashboardPage from "./pages/admin/dashboard/page.tsx";
+import AdminUserPage from "./pages/admin/user/page.tsx";
 import AccountPage from "./pages/account/page.tsx";
 import LoginPage from "./pages/login-page.tsx";
 import ErrorPage from "./pages/error-page.tsx";
-import WorkspacePage from "./pages/admin/workspace/page.tsx";
+import AdminWorkspacePage from "./pages/admin/workspace/page.tsx";
 import SettingsPage from "./pages/settings/page.tsx";
 import Layout from "./layout.tsx";
 import {
@@ -28,15 +28,17 @@ import {
   loadWorkspaces,
   adminLoadWorkspace,
   adminLoadWorkspaces,
+  loadWorkspace,
 } from "./lib/loaders.ts";
 import AuthSuccessPage from "./pages/auth-success-page.tsx";
 import ForgotPasswordPage from "./pages/forgot-password-page.tsx";
 import { CookiesProvider } from "react-cookie";
-import ClientPage from "./pages/admin/client/page.tsx";
-import UserWorkspacePage from "./pages/workspace/page.tsx";
-import OrganizationPage from "./pages/admin/organization/page.tsx";
+import AdminClientPage from "./pages/admin/client/page.tsx";
+import AdminOrganizationPage from "./pages/admin/organization/page.tsx";
 import AdminLayout from "./admin-layout.tsx";
-import WorkspaceAccessPage from "./pages/admin/workspace-access/page.tsx";
+import AdminWorkspaceAccessPage from "./pages/admin/workspace-access/page.tsx";
+import WorkspacePage from "./pages/workspace/page.tsx";
+import WorkspaceDetailPage from "./pages/workspace-detail/page.tsx";
 
 const router = createBrowserRouter([
   {
@@ -50,7 +52,12 @@ const router = createBrowserRouter([
       {
         path: "workspaces",
         loader: loadWorkspaces,
-        element: <UserWorkspacePage />,
+        element: <WorkspacePage />,
+      },
+      {
+        path: "workspaces/:wid",
+        loader: loadWorkspace,
+        element: <WorkspaceDetailPage />,
       },
       {
         path: "account",
@@ -73,32 +80,32 @@ const router = createBrowserRouter([
       {
         path: "dashboard",
         loader: adminLoadDashboard,
-        element: <DashboardPage />,
+        element: <AdminDashboardPage />,
       },
       {
         path: "users",
         loader: adminLoadUsers,
-        element: <UserPage />,
+        element: <AdminUserPage />,
       },
       {
         path: "organizations",
         loader: adminLoadOrganizations,
-        element: <OrganizationPage />,
+        element: <AdminOrganizationPage />,
       },
       {
         path: "workspaces",
         loader: adminLoadWorkspaces,
-        element: <WorkspacePage />,
+        element: <AdminWorkspacePage />,
       },
       {
         path: "workspaces/:wid",
         loader: adminLoadWorkspace,
-        element: <WorkspaceAccessPage />,
+        element: <AdminWorkspaceAccessPage />,
       },
       {
         path: "clients",
         loader: adminLoadClients,
-        element: <ClientPage />,
+        element: <AdminClientPage />,
       },
     ],
   },
