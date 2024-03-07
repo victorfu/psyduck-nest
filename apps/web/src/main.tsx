@@ -10,7 +10,7 @@ import {
   loginAction,
   loginLoader,
   logoutAction,
-  rootLoader,
+  authLoader,
 } from "./auth.ts";
 import AdminDashboardPage from "./pages/admin/dashboard/page.tsx";
 import AdminUserPage from "./pages/admin/user/page.tsx";
@@ -19,26 +19,27 @@ import LoginPage from "./pages/login-page.tsx";
 import ErrorPage from "./pages/error-page.tsx";
 import AdminWorkspacePage from "./pages/admin/workspace/page.tsx";
 import SettingsPage from "./pages/settings/page.tsx";
-import Layout from "./layout.tsx";
+import Layout from "./components/layout.tsx";
 import {
-  adminLoadClients,
-  adminLoadDashboard,
-  adminLoadOrganizations,
-  adminLoadUsers,
-  loadWorkspaces,
-  adminLoadWorkspace,
-  adminLoadWorkspaces,
-  loadWorkspace,
+  adminClientsLoader,
+  adminDashboardLoader,
+  adminOrganizationsLoader,
+  adminUsersLoader,
+  workspacesLoader,
+  adminWorkspaceLoader,
+  adminWorkspacesLoader,
+  workspaceLoader,
 } from "./lib/loaders.ts";
 import AuthSuccessPage from "./pages/auth-success-page.tsx";
 import ForgotPasswordPage from "./pages/forgot-password-page.tsx";
 import { CookiesProvider } from "react-cookie";
 import AdminClientPage from "./pages/admin/client/page.tsx";
 import AdminOrganizationPage from "./pages/admin/organization/page.tsx";
-import AdminLayout from "./admin-layout.tsx";
+import AdminLayout from "./components/admin-layout.tsx";
 import AdminWorkspaceAccessPage from "./pages/admin/workspace-access/page.tsx";
 import WorkspacePage from "./pages/workspace/page.tsx";
 import WorkspaceDetailPage from "./pages/workspace-detail/page.tsx";
+import WorkspaceLayout from "./components/workspace-layout.tsx";
 
 const router = createBrowserRouter([
   {
@@ -46,18 +47,13 @@ const router = createBrowserRouter([
     path: "/",
     element: <Layout />,
     errorElement: <ErrorPage />,
-    loader: rootLoader,
+    loader: authLoader,
     children: [
       { index: true, element: <Navigate to="/workspaces" replace /> },
       {
         path: "workspaces",
-        loader: loadWorkspaces,
+        loader: workspacesLoader,
         element: <WorkspacePage />,
-      },
-      {
-        path: "workspaces/:wid",
-        loader: loadWorkspace,
-        element: <WorkspaceDetailPage />,
       },
       {
         path: "account",
@@ -70,41 +66,55 @@ const router = createBrowserRouter([
     ],
   },
   {
+    id: "workspace",
+    path: "/workspaces/:wid",
+    element: <WorkspaceLayout />,
+    errorElement: <ErrorPage />,
+    loader: authLoader,
+    children: [
+      {
+        index: true,
+        loader: workspaceLoader,
+        element: <WorkspaceDetailPage />,
+      },
+    ],
+  },
+  {
     id: "adminRoot",
     path: "/admin",
     element: <AdminLayout />,
     errorElement: <ErrorPage />,
-    loader: rootLoader,
+    loader: authLoader,
     children: [
       { index: true, element: <Navigate to="/admin/dashboard" replace /> },
       {
         path: "dashboard",
-        loader: adminLoadDashboard,
+        loader: adminDashboardLoader,
         element: <AdminDashboardPage />,
       },
       {
         path: "users",
-        loader: adminLoadUsers,
+        loader: adminUsersLoader,
         element: <AdminUserPage />,
       },
       {
         path: "organizations",
-        loader: adminLoadOrganizations,
+        loader: adminOrganizationsLoader,
         element: <AdminOrganizationPage />,
       },
       {
         path: "workspaces",
-        loader: adminLoadWorkspaces,
+        loader: adminWorkspacesLoader,
         element: <AdminWorkspacePage />,
       },
       {
         path: "workspaces/:wid",
-        loader: adminLoadWorkspace,
+        loader: adminWorkspaceLoader,
         element: <AdminWorkspaceAccessPage />,
       },
       {
         path: "clients",
-        loader: adminLoadClients,
+        loader: adminClientsLoader,
         element: <AdminClientPage />,
       },
     ],

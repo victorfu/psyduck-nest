@@ -7,3 +7,7 @@ export function useRootUser() {
 export function useAdminRootUser() {
   return useRouteLoaderData("adminRoot") as { user: User };
 }
+
+export function useWorkspaceUser() {
+  return useRouteLoaderData("workspace") as { user: User };
+}

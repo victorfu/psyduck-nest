@@ -7,11 +7,11 @@ import {
   LogOutIcon,
   SettingsIcon,
   UsersIcon,
+  FolderIcon,
 } from "lucide-react";
-import { FolderIcon } from "@heroicons/react/24/outline";
 
-const routes = {
-  myworkspace: {
+const routes = [
+  {
     name: "Workspaces",
     href: "/workspaces",
     icon: FolderKanbanIcon,
@@ -20,7 +20,7 @@ const routes = {
     isAdmin: false,
     isMenu: false,
   },
-  dashboard: {
+  {
     name: "Dashboard",
     href: "/admin/dashboard",
     icon: BarChart2Icon,
@@ -29,7 +29,7 @@ const routes = {
     isAdmin: true,
     isMenu: false,
   },
-  organization: {
+  {
     name: "Organizations",
     href: "/admin/organizations",
     icon: Building2Icon,
@@ -38,7 +38,7 @@ const routes = {
     isAdmin: true,
     isMenu: false,
   },
-  workspaces: {
+  {
     name: "Workspaces",
     href: "/admin/workspaces",
     icon: FolderIcon,
@@ -47,7 +47,7 @@ const routes = {
     isAdmin: true,
     isMenu: false,
   },
-  clients: {
+  {
     name: "Clients",
     href: "/admin/clients",
     icon: BookUserIcon,
@@ -56,7 +56,7 @@ const routes = {
     isAdmin: true,
     isMenu: false,
   },
-  users: {
+  {
     name: "Users",
     href: "/admin/users",
     icon: UsersIcon,
@@ -65,7 +65,7 @@ const routes = {
     isAdmin: true,
     isMenu: false,
   },
-  settings: {
+  {
     name: "Settings",
     href: "/settings",
     icon: SettingsIcon,
@@ -74,7 +74,7 @@ const routes = {
     isAdmin: false,
     isMenu: false,
   },
-  account: {
+  {
     name: "Account",
     href: "/account",
     icon: CircleUserIcon,
@@ -83,7 +83,7 @@ const routes = {
     isAdmin: false,
     isMenu: true,
   },
-  signout: {
+  {
     name: "Sign out",
     href: "/signout",
     icon: LogOutIcon,
@@ -92,6 +92,6 @@ const routes = {
     isAdmin: false,
     isMenu: true,
   },
-};
+];
 
 export default Object.entries(routes);
