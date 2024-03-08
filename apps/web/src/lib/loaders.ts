@@ -24,10 +24,11 @@ export async function workspaceLoader({ params }: { params: Params }) {
     await authProvider.signinWithToken();
     if (!authProvider.isAuthenticated) return redirect("/login");
     const workspace = await Api.getWorkspace(+id);
-    return { workspace, user: authProvider.user };
+    const workspaces = await Api.getWorkspaces();
+    return { workspace, user: authProvider.user, workspaces };
   } catch (error) {
     console.error(error);
-    return { workspace: null, user: null };
+    return { workspace: null, user: null, workspaces: [] };
   }
 }
 

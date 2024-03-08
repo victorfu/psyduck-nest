@@ -37,10 +37,11 @@ import AdminClientPage from "./pages/admin/client/page.tsx";
 import AdminOrganizationPage from "./pages/admin/organization/page.tsx";
 import AdminLayout from "./components/admin-layout.tsx";
 import AdminWorkspaceAccessPage from "./pages/admin/workspace-access/page.tsx";
-import WorkspacePage from "./pages/workspace/entry/page.tsx";
+import WorkspaceListPage from "./pages/list/page.tsx";
 import WorkspaceLayout from "./components/workspace-layout.tsx";
-import WorkspaceClientPage from "./pages/workspace/detail/client/page.tsx";
-import WorkspaceMemberPage from "./pages/workspace/detail/member/page.tsx";
+import WorkspaceClientPage from "./pages/workspace/client/page.tsx";
+import WorkspaceMemberPage from "./pages/workspace/member/page.tsx";
+import WorkspaceSettingsPage from "./pages/workspace/settings/page.tsx";
 
 const router = createBrowserRouter([
   {
@@ -54,7 +55,7 @@ const router = createBrowserRouter([
       {
         path: "workspaces",
         loader: workspacesLoader,
-        element: <WorkspacePage />,
+        element: <WorkspaceListPage />,
       },
       {
         path: "account",
@@ -75,7 +76,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Navigate to="members" replace />,
+        element: <Navigate to="clients" replace />,
       },
       {
         path: "clients",
@@ -84,6 +85,10 @@ const router = createBrowserRouter([
       {
         path: "members",
         element: <WorkspaceMemberPage />,
+      },
+      {
+        path: "settings",
+        element: <WorkspaceSettingsPage />,
       },
     ],
   },

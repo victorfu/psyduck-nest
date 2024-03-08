@@ -1,4 +1,4 @@
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import { Toaster } from "@/components/ui/toaster";
 import { TailwindIndicator } from "@/components/ui/tailwind-indicator";
@@ -8,12 +8,56 @@ import { Disclosure } from "@headlessui/react";
 import { Bars3Icon, BellIcon } from "@heroicons/react/24/outline";
 import { XIcon } from "lucide-react";
 import { AccountMenu } from "./account-menu";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import Logo from "./logo";
+
+const WorkspaceSelect = ({
+  workspace,
+  workspaces,
+}: {
+  workspace: Workspace;
+  workspaces: Workspace[];
+}) => {
+  const navigate = useNavigate();
+  return (
+    <Select
+      defaultValue={`${workspace.id}`}
+      onValueChange={(value) => {
+        console.log(value);
+        navigate(`/workspaces/${value}`);
+      }}
+    >
+      <SelectTrigger className="w-[180px]">
+        <SelectValue placeholder="Select a workspace" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
+          <SelectLabel>Workspaces</SelectLabel>
+          {workspaces.map((workspace: Workspace) => {
+            return (
+              <SelectItem key={workspace.id} value={`${workspace.id}`}>
+                {workspace.name}
+              </SelectItem>
+            );
+          })}
+        </SelectGroup>
+      </SelectContent>
+    </Select>
+  );
+};
 
 function WorkspaceLayout() {
   const location = useLocation();
   const { pathname } = location;
-  const { user } = useWorkspaceData();
+  const { user, workspace, workspaces } = useWorkspaceData();
 
   const navigation = routes
     .filter((value) => value.isWorkspace)
@@ -36,10 +80,14 @@ function WorkspaceLayout() {
               <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="flex h-16 items-center justify-between">
                   <div className="flex items-center">
-                    <div className="flex-shrink-0">
+                    <div className="flex space-x-2 flex-shrink-0">
                       <Link to="/workspaces">
                         <Logo />
                       </Link>
+                      <WorkspaceSelect
+                        workspace={workspace}
+                        workspaces={workspaces}
+                      />
                     </div>
                     <div className="hidden md:block">
                       <div className="ml-10 flex items-baseline space-x-4">

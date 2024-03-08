@@ -103,6 +103,16 @@ const routes = [
     isMenu: true,
   },
   {
+    name: "Clients",
+    href: "/workspaces/:wid/clients",
+    icon: Users2Icon,
+    isPrimary: false,
+    isSecondary: false,
+    isAdmin: false,
+    isWorkspace: true,
+    isMenu: false,
+  },
+  {
     name: "Members",
     href: "/workspaces/:wid/members",
     icon: Users2Icon,
@@ -113,8 +123,8 @@ const routes = [
     isMenu: false,
   },
   {
-    name: "Clients",
-    href: "/workspaces/:wid/clients",
+    name: "Settings",
+    href: "/workspaces/:wid/settings",
     icon: Users2Icon,
     isPrimary: false,
     isSecondary: false,

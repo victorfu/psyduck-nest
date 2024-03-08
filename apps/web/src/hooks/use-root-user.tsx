@@ -12,5 +12,6 @@ export function useWorkspaceData() {
   return useRouteLoaderData("workspace") as {
     user: User;
     workspace: Workspace;
+    workspaces: Workspace[];
   };
 }
