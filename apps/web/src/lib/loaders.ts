@@ -1,4 +1,6 @@
+import { authProvider } from "@/auth";
 import Api from "./api";
+import { redirect } from "react-router-dom";
 
 type Params<Key extends string = string> = {
   readonly [key in Key]: string | undefined;
@@ -19,11 +21,13 @@ export async function workspaceLoader({ params }: { params: Params }) {
   if (!id) throw new Error("No workspace id");
 
   try {
+    await authProvider.signinWithToken();
+    if (!authProvider.isAuthenticated) return redirect("/login");
     const workspace = await Api.getWorkspace(+id);
-    return { workspace };
+    return { workspace, user: authProvider.user };
   } catch (error) {
     console.error(error);
-    return { workspace: {} };
+    return { workspace: null, user: null };
   }
 }
 
@@ -56,7 +60,7 @@ export async function adminWorkspaceLoader({ params }: { params: Params }) {
     return { workspace };
   } catch (error) {
     console.error(error);
-    return { workspace: {} };
+    return { workspace: null };
   }
 }
 

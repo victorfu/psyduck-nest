@@ -1,32 +1,31 @@
-import { Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import { Toaster } from "@/components/ui/toaster";
 import { TailwindIndicator } from "@/components/ui/tailwind-indicator";
-import { useWorkspaceUser } from "../hooks/use-root-user";
-import routes from "../routes";
+import { useWorkspaceData } from "../hooks/use-root-user";
+import routes, { userNavigation } from "../routes";
 import { Disclosure } from "@headlessui/react";
 import { Bars3Icon, BellIcon } from "@heroicons/react/24/outline";
 import { XIcon } from "lucide-react";
 import { AccountMenu } from "./account-menu";
+import Logo from "./logo";
 
 function WorkspaceLayout() {
   const location = useLocation();
   const { pathname } = location;
-  const { user } = useWorkspaceUser();
+  const { user } = useWorkspaceData();
 
   const navigation = routes
-    .filter((value) => value.isPrimary && value.isWorkspace)
-    .map((value) => ({
-      ...value,
-      current: pathname.includes(value.href),
-    }));
-
-  const userNavigation = routes
-    .filter((value) => value.isMenu)
-    .map((value) => ({
-      ...value,
-      key: value.href.replace("/", ""),
-    }));
+    .filter((value) => value.isWorkspace)
+    .map((value) => {
+      const wid = pathname.split("/")[2];
+      const newHref = value.href.replace(":wid", wid);
+      return {
+        ...value,
+        href: newHref,
+        current: pathname.includes(newHref),
+      };
+    });
 
   return (
     <>
@@ -38,11 +37,9 @@ function WorkspaceLayout() {
                 <div className="flex h-16 items-center justify-between">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
-                      <img
-                        className="h-8 w-8"
-                        src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                        alt="Your Company"
-                      />
+                      <Link to="/workspaces">
+                        <Logo />
+                      </Link>
                     </div>
                     <div className="hidden md:block">
                       <div className="ml-10 flex items-baseline space-x-4">
@@ -160,13 +157,6 @@ function WorkspaceLayout() {
           )}
         </Disclosure>
 
-        <header className="bg-white shadow">
-          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-              {"Workspace"}
-            </h1>
-          </div>
-        </header>
         <main>
           <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
             <Outlet />

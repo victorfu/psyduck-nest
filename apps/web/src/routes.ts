@@ -8,6 +8,7 @@ import {
   SettingsIcon,
   UsersIcon,
   FolderIcon,
+  Users2Icon,
 } from "lucide-react";
 
 const routes = [
@@ -20,6 +21,26 @@ const routes = [
     isAdmin: false,
     isWorkspace: false,
     isMenu: false,
+  },
+  {
+    name: "Settings",
+    href: "/settings",
+    icon: SettingsIcon,
+    isPrimary: false,
+    isSecondary: true,
+    isAdmin: false,
+    isWorkspace: false,
+    isMenu: false,
+  },
+  {
+    name: "Account",
+    href: "/account",
+    icon: CircleUserIcon,
+    isPrimary: false,
+    isSecondary: false,
+    isAdmin: false,
+    isWorkspace: false,
+    isMenu: true,
   },
   {
     name: "Dashboard",
@@ -72,26 +93,6 @@ const routes = [
     isMenu: false,
   },
   {
-    name: "Settings",
-    href: "/settings",
-    icon: SettingsIcon,
-    isPrimary: false,
-    isSecondary: true,
-    isAdmin: false,
-    isWorkspace: false,
-    isMenu: false,
-  },
-  {
-    name: "Account",
-    href: "/account",
-    icon: CircleUserIcon,
-    isPrimary: false,
-    isSecondary: false,
-    isAdmin: false,
-    isWorkspace: false,
-    isMenu: true,
-  },
-  {
     name: "Sign out",
     href: "/signout",
     icon: LogOutIcon,
@@ -101,6 +102,33 @@ const routes = [
     isWorkspace: false,
     isMenu: true,
   },
+  {
+    name: "Members",
+    href: "/workspaces/:wid/members",
+    icon: Users2Icon,
+    isPrimary: false,
+    isSecondary: false,
+    isAdmin: false,
+    isWorkspace: true,
+    isMenu: false,
+  },
+  {
+    name: "Clients",
+    href: "/workspaces/:wid/clients",
+    icon: Users2Icon,
+    isPrimary: false,
+    isSecondary: false,
+    isAdmin: false,
+    isWorkspace: true,
+    isMenu: false,
+  },
 ];
+
+export const userNavigation = routes
+  .filter((value) => value.isMenu)
+  .map((value) => ({
+    ...value,
+    key: value.href.replace("/", ""),
+  }));
 
 export default routes;

@@ -3,15 +3,8 @@ import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { twMerge } from "tailwind-merge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import routes from "@/routes";
+import { userNavigation } from "@/routes";
 import { LockIcon } from "lucide-react";
-
-const userNavigation = routes
-  .filter((value) => value.isMenu)
-  .map((value) => ({
-    ...value,
-    key: value.href.replace("/", ""),
-  }));
 
 export function AccountMenu({ user }: { user: User }) {
   const fetcher = useFetcher();

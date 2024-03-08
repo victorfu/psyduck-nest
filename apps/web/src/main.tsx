@@ -37,9 +37,10 @@ import AdminClientPage from "./pages/admin/client/page.tsx";
 import AdminOrganizationPage from "./pages/admin/organization/page.tsx";
 import AdminLayout from "./components/admin-layout.tsx";
 import AdminWorkspaceAccessPage from "./pages/admin/workspace-access/page.tsx";
-import WorkspacePage from "./pages/workspace/page.tsx";
-import WorkspaceDetailPage from "./pages/workspace-detail/page.tsx";
+import WorkspacePage from "./pages/workspace/entry/page.tsx";
 import WorkspaceLayout from "./components/workspace-layout.tsx";
+import WorkspaceClientPage from "./pages/workspace/detail/client/page.tsx";
+import WorkspaceMemberPage from "./pages/workspace/detail/member/page.tsx";
 
 const router = createBrowserRouter([
   {
@@ -49,7 +50,7 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     loader: authLoader,
     children: [
-      { index: true, element: <Navigate to="/workspaces" replace /> },
+      { index: true, element: <Navigate to="workspaces" replace /> },
       {
         path: "workspaces",
         loader: workspacesLoader,
@@ -70,12 +71,19 @@ const router = createBrowserRouter([
     path: "/workspaces/:wid",
     element: <WorkspaceLayout />,
     errorElement: <ErrorPage />,
-    loader: authLoader,
+    loader: workspaceLoader,
     children: [
       {
         index: true,
-        loader: workspaceLoader,
-        element: <WorkspaceDetailPage />,
+        element: <Navigate to="members" replace />,
+      },
+      {
+        path: "clients",
+        element: <WorkspaceClientPage />,
+      },
+      {
+        path: "members",
+        element: <WorkspaceMemberPage />,
       },
     ],
   },
