@@ -11,6 +11,11 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsOptional()
   @IsString()
   @ApiProperty()
+  language?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty()
   emailVerificationToken?: string;
 
   @IsOptional()

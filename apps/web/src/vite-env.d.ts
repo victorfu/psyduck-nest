@@ -20,6 +20,7 @@ interface User {
   picture?: string;
   birthday?: string;
   oauthGoogleRaw?: string;
+  language?: string;
 }
 
 interface Workspace {
