@@ -7,16 +7,23 @@ import {
   Param,
   Delete,
   Request,
+  UseInterceptors,
+  ClassSerializerInterceptor,
+  ForbiddenException,
 } from "@nestjs/common";
 import { WorkspacesService } from "./workspaces.service";
 import { CreateWorkspaceDto } from "./dto/create-workspace.dto";
 import { UpdateWorkspaceDto } from "./dto/update-workspace.dto";
 import { ApiTags } from "@nestjs/swagger";
+import { WorkspaceAccessService } from "@/workspace-access/workspace-access.service";
 
 @ApiTags("workspaces")
 @Controller("workspaces")
 export class WorkspacesController {
-  constructor(private readonly workspacesService: WorkspacesService) {}
+  constructor(
+    private readonly workspacesService: WorkspacesService,
+    private readonly workspaceAccessService: WorkspaceAccessService,
+  ) {}
 
   @Post()
   create(@Request() req, @Body() createWorkspaceDto: CreateWorkspaceDto) {
@@ -34,6 +41,17 @@ export class WorkspacesController {
   findOne(@Request() req, @Param("id") id: string) {
     const user = req.user;
     return this.workspacesService.findOneByUserId(+id, user.id);
+  }
+
+  @UseInterceptors(ClassSerializerInterceptor)
+  @Get(":id/members")
+  async findMembers(@Request() req, @Param("id") id: string) {
+    const user = req.user;
+    const workspaces = await this.workspacesService.findAllByUserId(user.id);
+    if (!workspaces.find((w) => w.id === +id)) {
+      throw new ForbiddenException();
+    }
+    return this.workspaceAccessService.findAllByWorkspaceId(+id);
   }
 
   @Patch(":id")

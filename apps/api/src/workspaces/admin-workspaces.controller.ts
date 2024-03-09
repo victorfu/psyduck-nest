@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from "@nestjs/common";
 import { WorkspacesService } from "./workspaces.service";
 import { CreateWorkspaceDto } from "./dto/create-workspace.dto";
@@ -30,6 +32,7 @@ export class AdminWorkspacesController {
     return this.workspacesService.findAll();
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get(":id")
   findOne(@Param("id") id: string) {
     return this.workspacesService.findOne(+id);

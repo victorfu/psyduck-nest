@@ -82,6 +82,12 @@ export default class Api {
     return authenticatedFetch<Workspace>(`/api/workspaces/${id}`);
   }
 
+  public static async getWorkspaceMembers(id: number) {
+    return authenticatedFetch<WorkspaceAccess[]>(
+      `/api/workspaces/${id}/members`,
+    );
+  }
+
   public static async createWorkspace(workspace: Partial<Workspace>) {
     return authenticatedFetch<Workspace>("/api/workspaces", "POST", workspace);
   }
