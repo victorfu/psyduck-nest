@@ -1,15 +1,15 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { WorkspaceAccessController } from "./workspace-access.controller";
+import { AdminWorkspaceAccessController } from "./admin-workspace-access.controller";
 import { WorkspaceAccessService } from "./workspace-access.service";
 import { WorkspaceAccess } from "./entities/workspace-access.entity";
 import { getRepositoryToken } from "@nestjs/typeorm";
 
 describe("WorkspaceAccessController", () => {
-  let controller: WorkspaceAccessController;
+  let controller: AdminWorkspaceAccessController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [WorkspaceAccessController],
+      controllers: [AdminWorkspaceAccessController],
       providers: [
         WorkspaceAccessService,
         {
@@ -25,8 +25,8 @@ describe("WorkspaceAccessController", () => {
       ],
     }).compile();
 
-    controller = module.get<WorkspaceAccessController>(
-      WorkspaceAccessController,
+    controller = module.get<AdminWorkspaceAccessController>(
+      AdminWorkspaceAccessController,
     );
   });
 

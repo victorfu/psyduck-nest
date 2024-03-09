@@ -17,7 +17,7 @@ import { Role } from "@/enums/role.enum";
 @ApiTags("admin")
 @Roles(Role.Admin)
 @Controller("admin/workspace-access")
-export class WorkspaceAccessController {
+export class AdminWorkspaceAccessController {
   constructor(
     private readonly workspaceAccessService: WorkspaceAccessService,
   ) {}
