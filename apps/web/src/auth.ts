@@ -122,7 +122,7 @@ export function protectedLoader({ request }: LoaderFunctionArgs) {
   return null;
 }
 
-export async function rootLoader() {
+export async function authLoader() {
   try {
     await authProvider.signinWithToken();
   } catch (error) {

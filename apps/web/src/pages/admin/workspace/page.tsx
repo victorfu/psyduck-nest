@@ -2,7 +2,7 @@ import { useLoaderData } from "react-router-dom";
 import { WorkspaceTable } from "./workspace-table";
 import CheckAdmin from "../check-admin";
 
-function WorkspacePage() {
+function AdminWorkspacePage() {
   const { workspaces } = useLoaderData() as { workspaces: Workspace[] };
 
   return (
@@ -12,4 +12,4 @@ function WorkspacePage() {
   );
 }
 
-export default WorkspacePage;
+export default AdminWorkspacePage;

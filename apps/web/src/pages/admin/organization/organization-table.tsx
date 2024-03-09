@@ -1,5 +1,3 @@
-"use client";
-
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import {
@@ -49,7 +47,7 @@ function OrganizationSheet({
 
     if (!selectedOrganization) return;
 
-    Api.updateOrganization(selectedOrganization.id, { name, description })
+    Api.adminUpdateOrganization(selectedOrganization.id, { name, description })
       .then(() => {
         toast({
           title: "Organization updated",
@@ -174,7 +172,7 @@ export function OrganizationTable({
                     return;
                   }
 
-                  Api.deleteOrganization(organization.id)
+                  Api.adminDeleteOrganization(organization.id)
                     .then(() => {
                       toast({
                         title: `${organization.name} deleted.`,

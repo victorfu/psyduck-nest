@@ -11,11 +11,12 @@ import { WorkspaceAccessService } from "./workspace-access.service";
 import { CreateWorkspaceAccessDto } from "./dto/create-workspace-access.dto";
 import { UpdateWorkspaceAccessDto } from "./dto/update-workspace-access.dto";
 import { ApiTags } from "@nestjs/swagger";
-import { Public } from "@/decorators/public.decorator";
+import { Roles } from "@/decorators/roles.decorator";
+import { Role } from "@/enums/role.enum";
 
-@Public()
-@ApiTags("workspace-access")
-@Controller("workspace-access")
+@ApiTags("admin")
+@Roles(Role.Admin)
+@Controller("admin/workspace-access")
 export class WorkspaceAccessController {
   constructor(
     private readonly workspaceAccessService: WorkspaceAccessService,

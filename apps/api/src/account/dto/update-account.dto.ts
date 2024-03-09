@@ -31,4 +31,9 @@ export class UpdateAccountDto {
   @IsString()
   @ApiProperty()
   birthday?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty()
+  language?: string;
 }

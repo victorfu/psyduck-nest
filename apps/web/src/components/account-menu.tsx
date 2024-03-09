@@ -1,18 +1,10 @@
 import { Link, useFetcher } from "react-router-dom";
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { twMerge } from "tailwind-merge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import routes from "@/routes";
+import { userNavigation } from "@/routes";
 import { LockIcon } from "lucide-react";
-
-const userNavigation = routes
-  .filter(([, value]) => value.isMenu)
-  .map(([key, value]) => ({
-    ...value,
-    key: key,
-  }));
 
 export function AccountMenu({ user }: { user: User }) {
   const fetcher = useFetcher();
@@ -30,18 +22,6 @@ export function AccountMenu({ user }: { user: User }) {
             {user?.username?.at(0)?.toUpperCase()}
           </AvatarFallback>
         </Avatar>
-        <span className="hidden lg:flex lg:items-center">
-          <span
-            className="ml-4 text-sm font-semibold leading-6 text-gray-900"
-            aria-hidden="true"
-          >
-            {user?.username}
-          </span>
-          <ChevronDownIcon
-            className="ml-2 h-5 w-5 text-gray-400"
-            aria-hidden="true"
-          />
-        </span>
       </Menu.Button>
       <Transition
         as={Fragment}

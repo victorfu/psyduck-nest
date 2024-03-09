@@ -22,7 +22,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useToast } from "@/components/ui/use-toast";
-import { CalendarIcon, MailCheckIcon, MailQuestionIcon } from "lucide-react";
+import {
+  CalendarIcon,
+  CheckIcon,
+  MailCheckIcon,
+  MailQuestionIcon,
+} from "lucide-react";
 import { useRevalidator } from "react-router-dom";
 import {
   Popover,
@@ -33,6 +38,8 @@ import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { twMerge } from "tailwind-merge";
 import AccountPicture from "./account-picture";
+import { Command, CommandGroup, CommandItem } from "@/components/ui/command";
+import { CaretSortIcon } from "@radix-ui/react-icons";
 
 const accountFormSchema = z.object({
   username: z.string(),
@@ -49,14 +56,20 @@ const accountFormSchema = z.object({
       return false;
     })
     .optional(),
+  language: z.string().optional(),
 });
+
+const languages = [
+  { label: "English", value: "en" },
+  { label: "Chinese", value: "zh-tw" },
+] as const;
 
 function AccountForm() {
   const { user } = useRootUser();
   const { toast } = useToast();
   const revalidator = useRevalidator();
 
-  const accountForm = useForm<z.infer<typeof accountFormSchema>>({
+  const form = useForm<z.infer<typeof accountFormSchema>>({
     resolver: zodResolver(accountFormSchema),
     defaultValues: {
       username: user?.username,
@@ -65,6 +78,7 @@ function AccountForm() {
       lastName: user?.lastName ?? "",
       birthday: user?.birthday ? new Date(user.birthday) : undefined,
       picture: user?.picture ?? undefined,
+      language: user?.language ?? "en",
     },
   });
 
@@ -76,6 +90,7 @@ function AccountForm() {
       firstName: values.firstName,
       lastName: values.lastName,
       birthday: values.birthday?.toISOString().split("T")[0] ?? undefined,
+      language: values.language,
     };
 
     try {
@@ -137,14 +152,14 @@ function AccountForm() {
         <CardTitle>Account</CardTitle>
         <CardDescription>Make changes to your account here.</CardDescription>
       </CardHeader>
-      <Form {...accountForm}>
+      <Form {...form}>
         <form
-          onSubmit={accountForm.handleSubmit(onAccountSubmit)}
+          onSubmit={form.handleSubmit(onAccountSubmit)}
           className="space-y-2"
         >
           <CardContent className="space-y-2">
             <FormField
-              control={accountForm.control}
+              control={form.control}
               name="username"
               render={({ field }) => (
                 <FormItem>
@@ -157,7 +172,7 @@ function AccountForm() {
               )}
             />
             <FormField
-              control={accountForm.control}
+              control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
@@ -173,7 +188,7 @@ function AccountForm() {
               )}
             />
             <FormField
-              control={accountForm.control}
+              control={form.control}
               name="firstName"
               render={({ field }) => (
                 <FormItem>
@@ -186,7 +201,7 @@ function AccountForm() {
               )}
             />
             <FormField
-              control={accountForm.control}
+              control={form.control}
               name="lastName"
               render={({ field }) => (
                 <FormItem>
@@ -199,7 +214,7 @@ function AccountForm() {
               )}
             />
             <FormField
-              control={accountForm.control}
+              control={form.control}
               name="birthday"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
@@ -239,9 +254,64 @@ function AccountForm() {
                 </FormItem>
               )}
             />
-
             <FormField
-              control={accountForm.control}
+              control={form.control}
+              name="language"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Language</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          className={twMerge(
+                            "w-[200px] justify-between",
+                            !field.value && "text-muted-foreground",
+                          )}
+                        >
+                          {field.value
+                            ? languages.find(
+                                (language) => language.value === field.value,
+                              )?.label
+                            : "Select language"}
+                          <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[200px] p-0">
+                      <Command>
+                        <CommandGroup>
+                          {languages.map((language) => (
+                            <CommandItem
+                              value={language.label}
+                              key={language.value}
+                              onSelect={() => {
+                                form.setValue("language", language.value);
+                              }}
+                            >
+                              <CheckIcon
+                                className={twMerge(
+                                  "mr-2 h-4 w-4",
+                                  language.value === field.value
+                                    ? "opacity-100"
+                                    : "opacity-0",
+                                )}
+                              />
+                              {language.label}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="picture"
               render={({ field }) => (
                 <FormItem>

@@ -1,16 +1,12 @@
+import { authProvider } from "@/auth";
 import Api from "./api";
+import { redirect } from "react-router-dom";
 
-export async function loadUsers() {
-  try {
-    const users = await Api.getUsers();
-    return { users };
-  } catch (error) {
-    console.error(error);
-    return { users: [] };
-  }
-}
+type Params<Key extends string = string> = {
+  readonly [key in Key]: string | undefined;
+};
 
-export async function loadWorkspaces() {
+export async function workspacesLoader() {
   try {
     const workspaces = await Api.getWorkspaces();
     return { workspaces };
@@ -20,10 +16,59 @@ export async function loadWorkspaces() {
   }
 }
 
-export async function loadDashboard() {
+export async function workspaceLoader({ params }: { params: Params }) {
+  const id = params.wid;
+  if (!id) throw new Error("No workspace id");
+
   try {
-    const users = await Api.getUsers();
+    await authProvider.signinWithToken();
+    if (!authProvider.isAuthenticated) return redirect("/login");
+    const workspace = await Api.getWorkspace(+id);
     const workspaces = await Api.getWorkspaces();
+    return { workspace, user: authProvider.user, workspaces };
+  } catch (error) {
+    console.error(error);
+    return { workspace: null, user: null, workspaces: [] };
+  }
+}
+
+export async function adminUsersLoader() {
+  try {
+    const users = await Api.adminGetUsers();
+    return { users };
+  } catch (error) {
+    console.error(error);
+    return { users: [] };
+  }
+}
+
+export async function adminWorkspacesLoader() {
+  try {
+    const workspaces = await Api.adminGetWorkspaces();
+    return { workspaces };
+  } catch (error) {
+    console.error(error);
+    return { workspaces: [] };
+  }
+}
+
+export async function adminWorkspaceLoader({ params }: { params: Params }) {
+  const id = params.wid;
+  if (!id) throw new Error("No workspace id");
+
+  try {
+    const workspace = await Api.adminGetWorkspace(+id);
+    return { workspace };
+  } catch (error) {
+    console.error(error);
+    return { workspace: null };
+  }
+}
+
+export async function adminDashboardLoader() {
+  try {
+    const users = await Api.adminGetUsers();
+    const workspaces = await Api.adminGetWorkspaces();
     return { users, workspaces };
   } catch (error) {
     console.error(error);
@@ -31,9 +76,9 @@ export async function loadDashboard() {
   }
 }
 
-export async function loadClients() {
+export async function adminClientsLoader() {
   try {
-    const clients = await Api.getClients();
+    const clients = await Api.adminGetClients();
     return { clients };
   } catch (error) {
     console.error(error);
@@ -41,9 +86,9 @@ export async function loadClients() {
   }
 }
 
-export async function loadOrganizations() {
+export async function adminOrganizationsLoader() {
   try {
-    const organizations = await Api.getOrganizations();
+    const organizations = await Api.adminGetOrganizations();
     return { organizations };
   } catch (error) {
     console.error(error);

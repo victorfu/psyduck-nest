@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -36,7 +34,7 @@ export default function ClientDialog() {
     }
 
     setLoading(true);
-    Api.createClient({ name, note })
+    Api.adminCreateClient({ name, note })
       .then(() => {
         toast({
           title: "Client created",

@@ -31,6 +31,9 @@ export class Workspace {
   @OneToMany(
     () => WorkspaceAccess,
     (workspaceAccess) => workspaceAccess.workspace,
+    {
+      cascade: true,
+    },
   )
   workspaceAccesses: WorkspaceAccess[];
 }

@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -36,7 +34,7 @@ export default function WorkspaceDialog() {
     }
 
     setLoading(true);
-    Api.createWorkspace({ name, description })
+    Api.adminCreateWorkspace({ name, description })
       .then(() => {
         toast({
           title: "Workspace created",

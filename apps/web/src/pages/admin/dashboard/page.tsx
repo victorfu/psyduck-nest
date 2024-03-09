@@ -6,7 +6,7 @@ import { User2Icon, LandPlotIcon } from "lucide-react";
 import { useLoaderData } from "react-router-dom";
 import CheckAdmin from "../check-admin";
 
-function DashboardPage() {
+function AdminDashboardPage() {
   const { users, workspaces } = useLoaderData() as {
     users: User[];
     workspaces: Workspace[];
@@ -66,4 +66,4 @@ function DashboardPage() {
   );
 }
 
-export default DashboardPage;
+export default AdminDashboardPage;

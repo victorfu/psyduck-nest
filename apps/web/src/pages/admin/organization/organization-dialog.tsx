@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -36,7 +34,7 @@ export default function OrganizationDialog() {
     }
 
     setLoading(true);
-    Api.createOrganization({ name, description })
+    Api.adminCreateOrganization({ name, description })
       .then(() => {
         toast({
           title: "Organization created",

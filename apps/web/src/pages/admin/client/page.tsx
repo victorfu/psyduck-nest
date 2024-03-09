@@ -2,7 +2,7 @@ import { useLoaderData } from "react-router-dom";
 import { ClientTable } from "./client-table";
 import CheckAdmin from "../check-admin";
 
-function ClientPage() {
+function AdminClientPage() {
   const { clients } = useLoaderData() as { clients: Client[] };
 
   return (
@@ -12,4 +12,4 @@ function ClientPage() {
   );
 }
 
-export default ClientPage;
+export default AdminClientPage;

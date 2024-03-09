@@ -9,8 +9,8 @@ interface User {
   username: string;
   isActive: boolean;
   roles: string[];
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 
   // Optional fields
   email?: string;
@@ -20,14 +20,25 @@ interface User {
   picture?: string;
   birthday?: string;
   oauthGoogleRaw?: string;
+  language?: string;
 }
 
 interface Workspace {
   id: number;
-  name?: string;
-  description?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  name: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+  workspaceAccesses: WorkspaceAccess[];
+}
+
+interface WorkspaceAccess {
+  id: number;
+  user: Partial<User>;
+  workspace: Partial<Workspace>;
+  role: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface Client {
@@ -37,14 +48,14 @@ interface Client {
   email?: string;
   note?: string;
   address?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface Organization {
   id: number;
   name?: string;
   description?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }

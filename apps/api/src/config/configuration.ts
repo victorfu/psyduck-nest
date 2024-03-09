@@ -12,7 +12,7 @@ export default () => ({
     database: process.env.DB_DATABASE || "db.dat",
     synchronize: process.env.DB_SYNCHRONIZE === "true",
     autoLoadEntities: true,
-    logging: true,
+    logging: process.env.DB_LOGGING === "true",
   },
   swagger: {
     enabled: process.env.SWAGGER_ENABLED === "true",

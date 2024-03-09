@@ -28,9 +28,11 @@ export class WorkspaceAccess {
   updatedAt: Date;
 
   // relations
-  @ManyToOne(() => User, (user) => user.workspaceAccesses)
+  @ManyToOne(() => User, (user) => user.workspaceAccesses, { eager: true })
   user: User;
 
-  @ManyToOne(() => Workspace, (workspace) => workspace.workspaceAccesses)
+  @ManyToOne(() => Workspace, (workspace) => workspace.workspaceAccesses, {
+    eager: true,
+  })
   workspace: Workspace;
 }

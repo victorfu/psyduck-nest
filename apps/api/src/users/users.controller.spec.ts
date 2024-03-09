@@ -39,6 +39,13 @@ describe("UsersController", () => {
                 lastName: "lastName #2",
               },
             ]),
+            findAllByUsername: jest.fn().mockResolvedValue([
+              {
+                username: "user1",
+                firstName: "firstName #1",
+                lastName: "lastName #1",
+              },
+            ]),
             findOne: jest.fn().mockImplementation((id: string) =>
               Promise.resolve({
                 username: "user1",
@@ -47,6 +54,11 @@ describe("UsersController", () => {
                 id,
               }),
             ),
+            findOneByUsername: jest.fn().mockResolvedValue({
+              username: "user1",
+              firstName: "firstName #1",
+              lastName: "lastName #1",
+            }),
             remove: jest.fn(),
           },
         },
@@ -74,8 +86,8 @@ describe("UsersController", () => {
 
   describe("findAll()", () => {
     it("should find all users ", () => {
-      usersController.findAll();
-      expect(usersService.findAll).toHaveBeenCalled();
+      usersController.findAll("user1");
+      expect(usersService.findAllByUsername).toHaveBeenCalled();
     });
   });
 
