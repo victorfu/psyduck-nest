@@ -23,12 +23,25 @@ export async function workspaceLoader({ params }: { params: Params }) {
   try {
     await authProvider.signinWithToken();
     if (!authProvider.isAuthenticated) return redirect("/login");
-    const workspace = await Api.getWorkspace(+id);
     const workspaces = await Api.getWorkspaces();
+    const workspace = workspaces.find((w) => w.id === +id);
     return { workspace, user: authProvider.user, workspaces };
   } catch (error) {
     console.error(error);
     return { workspace: null, user: null, workspaces: [] };
+  }
+}
+
+export async function workspaceMemberLoader({ params }: { params: Params }) {
+  const id = params.wid;
+  if (!id) throw new Error("No workspace id");
+
+  try {
+    const members = await Api.getWorkspaceMembers(+id);
+    return { members };
+  } catch (error) {
+    console.error(error);
+    return { members: [] };
   }
 }
 

@@ -29,6 +29,7 @@ import {
   adminWorkspaceLoader,
   adminWorkspacesLoader,
   workspaceLoader,
+  workspaceMemberLoader,
 } from "./lib/loaders.ts";
 import AuthSuccessPage from "./pages/auth-success-page.tsx";
 import ForgotPasswordPage from "./pages/forgot-password-page.tsx";
@@ -84,6 +85,7 @@ const router = createBrowserRouter([
       },
       {
         path: "members",
+        loader: workspaceMemberLoader,
         element: <WorkspaceMemberPage />,
       },
       {
