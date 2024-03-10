@@ -28,6 +28,7 @@ export class AdminWorkspacesController {
   }
 
   @Get()
+  @UseInterceptors(ClassSerializerInterceptor)
   findAll() {
     return this.workspacesService.findAll();
   }

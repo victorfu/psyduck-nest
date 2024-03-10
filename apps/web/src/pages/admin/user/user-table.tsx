@@ -16,9 +16,15 @@ import { DataTableColumnHeader } from "@/components/ui/data-table-column-header"
 import { UserTableToolbar } from "./user-table-toolbar";
 import Api from "@/lib/api";
 import { Switch } from "@/components/ui/switch";
-import { useRevalidator } from "react-router-dom";
+import { Link, useRevalidator } from "react-router-dom";
 
-export default function UserTable({ users = [] }: { users: User[] }) {
+export default function UserTable({
+  users = [],
+  workspaceAccesses = [],
+}: {
+  users: User[];
+  workspaceAccesses: WorkspaceAccess[];
+}) {
   const { toast } = useToast();
   const revalidator = useRevalidator();
 
@@ -97,6 +103,36 @@ export default function UserTable({ users = [] }: { users: User[] }) {
       cell: ({ row }) => {
         const user = row.original;
         return <div>{user.email ?? ""}</div>;
+      },
+    },
+    {
+      accessorKey: "workspaceAccesses",
+      header: "Workspaces",
+      cell: ({ row }) => {
+        const user = row.original;
+        const userWa = workspaceAccesses.filter((wa) => wa.user.id === user.id);
+        return (
+          <div>
+            {userWa.map((wa) => {
+              return (
+                <div
+                  key={wa.workspace.id}
+                  className="flex flex-row items-center space-x-1"
+                >
+                  <Link
+                    to={`/admin/workspaces/${wa.workspace.id}`}
+                    className="text-blue-600 hover:underline"
+                  >
+                    {wa.workspace.name}
+                  </Link>
+                  <div>
+                    <Badge variant="outline">{wa.role}</Badge>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        );
       },
     },
     {

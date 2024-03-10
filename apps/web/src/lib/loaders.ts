@@ -48,10 +48,11 @@ export async function workspaceMemberLoader({ params }: { params: Params }) {
 export async function adminUsersLoader() {
   try {
     const users = await Api.adminGetUsers();
-    return { users };
+    const workspaceAccesses = await Api.adminGetWorkspaceAccess();
+    return { users, workspaceAccesses };
   } catch (error) {
     console.error(error);
-    return { users: [] };
+    return { users: [], workspaceAccesses: [] };
   }
 }
 

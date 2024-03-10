@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from "@nestjs/common";
 import { WorkspaceAccessService } from "./workspace-access.service";
 import { CreateWorkspaceAccessDto } from "./dto/create-workspace-access.dto";
@@ -17,7 +19,7 @@ import { Role } from "@/enums/role.enum";
 @ApiTags("admin")
 @Roles(Role.Admin)
 @Controller("admin/workspace-access")
-export class AdminWorkspaceAccessController {
+export class WorkspaceAccessController {
   constructor(
     private readonly workspaceAccessService: WorkspaceAccessService,
   ) {}
@@ -28,11 +30,13 @@ export class AdminWorkspaceAccessController {
   }
 
   @Get()
+  @UseInterceptors(ClassSerializerInterceptor)
   findAll() {
     return this.workspaceAccessService.findAll();
   }
 
   @Get(":id")
+  @UseInterceptors(ClassSerializerInterceptor)
   findOne(@Param("id") id: string) {
     return this.workspaceAccessService.findOne(+id);
   }

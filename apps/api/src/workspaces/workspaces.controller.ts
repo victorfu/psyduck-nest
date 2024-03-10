@@ -32,12 +32,14 @@ export class WorkspacesController {
   }
 
   @Get()
+  @UseInterceptors(ClassSerializerInterceptor)
   findAll(@Request() req) {
     const user = req.user;
     return this.workspacesService.findAllByUserId(user.id);
   }
 
   @Get(":id")
+  @UseInterceptors(ClassSerializerInterceptor)
   findOne(@Request() req, @Param("id") id: string) {
     const user = req.user;
     return this.workspacesService.findOneByUserId(+id, user.id);
