@@ -137,15 +137,15 @@ export default function UserTable({ users = [] }: { users: User[] }) {
               <DropdownMenuItem
                 onClick={() => {
                   navigator.clipboard
-                    .writeText(String(user?.id ?? 0))
+                    .writeText(String(user?.username ?? ""))
                     .catch(console.error);
                   toast({
-                    title: "Id copied to clipboard",
-                    description: user.id,
+                    title: "Username copied to clipboard",
+                    description: user.username,
                   });
                 }}
               >
-                Copy Id
+                Copy Username
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={async () => {

@@ -77,15 +77,15 @@ export default function MemberTable({
               <DropdownMenuItem
                 onClick={() => {
                   navigator.clipboard
-                    .writeText(String(access.user?.id ?? 0))
+                    .writeText(String(access.user?.username ?? ""))
                     .catch(console.error);
                   toast({
-                    title: "Email copied to clipboard",
-                    description: access.user.email,
+                    title: "Username copied to clipboard",
+                    description: access.user.username,
                   });
                 }}
               >
-                Copy Email
+                Copy Username
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
