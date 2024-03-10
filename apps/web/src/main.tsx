@@ -92,6 +92,10 @@ const router = createBrowserRouter([
         path: "settings",
         element: <WorkspaceSettingsPage />,
       },
+      {
+        path: "settings/:tab",
+        element: <WorkspaceSettingsPage />,
+      },
     ],
   },
   {
