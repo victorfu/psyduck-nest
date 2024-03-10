@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -26,14 +25,16 @@ const infoFormSchema = z.object({
       message: "Name must not be longer than 30 characters.",
     }),
   description: z.string().optional(),
+  manager: z.string().optional(),
 });
 
 type InfoFormValues = z.infer<typeof infoFormSchema>;
 
 export function InfoForm({ workspace }: { workspace: Workspace }) {
   const defaultValues: Partial<InfoFormValues> = {
-    name: workspace.name,
-    description: workspace.description,
+    name: workspace.name ?? "",
+    description: workspace.description ?? "",
+    manager: workspace.manager ?? "",
   };
 
   const form = useForm<InfoFormValues>({
@@ -70,9 +71,6 @@ export function InfoForm({ workspace }: { workspace: Workspace }) {
               <FormControl>
                 <Input placeholder="Workspace name" {...field} />
               </FormControl>
-              <FormDescription>
-                This is the name of your workspace.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -86,9 +84,19 @@ export function InfoForm({ workspace }: { workspace: Workspace }) {
               <FormControl>
                 <Input placeholder="Workspace description" {...field} />
               </FormControl>
-              <FormDescription>
-                This is the description of your workspace.
-              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="manager"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Manager</FormLabel>
+              <FormControl>
+                <Input placeholder="Workspace manager" {...field} />
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}

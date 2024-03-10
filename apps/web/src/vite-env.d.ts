@@ -27,6 +27,7 @@ interface Workspace {
   id: number;
   name: string;
   description: string;
+  manager: string;
   createdAt: string;
   updatedAt: string;
   workspaceAccesses: WorkspaceAccess[];

@@ -21,6 +21,9 @@ export class Workspace {
   @Column({ nullable: true })
   description: string;
 
+  @Column({ nullable: true })
+  manager: string;
+
   @CreateDateColumn()
   createdAt: Date;
 
