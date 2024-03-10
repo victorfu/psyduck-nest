@@ -82,6 +82,12 @@ export default class Api {
     return authenticatedFetch<Workspace>(`/api/workspaces/${id}`);
   }
 
+  public static async getWorkspaceMembers(id: number) {
+    return authenticatedFetch<WorkspaceAccess[]>(
+      `/api/workspaces/${id}/members`,
+    );
+  }
+
   public static async createWorkspace(workspace: Partial<Workspace>) {
     return authenticatedFetch<Workspace>("/api/workspaces", "POST", workspace);
   }
@@ -99,6 +105,27 @@ export default class Api {
 
   public static async deleteWorkspace(id: number) {
     return authenticatedFetch(`/api/workspaces/${id}`, "DELETE");
+  }
+
+  // Notes endpoints
+  public static async getNotes() {
+    return authenticatedFetch<Note[]>(`/api/notes`);
+  }
+
+  public static async getNote(id: number) {
+    return authenticatedFetch<Note>(`/api/notes/${id}`);
+  }
+
+  public static async createNote(note: Partial<Note>) {
+    return authenticatedFetch<Note>(`/api/notes`, "POST", note);
+  }
+
+  public static async updateNote(id: number, note: Partial<Note>) {
+    return authenticatedFetch<Note>(`/api/notes/${id}`, "PATCH", note);
+  }
+
+  public static async deleteNote(id: number) {
+    return authenticatedFetch(`/api/notes/${id}`, "DELETE");
   }
 
   // Admin Users endpoints

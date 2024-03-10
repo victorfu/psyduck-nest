@@ -27,6 +27,7 @@ interface Workspace {
   id: number;
   name: string;
   description: string;
+  manager: string;
   createdAt: string;
   updatedAt: string;
   workspaceAccesses: WorkspaceAccess[];
@@ -56,6 +57,13 @@ interface Organization {
   id: number;
   name?: string;
   description?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface Note {
+  id: number;
+  content: string;
   createdAt: string;
   updatedAt: string;
 }

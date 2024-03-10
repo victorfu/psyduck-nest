@@ -38,10 +38,11 @@ export async function copyToClipboard(text?: string): Promise<void> {
   }
 }
 
-export const toBase64 = (file: File) =>
-  new Promise((resolve, reject) => {
+export const toBase64 = (file: File) => {
+  return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => resolve(reader.result);
     reader.onerror = reject;
   });
+};

@@ -10,10 +10,11 @@ import {
 import { OrganizationsService } from "./organizations.service";
 import { CreateOrganizationDto } from "./dto/create-organization.dto";
 import { UpdateOrganizationDto } from "./dto/update-organization.dto";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { Roles } from "@/decorators/roles.decorator";
 import { Role } from "@/enums/role.enum";
 
+@ApiBearerAuth()
 @ApiTags("admin")
 @Roles(Role.Admin)
 @Controller("admin/organizations")

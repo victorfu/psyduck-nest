@@ -23,8 +23,8 @@ export async function workspaceLoader({ params }: { params: Params }) {
   try {
     await authProvider.signinWithToken();
     if (!authProvider.isAuthenticated) return redirect("/login");
-    const workspace = await Api.getWorkspace(+id);
     const workspaces = await Api.getWorkspaces();
+    const workspace = workspaces.find((w) => w.id === +id);
     return { workspace, user: authProvider.user, workspaces };
   } catch (error) {
     console.error(error);
@@ -32,13 +32,37 @@ export async function workspaceLoader({ params }: { params: Params }) {
   }
 }
 
+export async function noteLoader() {
+  try {
+    const notes = await Api.getNotes();
+    return { notes };
+  } catch (error) {
+    console.error(error);
+    return { notes: [] };
+  }
+}
+
+export async function workspaceMemberLoader({ params }: { params: Params }) {
+  const id = params.wid;
+  if (!id) throw new Error("No workspace id");
+
+  try {
+    const members = await Api.getWorkspaceMembers(+id);
+    return { members };
+  } catch (error) {
+    console.error(error);
+    return { members: [] };
+  }
+}
+
 export async function adminUsersLoader() {
   try {
     const users = await Api.adminGetUsers();
-    return { users };
+    const workspaceAccesses = await Api.adminGetWorkspaceAccess();
+    return { users, workspaceAccesses };
   } catch (error) {
     console.error(error);
-    return { users: [] };
+    return { users: [], workspaceAccesses: [] };
   }
 }
 

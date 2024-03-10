@@ -13,10 +13,11 @@ import {
 import { UsersService } from "./users.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { Roles } from "../decorators/roles.decorator";
 import { Role } from "../enums/role.enum";
 
+@ApiBearerAuth()
 @ApiTags("admin")
 @Controller("admin/users")
 export class UsersController {

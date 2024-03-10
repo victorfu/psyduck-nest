@@ -11,4 +11,9 @@ export class CreateWorkspaceDto {
   @IsString()
   @ApiProperty()
   description?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty()
+  manager?: string;
 }

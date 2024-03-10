@@ -29,6 +29,8 @@ import {
   adminWorkspaceLoader,
   adminWorkspacesLoader,
   workspaceLoader,
+  workspaceMemberLoader,
+  noteLoader,
 } from "./lib/loaders.ts";
 import AuthSuccessPage from "./pages/auth-success-page.tsx";
 import ForgotPasswordPage from "./pages/forgot-password-page.tsx";
@@ -42,6 +44,7 @@ import WorkspaceLayout from "./components/workspace-layout.tsx";
 import WorkspaceClientPage from "./pages/workspace/client/page.tsx";
 import WorkspaceMemberPage from "./pages/workspace/member/page.tsx";
 import WorkspaceSettingsPage from "./pages/workspace/settings/page.tsx";
+import WorkspaceNotePage from "./pages/workspace/note/page.tsx";
 
 const router = createBrowserRouter([
   {
@@ -76,7 +79,12 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Navigate to="clients" replace />,
+        element: <Navigate to="notes" replace />,
+      },
+      {
+        path: "notes",
+        loader: noteLoader,
+        element: <WorkspaceNotePage />,
       },
       {
         path: "clients",
@@ -84,10 +92,15 @@ const router = createBrowserRouter([
       },
       {
         path: "members",
+        loader: workspaceMemberLoader,
         element: <WorkspaceMemberPage />,
       },
       {
         path: "settings",
+        element: <WorkspaceSettingsPage />,
+      },
+      {
+        path: "settings/:tab",
         element: <WorkspaceSettingsPage />,
       },
     ],

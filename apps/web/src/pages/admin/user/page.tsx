@@ -3,11 +3,14 @@ import { useLoaderData } from "react-router-dom";
 import CheckAdmin from "../check-admin";
 
 function AdminUserPage() {
-  const { users } = useLoaderData() as { users: User[] };
+  const { users, workspaceAccesses } = useLoaderData() as {
+    users: User[];
+    workspaceAccesses: WorkspaceAccess[];
+  };
 
   return (
     <CheckAdmin>
-      <UserTable users={users} />
+      <UserTable users={users} workspaceAccesses={workspaceAccesses} />
     </CheckAdmin>
   );
 }

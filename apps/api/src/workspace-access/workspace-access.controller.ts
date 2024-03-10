@@ -6,14 +6,17 @@ import {
   Patch,
   Param,
   Delete,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from "@nestjs/common";
 import { WorkspaceAccessService } from "./workspace-access.service";
 import { CreateWorkspaceAccessDto } from "./dto/create-workspace-access.dto";
 import { UpdateWorkspaceAccessDto } from "./dto/update-workspace-access.dto";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { Roles } from "@/decorators/roles.decorator";
 import { Role } from "@/enums/role.enum";
 
+@ApiBearerAuth()
 @ApiTags("admin")
 @Roles(Role.Admin)
 @Controller("admin/workspace-access")
@@ -28,11 +31,13 @@ export class WorkspaceAccessController {
   }
 
   @Get()
+  @UseInterceptors(ClassSerializerInterceptor)
   findAll() {
     return this.workspaceAccessService.findAll();
   }
 
   @Get(":id")
+  @UseInterceptors(ClassSerializerInterceptor)
   findOne(@Param("id") id: string) {
     return this.workspaceAccessService.findOne(+id);
   }

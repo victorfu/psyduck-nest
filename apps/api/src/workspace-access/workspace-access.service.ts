@@ -20,6 +20,16 @@ export class WorkspaceAccessService {
     return this.workspaceAccessRepository.find();
   }
 
+  findAllByWorkspaceId(workspaceId: number) {
+    return this.workspaceAccessRepository.find({
+      where: {
+        workspace: {
+          id: workspaceId,
+        },
+      },
+    });
+  }
+
   findOne(id: number) {
     return this.workspaceAccessRepository.findOneBy({ id: id });
   }

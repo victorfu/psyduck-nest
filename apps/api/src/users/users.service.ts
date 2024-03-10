@@ -48,7 +48,7 @@ export class UsersService {
   findAll(): Promise<User[]> {
     return this.usersRepository.find({
       relations: {
-        workspaceAccesses: true,
+        workspaceAccesses: false,
       },
     });
   }

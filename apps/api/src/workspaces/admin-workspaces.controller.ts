@@ -6,14 +6,17 @@ import {
   Patch,
   Param,
   Delete,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from "@nestjs/common";
 import { WorkspacesService } from "./workspaces.service";
 import { CreateWorkspaceDto } from "./dto/create-workspace.dto";
 import { UpdateWorkspaceDto } from "./dto/update-workspace.dto";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { Roles } from "@/decorators/roles.decorator";
 import { Role } from "@/enums/role.enum";
 
+@ApiBearerAuth()
 @ApiTags("admin")
 @Roles(Role.Admin)
 @Controller("admin/workspaces")
@@ -26,10 +29,12 @@ export class AdminWorkspacesController {
   }
 
   @Get()
+  @UseInterceptors(ClassSerializerInterceptor)
   findAll() {
     return this.workspacesService.findAll();
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get(":id")
   findOne(@Param("id") id: string) {
     return this.workspacesService.findOne(+id);

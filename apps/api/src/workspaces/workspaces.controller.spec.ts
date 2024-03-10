@@ -1,6 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { WorkspacesController } from "./workspaces.controller";
 import { WorkspacesService } from "./workspaces.service";
+import { WorkspaceAccessService } from "@/workspace-access/workspace-access.service";
 
 describe("WorkspacesController", () => {
   let controller: WorkspacesController;
@@ -11,6 +12,10 @@ describe("WorkspacesController", () => {
       providers: [
         {
           provide: WorkspacesService,
+          useValue: {},
+        },
+        {
+          provide: WorkspaceAccessService,
           useValue: {},
         },
       ],
