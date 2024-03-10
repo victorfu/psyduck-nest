@@ -14,9 +14,10 @@ import {
 import { WorkspacesService } from "./workspaces.service";
 import { CreateWorkspaceDto } from "./dto/create-workspace.dto";
 import { UpdateWorkspaceDto } from "./dto/update-workspace.dto";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { WorkspaceAccessService } from "@/workspace-access/workspace-access.service";
 
+@ApiBearerAuth()
 @ApiTags("workspaces")
 @Controller("workspaces")
 export class WorkspacesController {

@@ -20,6 +20,7 @@ import { WorkspacesModule } from "./workspaces/workspaces.module";
 import { ClientsModule } from "./clients/clients.module";
 import { OrganizationsModule } from "./organizations/organizations.module";
 import { WorkspaceAccessModule } from "./workspace-access/workspace-access.module";
+import { NotesModule } from './notes/notes.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { WorkspaceAccessModule } from "./workspace-access/workspace-access.modul
     ClientsModule,
     OrganizationsModule,
     WorkspaceAccessModule,
+    NotesModule,
   ],
   controllers: [AppController],
   providers: [

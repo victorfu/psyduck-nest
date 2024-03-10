@@ -13,7 +13,7 @@ import { LocalAuthGuard } from "./auth/local-auth.guard";
 import { AuthService } from "./auth/auth.service";
 import { Public } from "./decorators/public.decorator";
 import { UserLoginDto } from "./auth/dto/user-login.dto";
-import { ApiBody, ApiExcludeEndpoint } from "@nestjs/swagger";
+import { ApiBody, ApiExcludeEndpoint, ApiTags } from "@nestjs/swagger";
 import { UsersService } from "./users/users.service";
 
 @Controller()
@@ -42,6 +42,7 @@ export class AppController {
     return this.appService.version();
   }
 
+  @ApiTags("auth")
   @Public()
   @UseGuards(LocalAuthGuard)
   @ApiBody({ type: UserLoginDto })
@@ -50,6 +51,7 @@ export class AppController {
     return await this.authService.generateToken(req.user);
   }
 
+  @ApiTags("auth")
   @Public()
   @Post("forgot-password")
   async forgotPassword(@Body("email") email: string) {
