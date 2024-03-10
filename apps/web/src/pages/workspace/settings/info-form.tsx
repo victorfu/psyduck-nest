@@ -14,6 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { toast } from "@/components/ui/use-toast";
+import Api from "@/lib/api";
 
 const infoFormSchema = z.object({
   name: z
@@ -40,15 +41,21 @@ export function InfoForm({ workspace }: { workspace: Workspace }) {
     defaultValues,
   });
 
-  function onSubmit(data: InfoFormValues) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+  async function onSubmit(data: InfoFormValues) {
+    try {
+      await Api.updateWorkspace(workspace.id, data);
+      toast({
+        title: "Workspace updated",
+        description: "Your workspace has been updated.",
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "An error occurred",
+        description: "Unable to update workspace.",
+        variant: "destructive",
+      });
+    }
   }
 
   return (

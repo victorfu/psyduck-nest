@@ -80,24 +80,6 @@ export class WorkspacesService {
     return this.workspacesRepository.update(id, updateWorkspaceDto);
   }
 
-  updateByUserId(
-    id: number,
-    userId: number,
-    updateWorkspaceDto: UpdateWorkspaceDto,
-  ) {
-    return this.workspacesRepository.update(
-      {
-        id: id,
-        workspaceAccesses: {
-          user: {
-            id: userId,
-          },
-        },
-      },
-      updateWorkspaceDto,
-    );
-  }
-
   remove(id: number) {
     this.workspacesRepository.delete(id);
   }

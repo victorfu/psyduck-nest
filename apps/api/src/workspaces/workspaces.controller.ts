@@ -55,17 +55,17 @@ export class WorkspacesController {
   }
 
   @Patch(":id")
-  update(
+  async update(
     @Request() req,
     @Param("id") id: string,
     @Body() updateWorkspaceDto: UpdateWorkspaceDto,
   ) {
     const user = req.user;
-    return this.workspacesService.updateByUserId(
-      +id,
-      user.id,
-      updateWorkspaceDto,
-    );
+    const workspaces = await this.workspacesService.findAllByUserId(user.id);
+    if (!workspaces.find((w) => w.id === +id)) {
+      throw new ForbiddenException();
+    }
+    return this.workspacesService.update(+id, updateWorkspaceDto);
   }
 
   @Delete(":id")
