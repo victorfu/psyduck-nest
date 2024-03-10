@@ -32,6 +32,16 @@ export async function workspaceLoader({ params }: { params: Params }) {
   }
 }
 
+export async function noteLoader() {
+  try {
+    const notes = await Api.getNotes();
+    return { notes };
+  } catch (error) {
+    console.error(error);
+    return { notes: [] };
+  }
+}
+
 export async function workspaceMemberLoader({ params }: { params: Params }) {
   const id = params.wid;
   if (!id) throw new Error("No workspace id");

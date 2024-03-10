@@ -107,6 +107,27 @@ export default class Api {
     return authenticatedFetch(`/api/workspaces/${id}`, "DELETE");
   }
 
+  // Notes endpoints
+  public static async getNotes() {
+    return authenticatedFetch<Note[]>(`/api/notes`);
+  }
+
+  public static async getNote(id: number) {
+    return authenticatedFetch<Note>(`/api/notes/${id}`);
+  }
+
+  public static async createNote(note: Partial<Note>) {
+    return authenticatedFetch<Note>(`/api/notes`, "POST", note);
+  }
+
+  public static async updateNote(id: number, note: Partial<Note>) {
+    return authenticatedFetch<Note>(`/api/notes/${id}`, "PATCH", note);
+  }
+
+  public static async deleteNote(id: number) {
+    return authenticatedFetch(`/api/notes/${id}`, "DELETE");
+  }
+
   // Admin Users endpoints
   public static async adminGetUsers(username?: string) {
     if (!username) return authenticatedFetch<User[]>("/api/admin/users");

@@ -9,6 +9,7 @@ import {
   UsersIcon,
   FolderIcon,
   Users2Icon,
+  NotepadTextIcon,
 } from "lucide-react";
 
 const routes = [
@@ -101,6 +102,16 @@ const routes = [
     isAdmin: false,
     isWorkspace: false,
     isMenu: true,
+  },
+  {
+    name: "Notes",
+    href: "/workspaces/:wid/notes",
+    icon: NotepadTextIcon,
+    isPrimary: false,
+    isSecondary: false,
+    isAdmin: false,
+    isWorkspace: true,
+    isMenu: false,
   },
   {
     name: "Clients",

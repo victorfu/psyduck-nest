@@ -60,3 +60,10 @@ interface Organization {
   createdAt: string;
   updatedAt: string;
 }
+
+interface Note {
+  id: number;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+}
