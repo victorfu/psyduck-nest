@@ -40,29 +40,30 @@ function WorkspaceNoteDetailPage() {
   return (
     <div>
       <div className="text-2xl font-bold mb-4 text-center">{note?.title}</div>
-
-      <Editor
-        data={convertNoteToEditorData(note)}
-        onChange={(api) => {
-          api.saver
-            .save()
-            .then(async (outputData) => {
-              console.log("Saving complete: ", JSON.stringify(outputData));
-              if (!note) return;
-              try {
-                await Api.updateNote(note.id, {
-                  content: JSON.stringify(outputData),
-                });
-                await loadNote(note.id);
-              } catch (error) {
+      <div className="overview__canvas">
+        <Editor
+          data={convertNoteToEditorData(note)}
+          onChange={(api) => {
+            api.saver
+              .save()
+              .then(async (outputData) => {
+                console.log("Saving complete: ", JSON.stringify(outputData));
+                if (!note) return;
+                try {
+                  await Api.updateNote(note.id, {
+                    content: JSON.stringify(outputData),
+                  });
+                  await loadNote(note.id);
+                } catch (error) {
+                  console.error("Saving failed: ", error);
+                }
+              })
+              .catch((error) => {
                 console.error("Saving failed: ", error);
-              }
-            })
-            .catch((error) => {
-              console.error("Saving failed: ", error);
-            });
-        }}
-      />
+              });
+          }}
+        />
+      </div>
     </div>
   );
 }
