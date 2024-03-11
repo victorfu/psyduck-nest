@@ -13,6 +13,9 @@ export class Note {
   @Generated("increment")
   id: number;
 
+  @Column()
+  title: string;
+
   @Column({ nullable: true })
   content: string;
 

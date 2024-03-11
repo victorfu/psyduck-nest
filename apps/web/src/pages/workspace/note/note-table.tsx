@@ -25,7 +25,8 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import Api from "@/lib/api";
-import { useRevalidator } from "react-router-dom";
+import { Link, useLocation, useRevalidator } from "react-router-dom";
+import { format } from "date-fns";
 
 function NoteSheet({
   open,
@@ -42,11 +43,11 @@ function NoteSheet({
   function handleSubmit(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const content = formData.get("content") as string;
+    const title = formData.get("title") as string;
 
     if (!selectedNote) return;
 
-    Api.updateNote(selectedNote.id, { content })
+    Api.updateNote(selectedNote.id, { title })
       .then(() => {
         toast({
           title: "Note updated",
@@ -77,13 +78,13 @@ function NoteSheet({
         <form onSubmit={handleSubmit} autoComplete="off">
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="content" className="text-right">
-                Content
+              <Label htmlFor="title" className="text-right">
+                Title
               </Label>
               <Input
-                id="content"
-                name="content"
-                defaultValue={selectedNote?.content}
+                id="title"
+                name="title"
+                defaultValue={selectedNote?.title}
                 className="col-span-3"
               />
             </div>
@@ -101,6 +102,8 @@ function NoteSheet({
 
 export function NoteTable({ notes }: { notes: Note[] }) {
   const { toast } = useToast();
+  const location = useLocation();
+  const { pathname } = location;
   const [selectedNote, setSelectedNote] = useState<Note>();
   const [open, setOpen] = useState(false);
   const revalidator = useRevalidator();
@@ -111,12 +114,70 @@ export function NoteTable({ notes }: { notes: Note[] }) {
       header: "Id",
     },
     {
-      accessorKey: "content",
+      accessorKey: "title",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Content" />
+        <DataTableColumnHeader column={column} title="Title" />
       ),
-    },
+      cell: ({ row }) => {
+        const note = row.original;
+        const wid = pathname.split("/")[2];
 
+        return (
+          <Link
+            to={`/workspaces/${wid}/notes/${note.id}`}
+            className="text-blue-600"
+          >
+            {note.title}
+          </Link>
+        );
+      },
+    },
+    {
+      accessorKey: "updatedAt",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="UpdatedAt" />
+      ),
+      cell: ({ row }) => {
+        const note = row.original;
+        return (
+          <div className="w-24">
+            {note.updatedAt
+              ? format(note.updatedAt, "yyyy-MM-dd HH:mm:dd")
+              : ""}
+          </div>
+        );
+      },
+      sortingFn: (a, b) => {
+        const userA = a.original;
+        const userB = b.original;
+        const aDate = userA.createdAt ? new Date(userA.createdAt) : new Date(0);
+        const bDate = userB.createdAt ? new Date(userB.createdAt) : new Date(0);
+        return aDate.getTime() - bDate.getTime();
+      },
+    },
+    {
+      accessorKey: "createdAt",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="CreatedAt" />
+      ),
+      cell: ({ row }) => {
+        const note = row.original;
+        return (
+          <div className="w-24">
+            {note.createdAt
+              ? format(note.createdAt, "yyyy-MM-dd HH:mm:dd")
+              : ""}
+          </div>
+        );
+      },
+      sortingFn: (a, b) => {
+        const userA = a.original;
+        const userB = b.original;
+        const aDate = userA.createdAt ? new Date(userA.createdAt) : new Date(0);
+        const bDate = userB.createdAt ? new Date(userB.createdAt) : new Date(0);
+        return aDate.getTime() - bDate.getTime();
+      },
+    },
     {
       id: "actions",
       cell: ({ row }) => {

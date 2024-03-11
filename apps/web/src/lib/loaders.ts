@@ -6,7 +6,7 @@ type Params<Key extends string = string> = {
   readonly [key in Key]: string | undefined;
 };
 
-export async function workspacesLoader() {
+export async function workspaceListLoader() {
   try {
     const workspaces = await Api.getWorkspaces();
     return { workspaces };
@@ -32,7 +32,7 @@ export async function workspaceLoader({ params }: { params: Params }) {
   }
 }
 
-export async function noteLoader() {
+export async function notesLoader() {
   try {
     const notes = await Api.getNotes();
     return { notes };
