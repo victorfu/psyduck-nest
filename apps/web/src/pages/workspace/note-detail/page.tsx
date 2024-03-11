@@ -3,6 +3,8 @@ import Editor from "./editor";
 import { useLocation } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
 import EditorJS from "@editorjs/editorjs";
+import { Input } from "@/components/ui/input";
+import debounce from "lodash/debounce";
 
 function WorkspaceNoteDetailPage() {
   const { pathname } = useLocation();
@@ -37,10 +39,27 @@ function WorkspaceNoteDetailPage() {
     return JSON.parse(note.content) as EditorJS.OutputData;
   };
 
+  const updateNote = async (id: number, note: Partial<Note>) => {
+    return await Api.updateNote(id, note);
+  };
+
+  const debouncedUpdateNote = useCallback(debounce(updateNote, 500), []);
+
+  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!note) return;
+    debouncedUpdateNote(note.id, {
+      title: event.target.value,
+    })?.catch(console.error);
+  };
+
   return (
     <div>
       <div className="overview__canvas">
-        <div className="text-2xl font-bold mb-4 text-center">{note?.title}</div>
+        <Input
+          className="text-2xl font-bold mb-4 text-center focus-visible:ring-0 focus-visible:ring-transparent focus-visible:ring-offset-0 border-0"
+          defaultValue={note?.title}
+          onChange={handleTitleChange}
+        />
         <Editor
           data={convertNoteToEditorData(note)}
           onChange={(api) => {
