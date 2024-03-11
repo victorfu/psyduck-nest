@@ -39,8 +39,8 @@ function WorkspaceNoteDetailPage() {
 
   return (
     <div>
-      <div className="text-2xl font-bold mb-4 text-center">{note?.title}</div>
       <div className="overview__canvas">
+        <div className="text-2xl font-bold mb-4 text-center">{note?.title}</div>
         <Editor
           data={convertNoteToEditorData(note)}
           onChange={(api) => {
