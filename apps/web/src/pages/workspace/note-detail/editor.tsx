@@ -50,6 +50,7 @@ function Editor({
     editor = new EditorJS({
       readOnly: false,
       holder: "editorjs",
+      placeholder: "Type something...",
 
       /**
        * Common Inline Toolbar settings
