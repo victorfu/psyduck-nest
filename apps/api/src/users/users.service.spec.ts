@@ -79,6 +79,8 @@ describe("UserService", () => {
         password: "12345",
         firstName: "firstName #1",
         lastName: "lastName #1",
+        createdBy: 1,
+        updatedBy: 1,
       };
 
       const findOneBySpy = jest.spyOn(repository, "findOneBy");
@@ -88,6 +90,8 @@ describe("UserService", () => {
         username: "user1",
         firstName: "firstName #1",
         lastName: "lastName #1",
+        createdBy: 1,
+        updatedBy: 1,
       });
     });
   });

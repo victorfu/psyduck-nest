@@ -30,6 +30,7 @@ export class UsersController {
   create(@Request() req, @Body() createUserDto: CreateUserDto) {
     const user = req.user;
     createUserDto.createdBy = user.id;
+    createUserDto.updatedBy = user.id;
     return this.usersService.create(createUserDto);
   }
 

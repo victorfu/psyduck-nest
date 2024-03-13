@@ -3,6 +3,14 @@ import { CreateUserDto } from "./dto/create-user.dto";
 import { UsersController } from "./users.controller";
 import { UsersService } from "./users.service";
 
+const userA = {
+  id: 1,
+  username: "user-0",
+  password: "123",
+  firstName: "firstName #1",
+  lastName: "lastName #1",
+};
+
 const createUserDto: CreateUserDto = {
   username: "user-1",
   password: "123",
@@ -25,7 +33,7 @@ describe("UsersController", () => {
             create: jest
               .fn()
               .mockImplementation((user: CreateUserDto) =>
-                Promise.resolve({ id: "1", ...user }),
+                Promise.resolve({ id: 1, ...user }),
               ),
             findAll: jest.fn().mockResolvedValue([
               {
@@ -75,9 +83,21 @@ describe("UsersController", () => {
 
   describe("create()", () => {
     it("should create a user", async () => {
-      usersController.create(createUserDto);
-      expect(usersController.create(createUserDto)).resolves.toEqual({
-        id: "1",
+      usersController.create(
+        {
+          user: userA,
+        },
+        createUserDto,
+      );
+      expect(
+        usersController.create(
+          {
+            user: userA,
+          },
+          createUserDto,
+        ),
+      ).resolves.toEqual({
+        id: 1,
         ...createUserDto,
       });
       expect(usersService.create).toHaveBeenCalledWith(createUserDto);
