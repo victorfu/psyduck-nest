@@ -1,16 +1,9 @@
+import { AuditableEntity } from "@/common/auditable.entity";
 import { WorkspaceAccess } from "@/workspace-access/entities/workspace-access.entity";
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  Generated,
-  OneToMany,
-  PrimaryColumn,
-  UpdateDateColumn,
-} from "typeorm";
+import { Column, Entity, Generated, OneToMany, PrimaryColumn } from "typeorm";
 
 @Entity()
-export class Workspace {
+export class Workspace extends AuditableEntity {
   @PrimaryColumn({ update: false })
   @Generated("increment")
   id: number;
@@ -23,12 +16,6 @@ export class Workspace {
 
   @Column({ nullable: true })
   manager: string;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 
   // relations
   @OneToMany(

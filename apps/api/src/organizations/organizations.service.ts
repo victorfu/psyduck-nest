@@ -12,23 +12,23 @@ export class OrganizationsService {
     private readonly organizationsRepository: Repository<Organization>,
   ) {}
 
-  create(createOrganizationDto: CreateOrganizationDto) {
-    return this.organizationsRepository.save(createOrganizationDto);
+  async create(createOrganizationDto: CreateOrganizationDto) {
+    return await this.organizationsRepository.save(createOrganizationDto);
   }
 
-  findAll() {
-    return this.organizationsRepository.find();
+  async findAll() {
+    return await this.organizationsRepository.find();
   }
 
-  findOne(id: number) {
-    return this.organizationsRepository.findOneBy({ id: id });
+  async findOne(id: number) {
+    return await this.organizationsRepository.findOneBy({ id: id });
   }
 
-  update(id: number, updateOrganizationDto: UpdateOrganizationDto) {
-    return this.organizationsRepository.update(id, updateOrganizationDto);
+  async update(id: number, updateOrganizationDto: UpdateOrganizationDto) {
+    return await this.organizationsRepository.update(id, updateOrganizationDto);
   }
 
-  remove(id: number) {
-    return this.organizationsRepository.delete(id);
+  async remove(id: number) {
+    await this.organizationsRepository.delete(id);
   }
 }

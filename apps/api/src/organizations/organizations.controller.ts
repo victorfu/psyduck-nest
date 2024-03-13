@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Request,
 } from "@nestjs/common";
 import { OrganizationsService } from "./organizations.service";
 import { CreateOrganizationDto } from "./dto/create-organization.dto";
@@ -22,7 +23,10 @@ export class OrganizationsController {
   constructor(private readonly organizationsService: OrganizationsService) {}
 
   @Post()
-  create(@Body() createOrganizationDto: CreateOrganizationDto) {
+  create(@Request() req, @Body() createOrganizationDto: CreateOrganizationDto) {
+    const user = req.user;
+    createOrganizationDto.createdBy = user.id;
+    createOrganizationDto.updatedBy = user.id;
     return this.organizationsService.create(createOrganizationDto);
   }
 
@@ -38,9 +42,12 @@ export class OrganizationsController {
 
   @Patch(":id")
   update(
+    @Request() req,
     @Param("id") id: string,
     @Body() updateOrganizationDto: UpdateOrganizationDto,
   ) {
+    const user = req.user;
+    updateOrganizationDto.updatedBy = user.id;
     return this.organizationsService.update(+id, updateOrganizationDto);
   }
 

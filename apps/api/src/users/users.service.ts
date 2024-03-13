@@ -42,33 +42,33 @@ export class UsersService {
       );
     }
     const user = await CreateUserDto.toUser(createUserDto);
-    return this.usersRepository.save(user);
+    return await this.usersRepository.save(user);
   }
 
-  findAll(): Promise<User[]> {
-    return this.usersRepository.find({
+  async findAll(): Promise<User[]> {
+    return await this.usersRepository.find({
       relations: {
         workspaceAccesses: false,
       },
     });
   }
 
-  findAllByUsername(username: string): Promise<User[]> {
-    return this.usersRepository.find({
+  async findAllByUsername(username: string): Promise<User[]> {
+    return await this.usersRepository.find({
       where: { username: username },
     });
   }
 
-  findOne(id: number): Promise<User> {
-    return this.usersRepository.findOneBy({ id: id });
+  async findOne(id: number): Promise<User> {
+    return await this.usersRepository.findOneBy({ id: id });
   }
 
-  findOneByUsername(username: string): Promise<User> {
-    return this.usersRepository.findOneBy({ username: username });
+  async findOneByUsername(username: string): Promise<User> {
+    return await this.usersRepository.findOneBy({ username: username });
   }
 
-  findOneByEmail(email: string): Promise<User> {
-    return this.usersRepository.findOneBy({ email: email });
+  async findOneByEmail(email: string): Promise<User> {
+    return await this.usersRepository.findOneBy({ email: email });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
@@ -115,7 +115,7 @@ export class UsersService {
       }
     });
 
-    return this.usersRepository.update(id, updatePayload);
+    return await this.usersRepository.update(id, updatePayload);
   }
 
   async remove(id: number): Promise<void> {
@@ -126,7 +126,7 @@ export class UsersService {
     const bcryptConfig = this.configService.get<BcryptConfig>("bcrypt");
     const { defaultPassword } =
       this.configService.get<DefaultUserConfig>("user");
-    return this.usersRepository.update(id, {
+    return await this.usersRepository.update(id, {
       password: await bcrypt.hash(defaultPassword, bcryptConfig.saltRounds),
     });
   }
@@ -184,7 +184,7 @@ export class UsersService {
       throw new BadRequestException("Invalid or expired token");
     }
 
-    return this.update(user.id, {
+    return await this.update(user.id, {
       password: newPassword,
       passwordResetToken: null,
       passwordResetTokenExpiration: null,
@@ -202,7 +202,7 @@ export class UsersService {
       throw new Error("User not found or token is invalid");
     }
 
-    return this.update(user.id, {
+    return await this.update(user.id, {
       emailVerified: true,
       emailVerificationToken: null,
     });

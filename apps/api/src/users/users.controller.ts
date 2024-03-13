@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Request,
   UseInterceptors,
   ClassSerializerInterceptor,
   Query,
@@ -26,7 +27,9 @@ export class UsersController {
   @Roles(Role.Admin)
   @UseInterceptors(ClassSerializerInterceptor)
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
+  create(@Request() req, @Body() createUserDto: CreateUserDto) {
+    const user = req.user;
+    createUserDto.createdBy = user.id;
     return this.usersService.create(createUserDto);
   }
 
@@ -49,7 +52,13 @@ export class UsersController {
 
   @Roles(Role.Admin)
   @Patch(":id")
-  update(@Param("id") id: string, @Body() updateUserDto: UpdateUserDto) {
+  update(
+    @Request() req,
+    @Param("id") id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    const user = req.user;
+    updateUserDto.updatedBy = user.id;
     return this.usersService.update(+id, updateUserDto);
   }
 

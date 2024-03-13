@@ -12,20 +12,20 @@ export class ClientsService {
     private readonly clientsRepository: Repository<Client>,
   ) {}
 
-  create(createClientDto: CreateClientDto) {
-    return this.clientsRepository.save(createClientDto);
+  async create(createClientDto: CreateClientDto) {
+    return await this.clientsRepository.save(createClientDto);
   }
 
-  findAll() {
-    return this.clientsRepository.find();
+  async findAll() {
+    return await this.clientsRepository.find();
   }
 
-  findOne(id: number) {
-    return this.clientsRepository.findOneBy({ id: id });
+  async findOne(id: number) {
+    return await this.clientsRepository.findOneBy({ id: id });
   }
 
-  update(id: number, updateClientDto: UpdateClientDto) {
-    return this.clientsRepository.update(id, updateClientDto);
+  async update(id: number, updateClientDto: UpdateClientDto) {
+    return await this.clientsRepository.update(id, updateClientDto);
   }
 
   async remove(id: number) {

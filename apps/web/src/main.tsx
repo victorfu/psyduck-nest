@@ -25,12 +25,12 @@ import {
   adminDashboardLoader,
   adminOrganizationsLoader,
   adminUsersLoader,
-  workspacesLoader,
+  workspaceListLoader,
   adminWorkspaceLoader,
   adminWorkspacesLoader,
   workspaceLoader,
   workspaceMemberLoader,
-  noteLoader,
+  notesLoader,
 } from "./lib/loaders.ts";
 import AuthSuccessPage from "./pages/auth-success-page.tsx";
 import ForgotPasswordPage from "./pages/forgot-password-page.tsx";
@@ -45,6 +45,7 @@ import WorkspaceClientPage from "./pages/workspace/client/page.tsx";
 import WorkspaceMemberPage from "./pages/workspace/member/page.tsx";
 import WorkspaceSettingsPage from "./pages/workspace/settings/page.tsx";
 import WorkspaceNotePage from "./pages/workspace/note/page.tsx";
+import WorkspaceNoteDetailPage from "./pages/workspace/note-detail/page.tsx";
 
 const router = createBrowserRouter([
   {
@@ -57,8 +58,17 @@ const router = createBrowserRouter([
       { index: true, element: <Navigate to="workspaces" replace /> },
       {
         path: "workspaces",
-        loader: workspacesLoader,
+        loader: workspaceListLoader,
         element: <WorkspaceListPage />,
+      },
+      {
+        path: "notes",
+        loader: notesLoader,
+        element: <WorkspaceNotePage />,
+      },
+      {
+        path: "notes/:nid",
+        element: <WorkspaceNoteDetailPage />,
       },
       {
         path: "account",
@@ -80,11 +90,6 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Navigate to="notes" replace />,
-      },
-      {
-        path: "notes",
-        loader: noteLoader,
-        element: <WorkspaceNotePage />,
       },
       {
         path: "clients",

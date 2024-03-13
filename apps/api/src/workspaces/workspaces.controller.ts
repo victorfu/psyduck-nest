@@ -29,6 +29,8 @@ export class WorkspacesController {
   @Post()
   create(@Request() req, @Body() createWorkspaceDto: CreateWorkspaceDto) {
     const user = req.user;
+    createWorkspaceDto.createdBy = user.id;
+    createWorkspaceDto.updatedBy = user.id;
     return this.workspacesService.createByUserId(user.id, createWorkspaceDto);
   }
 
@@ -68,6 +70,7 @@ export class WorkspacesController {
     if (!workspaces.find((w) => w.id === +id)) {
       throw new ForbiddenException();
     }
+    updateWorkspaceDto.updatedBy = user.id;
     return this.workspacesService.update(+id, updateWorkspaceDto);
   }
 

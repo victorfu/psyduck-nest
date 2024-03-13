@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Request,
 } from "@nestjs/common";
 import { NotesService } from "./notes.service";
 import { CreateNoteDto } from "./dto/create-note.dto";
@@ -19,7 +20,10 @@ export class NotesController {
   constructor(private readonly notesService: NotesService) {}
 
   @Post()
-  create(@Body() createNoteDto: CreateNoteDto) {
+  create(@Request() req, @Body() createNoteDto: CreateNoteDto) {
+    const user = req.user;
+    createNoteDto.createdBy = user.id;
+    createNoteDto.updatedBy = user.id;
     return this.notesService.create(createNoteDto);
   }
 
@@ -34,7 +38,13 @@ export class NotesController {
   }
 
   @Patch(":id")
-  update(@Param("id") id: string, @Body() updateNoteDto: UpdateNoteDto) {
+  update(
+    @Request() req,
+    @Param("id") id: string,
+    @Body() updateNoteDto: UpdateNoteDto,
+  ) {
+    const user = req.user;
+    updateNoteDto.updatedBy = user.id;
     return this.notesService.update(+id, updateNoteDto);
   }
 

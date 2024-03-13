@@ -8,8 +8,9 @@ import {
   Length,
 } from "class-validator";
 import { User } from "../entities/user.entity";
+import { AuditableDto } from "@/common/auditable.dto";
 
-export class CreateUserDto {
+export class CreateUserDto extends AuditableDto {
   @IsNotEmpty()
   @Length(4, 20)
   @ApiProperty()

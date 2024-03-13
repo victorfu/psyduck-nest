@@ -24,6 +24,16 @@ const routes = [
     isMenu: false,
   },
   {
+    name: "Notes",
+    href: "/notes",
+    icon: NotepadTextIcon,
+    isPrimary: true,
+    isSecondary: false,
+    isAdmin: false,
+    isWorkspace: false,
+    isMenu: false,
+  },
+  {
     name: "Settings",
     href: "/settings",
     icon: SettingsIcon,
@@ -102,16 +112,6 @@ const routes = [
     isAdmin: false,
     isWorkspace: false,
     isMenu: true,
-  },
-  {
-    name: "Notes",
-    href: "/workspaces/:wid/notes",
-    icon: NotepadTextIcon,
-    isPrimary: false,
-    isSecondary: false,
-    isAdmin: false,
-    isWorkspace: true,
-    isMenu: false,
   },
   {
     name: "Clients",

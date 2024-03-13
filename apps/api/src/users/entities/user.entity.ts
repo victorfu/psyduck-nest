@@ -1,17 +1,10 @@
+import { AuditableEntity } from "@/common/auditable.entity";
 import { WorkspaceAccess } from "@/workspace-access/entities/workspace-access.entity";
 import { Exclude } from "class-transformer";
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  Generated,
-  OneToMany,
-  PrimaryColumn,
-  UpdateDateColumn,
-} from "typeorm";
+import { Column, Entity, Generated, OneToMany, PrimaryColumn } from "typeorm";
 
 @Entity()
-export class User {
+export class User extends AuditableEntity {
   @PrimaryColumn({ update: false })
   @Generated("increment")
   id: number;
@@ -67,14 +60,7 @@ export class User {
   @Column({ nullable: true })
   oauthGoogleRaw: string;
 
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
-
   // relations
-
   @OneToMany(() => WorkspaceAccess, (workspaceAccess) => workspaceAccess.user)
   workspaceAccesses: WorkspaceAccess[];
 }

@@ -22,17 +22,17 @@ export default function NoteDialog() {
     setLoading(true);
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const content = formData.get("content") as string;
-    if (!content) {
+    const title = formData.get("title") as string;
+    if (!title) {
       toast({
-        title: "Please enter content",
+        title: "Please enter title",
         variant: "destructive",
       });
       return;
     }
 
     setLoading(true);
-    Api.createNote({ content })
+    Api.createNote({ title })
       .then(() => {
         toast({
           title: "Note created",
@@ -70,8 +70,8 @@ export default function NoteDialog() {
             <form onSubmit={handleSubmit}>
               <div className="flex flex-col space-y-4">
                 <div className="space-y-2">
-                  <label htmlFor="content">Content</label>
-                  <Input name="content" id="content" />
+                  <label htmlFor="title">Title</label>
+                  <Input name="title" id="title" />
                 </div>
                 <Button type="submit" disabled={loading}>
                   {loading ? "Saving..." : "Save"}
