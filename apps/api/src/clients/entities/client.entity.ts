@@ -1,14 +1,8 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  Generated,
-  PrimaryColumn,
-  UpdateDateColumn,
-} from "typeorm";
+import { AuditableEntity } from "@/auditable.entity";
+import { Column, Entity, Generated, PrimaryColumn } from "typeorm";
 
 @Entity()
-export class Client {
+export class Client extends AuditableEntity {
   @PrimaryColumn({ update: false })
   @Generated("increment")
   id: number;
@@ -39,10 +33,4 @@ export class Client {
 
   @Column({ nullable: true })
   weight: number;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 }
