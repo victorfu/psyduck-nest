@@ -1,3 +1,4 @@
+import { AuditableDto } from "@/common/auditable.dto";
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsString } from "class-validator";
 
@@ -11,7 +12,7 @@ class WorkspaceId {
   id: number;
 }
 
-export class CreateWorkspaceAccessDto {
+export class CreateWorkspaceAccessDto extends AuditableDto {
   @IsNotEmpty()
   @IsString()
   @ApiProperty()

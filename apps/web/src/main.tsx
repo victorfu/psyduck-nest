@@ -62,6 +62,15 @@ const router = createBrowserRouter([
         element: <WorkspaceListPage />,
       },
       {
+        path: "notes",
+        loader: notesLoader,
+        element: <WorkspaceNotePage />,
+      },
+      {
+        path: "notes/:nid",
+        element: <WorkspaceNoteDetailPage />,
+      },
+      {
         path: "account",
         element: <AccountPage />,
       },
@@ -81,15 +90,6 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Navigate to="notes" replace />,
-      },
-      {
-        path: "notes",
-        loader: notesLoader,
-        element: <WorkspaceNotePage />,
-      },
-      {
-        path: "notes/:nid",
-        element: <WorkspaceNoteDetailPage />,
       },
       {
         path: "clients",

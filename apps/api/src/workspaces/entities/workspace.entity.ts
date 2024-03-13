@@ -1,4 +1,4 @@
-import { AuditableEntity } from "@/auditable.entity";
+import { AuditableEntity } from "@/common/auditable.entity";
 import { WorkspaceAccess } from "@/workspace-access/entities/workspace-access.entity";
 import { Column, Entity, Generated, OneToMany, PrimaryColumn } from "typeorm";
 

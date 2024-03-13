@@ -12,20 +12,20 @@ export class NotesService {
     private readonly notesRepository: Repository<Note>,
   ) {}
 
-  create(createNoteDto: CreateNoteDto) {
-    return this.notesRepository.save(createNoteDto);
+  async create(createNoteDto: CreateNoteDto) {
+    return await this.notesRepository.save(createNoteDto);
   }
 
-  findAll() {
-    return this.notesRepository.find();
+  async findAll() {
+    return await this.notesRepository.find();
   }
 
-  findOne(id: number) {
-    return this.notesRepository.findOneBy({ id: id });
+  async findOne(id: number) {
+    return await this.notesRepository.findOneBy({ id: id });
   }
 
-  update(id: number, updateNoteDto: UpdateNoteDto) {
-    return this.notesRepository.update(id, updateNoteDto);
+  async update(id: number, updateNoteDto: UpdateNoteDto) {
+    return await this.notesRepository.update(id, updateNoteDto);
   }
 
   async remove(id: number) {

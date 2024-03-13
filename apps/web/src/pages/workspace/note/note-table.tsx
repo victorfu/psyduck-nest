@@ -25,7 +25,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import Api from "@/lib/api";
-import { Link, useLocation, useRevalidator } from "react-router-dom";
+import { Link, useRevalidator } from "react-router-dom";
 import { format } from "date-fns";
 
 function NoteSheet({
@@ -102,8 +102,6 @@ function NoteSheet({
 
 export function NoteTable({ notes }: { notes: Note[] }) {
   const { toast } = useToast();
-  const location = useLocation();
-  const { pathname } = location;
   const [selectedNote, setSelectedNote] = useState<Note>();
   const [open, setOpen] = useState(false);
   const revalidator = useRevalidator();
@@ -120,13 +118,9 @@ export function NoteTable({ notes }: { notes: Note[] }) {
       ),
       cell: ({ row }) => {
         const note = row.original;
-        const wid = pathname.split("/")[2];
 
         return (
-          <Link
-            to={`/workspaces/${wid}/notes/${note.id}`}
-            className="text-blue-600"
-          >
+          <Link to={`/notes/${note.id}`} className="text-blue-600">
             {note.title}
           </Link>
         );

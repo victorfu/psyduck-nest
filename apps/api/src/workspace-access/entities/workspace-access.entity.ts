@@ -1,4 +1,4 @@
-import { AuditableEntity } from "@/auditable.entity";
+import { AuditableEntity } from "@/common/auditable.entity";
 import { User } from "@/users/entities/user.entity";
 import { Workspace } from "@/workspaces/entities/workspace.entity";
 import {

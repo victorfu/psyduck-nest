@@ -12,12 +12,12 @@ export class WorkspacesService {
     private readonly workspacesRepository: Repository<Workspace>,
   ) {}
 
-  create(createWorkspaceDto: CreateWorkspaceDto) {
-    return this.workspacesRepository.save(createWorkspaceDto);
+  async create(createWorkspaceDto: CreateWorkspaceDto) {
+    return await this.workspacesRepository.save(createWorkspaceDto);
   }
 
-  createByUserId(userId: number, createWorkspaceDto: CreateWorkspaceDto) {
-    return this.workspacesRepository.save({
+  async createByUserId(userId: number, createWorkspaceDto: CreateWorkspaceDto) {
+    return await this.workspacesRepository.save({
       ...createWorkspaceDto,
       workspaceAccesses: [
         {
@@ -30,12 +30,12 @@ export class WorkspacesService {
     });
   }
 
-  findAll() {
-    return this.workspacesRepository.find();
+  async findAll() {
+    return await this.workspacesRepository.find();
   }
 
-  findAllByUserId(userId: number) {
-    return this.workspacesRepository.find({
+  async findAllByUserId(userId: number) {
+    return await this.workspacesRepository.find({
       where: {
         workspaceAccesses: {
           user: {
@@ -49,8 +49,8 @@ export class WorkspacesService {
     });
   }
 
-  findOne(id: number) {
-    return this.workspacesRepository.findOne({
+  async findOne(id: number) {
+    return await this.workspacesRepository.findOne({
       where: {
         id: id,
       },
@@ -60,8 +60,8 @@ export class WorkspacesService {
     });
   }
 
-  findOneByUserId(workspaceId: number, userId: number) {
-    return this.workspacesRepository.findOne({
+  async findOneByUserId(workspaceId: number, userId: number) {
+    return await this.workspacesRepository.findOne({
       where: {
         id: workspaceId,
         workspaceAccesses: {
@@ -76,12 +76,12 @@ export class WorkspacesService {
     });
   }
 
-  update(id: number, updateWorkspaceDto: UpdateWorkspaceDto) {
-    return this.workspacesRepository.update(id, updateWorkspaceDto);
+  async update(id: number, updateWorkspaceDto: UpdateWorkspaceDto) {
+    return await this.workspacesRepository.update(id, updateWorkspaceDto);
   }
 
-  remove(id: number) {
-    this.workspacesRepository.delete(id);
+  async remove(id: number) {
+    await this.workspacesRepository.delete(id);
   }
 
   async removeByUserId(id: number, userId: number) {
@@ -98,6 +98,6 @@ export class WorkspacesService {
     if (!workspace) {
       return;
     }
-    this.workspacesRepository.remove(workspace);
+    await this.workspacesRepository.remove(workspace);
   }
 }

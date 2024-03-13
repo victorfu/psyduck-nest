@@ -67,6 +67,8 @@ export class AuthService {
       picture: photos[0].value,
       isActive: true,
       oauthGoogleRaw: profile._raw,
+      createdBy: 0,
+      updatedBy: 0,
     });
     return this.removeSensitiveData(newUser);
   }

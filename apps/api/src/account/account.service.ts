@@ -7,15 +7,15 @@ import { User } from "@/users/entities/user.entity";
 export class AccountService {
   constructor(private readonly usersService: UsersService) {}
 
-  update(id: number, updateAccountDto: UpdateAccountDto) {
-    return this.usersService.update(id, updateAccountDto);
+  async update(id: number, updateAccountDto: UpdateAccountDto) {
+    return await this.usersService.update(id, updateAccountDto);
   }
 
-  hasLocalAuth(id: number) {
-    return this.usersService.hasLocalAuth(id);
+  async hasLocalAuth(id: number) {
+    return await this.usersService.hasLocalAuth(id);
   }
 
-  sendVerificationEmail(user: User) {
-    this.usersService.sendVerificationEmail(user);
+  async sendVerificationEmail(user: User) {
+    await this.usersService.sendVerificationEmail(user);
   }
 }

@@ -12,16 +12,16 @@ export class WorkspaceAccessService {
     private readonly workspaceAccessRepository: Repository<WorkspaceAccess>,
   ) {}
 
-  create(createWorkspaceAccessDto: CreateWorkspaceAccessDto) {
-    return this.workspaceAccessRepository.save(createWorkspaceAccessDto);
+  async create(createWorkspaceAccessDto: CreateWorkspaceAccessDto) {
+    return await this.workspaceAccessRepository.save(createWorkspaceAccessDto);
   }
 
-  findAll() {
-    return this.workspaceAccessRepository.find();
+  async findAll() {
+    return await this.workspaceAccessRepository.find();
   }
 
-  findAllByWorkspaceId(workspaceId: number) {
-    return this.workspaceAccessRepository.find({
+  async findAllByWorkspaceId(workspaceId: number) {
+    return await this.workspaceAccessRepository.find({
       where: {
         workspace: {
           id: workspaceId,
@@ -30,15 +30,18 @@ export class WorkspaceAccessService {
     });
   }
 
-  findOne(id: number) {
-    return this.workspaceAccessRepository.findOneBy({ id: id });
+  async findOne(id: number) {
+    return await this.workspaceAccessRepository.findOneBy({ id: id });
   }
 
-  update(id: number, updateWorkspaceAccessDto: UpdateWorkspaceAccessDto) {
-    return this.workspaceAccessRepository.update(id, updateWorkspaceAccessDto);
+  async update(id: number, updateWorkspaceAccessDto: UpdateWorkspaceAccessDto) {
+    return await this.workspaceAccessRepository.update(
+      id,
+      updateWorkspaceAccessDto,
+    );
   }
 
-  remove(id: number) {
-    this.workspaceAccessRepository.delete(id);
+  async remove(id: number) {
+    await this.workspaceAccessRepository.delete(id);
   }
 }

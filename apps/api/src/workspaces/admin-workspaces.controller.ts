@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Request,
   UseInterceptors,
   ClassSerializerInterceptor,
 } from "@nestjs/common";
@@ -24,7 +25,10 @@ export class AdminWorkspacesController {
   constructor(private readonly workspacesService: WorkspacesService) {}
 
   @Post()
-  create(@Body() createWorkspaceDto: CreateWorkspaceDto) {
+  create(@Request() req, @Body() createWorkspaceDto: CreateWorkspaceDto) {
+    const user = req.user;
+    createWorkspaceDto.createdBy = user.id;
+    createWorkspaceDto.updatedBy = user.id;
     return this.workspacesService.create(createWorkspaceDto);
   }
 
@@ -42,9 +46,12 @@ export class AdminWorkspacesController {
 
   @Patch(":id")
   update(
+    @Request() req,
     @Param("id") id: string,
     @Body() updateWorkspaceDto: UpdateWorkspaceDto,
   ) {
+    const user = req.user;
+    updateWorkspaceDto.updatedBy = user.id;
     return this.workspacesService.update(+id, updateWorkspaceDto);
   }
 

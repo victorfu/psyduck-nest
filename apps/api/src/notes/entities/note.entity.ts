@@ -1,4 +1,4 @@
-import { AuditableEntity } from "@/auditable.entity";
+import { AuditableEntity } from "@/common/auditable.entity";
 import { Column, Entity, Generated, PrimaryColumn } from "typeorm";
 
 @Entity()
