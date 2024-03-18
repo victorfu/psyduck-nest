@@ -89,7 +89,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Navigate to="notes" replace />,
+        element: <Navigate to="clients" replace />,
       },
       {
         path: "clients",
