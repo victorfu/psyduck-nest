@@ -17,7 +17,7 @@
     "packages/*"
   ],
   "devDependencies": {
-    "dotenv-cli": "^7.3.0",
-    "turbo": "^1.12.5"
+    "dotenv-cli": "^7.4.1",
+    "turbo": "^1.13.0"
   }
 }
