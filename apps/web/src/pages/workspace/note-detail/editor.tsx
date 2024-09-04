@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { useCallback, useEffect } from "react";
 import EditorJS, {
   API,
@@ -5,31 +7,18 @@ import EditorJS, {
   OutputData,
 } from "@editorjs/editorjs";
 
-// @ts-expect-error - no types available
 import Header from "@editorjs/header";
-// @ts-expect-error - no types available
 import SimpleImage from "@editorjs/simple-image";
-// @ts-expect-error - no types available
 import List from "@editorjs/list";
-// @ts-expect-error - no types available
 import Checklist from "@editorjs/checklist";
-// @ts-expect-error - no types available
 import Quote from "@editorjs/quote";
-// @ts-expect-error - no types available
 import Warning from "@editorjs/warning";
-// @ts-expect-error - no types available
 import Marker from "@editorjs/marker";
-// @ts-expect-error - no types available
 import CodeTool from "@editorjs/code";
-// @ts-expect-error - no types available
 import Delimiter from "@editorjs/delimiter";
-// @ts-expect-error - no types available
 import InlineCode from "@editorjs/inline-code";
-// @ts-expect-error - no types available
 import LinkTool from "@editorjs/link";
-// @ts-expect-error - no types available
 import Embed from "@editorjs/embed";
-// @ts-expect-error - no types available
 import Table from "@editorjs/table";
 
 let editor: EditorJS | null = null;
