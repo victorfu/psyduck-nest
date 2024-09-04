@@ -5,6 +5,11 @@ function MainPage() {
         <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
           Hello :D
         </h2>
+        <p className="mt-6 text-center text-xl font-bold leading-9 tracking-tight">
+          <a href="/api" className="underline hover:text-blue-500">
+            API Docs
+          </a>
+        </p>
       </div>
     </div>
   );

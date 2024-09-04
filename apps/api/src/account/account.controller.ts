@@ -11,13 +11,20 @@ import {
 } from "@nestjs/common";
 import { AccountService } from "./account.service";
 import { UpdateAccountDto } from "./dto/update-account.dto";
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from "@nestjs/swagger";
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiExcludeController,
+  ApiTags,
+} from "@nestjs/swagger";
 import { ChangePasswordDto } from "@/auth/dto/change-password.dto";
 import { SetLocalPasswordDto } from "@/auth/dto/set-local-password.dto";
 import { AuthService } from "@/auth/auth.service";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { FirebaseAdminService } from "@/firebase-admin/firebase-admin.service";
 
+@ApiExcludeController()
 @ApiTags("account")
 @Controller("account")
 export class AccountController {

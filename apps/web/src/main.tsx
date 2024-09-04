@@ -1,7 +1,6 @@
 import "./index.css";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { authLoader } from "./auth.ts";
 
 import ErrorPage from "./pages/error-page.tsx";
 
@@ -13,7 +12,6 @@ const router = createBrowserRouter([
     path: "/",
     element: <MainPage />,
     errorElement: <ErrorPage />,
-    loader: authLoader,
   },
 ]);
 

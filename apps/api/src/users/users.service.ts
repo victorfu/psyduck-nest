@@ -46,11 +46,7 @@ export class UsersService {
   }
 
   async findAll(): Promise<User[]> {
-    return await this.usersRepository.find({
-      relations: {
-        workspaceAccesses: false,
-      },
-    });
+    return await this.usersRepository.find();
   }
 
   async findAllByUsername(username: string): Promise<User[]> {

@@ -42,6 +42,7 @@ export class AppController {
     return this.appService.version();
   }
 
+  @ApiExcludeEndpoint()
   @ApiTags("auth")
   @Public()
   @UseGuards(LocalAuthGuard)
@@ -51,6 +52,7 @@ export class AppController {
     return await this.authService.generateToken(req.user);
   }
 
+  @ApiExcludeEndpoint()
   @ApiTags("auth")
   @Public()
   @Post("forgot-password")
