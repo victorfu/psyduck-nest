@@ -4,9 +4,7 @@ import {
   Post,
   UseGuards,
   Request,
-  Query,
   Render,
-  Body,
 } from "@nestjs/common";
 import { AppService } from "./app.service";
 import { LocalAuthGuard } from "./auth/local-auth.guard";
@@ -52,68 +50,13 @@ export class AppController {
     return await this.authService.generateToken(req.user);
   }
 
-  @ApiExcludeEndpoint()
-  @ApiTags("auth")
-  @Public()
-  @Post("forgot-password")
-  async forgotPassword(@Body("email") email: string) {
-    return await this.authService.forgotPassword(email);
-  }
-
   // Views
 
   @ApiExcludeEndpoint()
   @Public()
-  @Get("reset-password")
-  @Render("reset-password")
-  async resetPasswordPage(@Query("token") token: string) {
-    return { token };
-  }
-
-  @ApiExcludeEndpoint()
-  @Public()
-  @Post("reset-password")
-  @Render("reset-password-result")
-  async resetPasswordAction(
-    @Body("token") token: string,
-    @Body("newPassword") newPassword: string,
-    @Body("confirmPassword") confirmPassword: string,
-  ) {
-    if (newPassword !== confirmPassword) {
-      return {
-        error: "Passwords do not match.",
-      };
-    }
-    try {
-      await this.authService.resetPassword(token, newPassword);
-    } catch (error) {
-      console.error(error);
-      return {
-        error: "Failed to reset password.",
-      };
-    }
-
-    return {
-      message: "Password reset successfully.",
-    };
-  }
-
-  @ApiExcludeEndpoint()
-  @Public()
-  @Get("verify-email")
-  @Render("verify-email")
-  async verifyEmailPage(@Query("token") token: string) {
-    try {
-      await this.usersService.verifyEmail(token);
-    } catch (error) {
-      console.error(error);
-      return {
-        message: "Failed to verify email. Please try again later.",
-      };
-    }
-
-    return {
-      message: "Email verified successfully.",
-    };
+  @Get("ssr")
+  @Render("ssr")
+  async ssr() {
+    return { message: "Hello SSR!" };
   }
 }

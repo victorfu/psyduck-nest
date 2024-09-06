@@ -118,14 +118,6 @@ export class AuthService {
     return { message: "Password set" };
   }
 
-  async forgotPassword(email: string) {
-    const user = await this.usersService.findOneByEmail(email);
-    if (!user) {
-      return;
-    }
-    return this.usersService.sendPasswordResetEmail(user);
-  }
-
   async resetPassword(token: string, newPassword: string) {
     return this.usersService.resetPassword(token, newPassword);
   }

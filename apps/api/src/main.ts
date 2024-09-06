@@ -15,16 +15,8 @@ async function bootstrap() {
   app.setGlobalPrefix("api", {
     exclude: [
       {
-        path: "verify-email",
+        path: "ssr",
         method: RequestMethod.GET,
-      },
-      {
-        path: "reset-password",
-        method: RequestMethod.GET,
-      },
-      {
-        path: "reset-password",
-        method: RequestMethod.POST,
       },
     ],
   });

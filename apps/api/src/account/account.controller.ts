@@ -56,12 +56,6 @@ export class AccountController {
   }
 
   @ApiBearerAuth()
-  @Post("send-verification-email")
-  sendVerificationEmail(@Request() req) {
-    return this.accountService.sendVerificationEmail(req.user);
-  }
-
-  @ApiBearerAuth()
   @Post("change-password")
   async changePassword(@Request() req, @Body() body: ChangePasswordDto) {
     return await this.authService.changePassword(req.user, body);

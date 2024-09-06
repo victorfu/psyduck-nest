@@ -21,13 +21,6 @@ export interface JwtConfig {
   expiresIn: string;
 }
 
-export interface NodemailerConfig {
-  service: string;
-  user: string;
-  pass: string;
-  from: string;
-}
-
 export interface DefaultUserConfig {
   defaultPassword: string;
 }

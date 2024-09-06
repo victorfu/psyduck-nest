@@ -13,11 +13,7 @@ import { ConfigService } from "@nestjs/config";
 import {
   BcryptConfig,
   DefaultUserConfig,
-  NodemailerConfig,
-  ServerConfig,
 } from "../config/configuration.interface";
-import { MailerService } from "@/mailer/mailer.service";
-import * as crypto from "crypto";
 
 @Injectable()
 export class UsersService {
@@ -25,7 +21,6 @@ export class UsersService {
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
     private readonly configService: ConfigService,
-    private readonly mailerService: MailerService,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -130,45 +125,6 @@ export class UsersService {
   async hasLocalAuth(id: number): Promise<boolean> {
     const user = await this.usersRepository.findOneBy({ id: id });
     return !!user.password;
-  }
-
-  async sendVerificationEmail(user: User) {
-    const mailerConfig = this.configService.get<NodemailerConfig>("nodemailer");
-    const appUrl = this.configService.get<ServerConfig>("appUrl");
-
-    const verificationToken = crypto.randomBytes(16).toString("hex");
-    await this.update(user.id, { emailVerificationToken: verificationToken });
-
-    const verificationUrl = `${appUrl}/verify-email?token=${verificationToken}`;
-    await this.mailerService.sendMail({
-      from: mailerConfig.user,
-      to: user.email,
-      subject: "Verify Your Email",
-      text: `Please click this link to verify your email: ${verificationUrl}`,
-      html: `Please click this link to verify your email: <a href="${verificationUrl}">${verificationUrl}</a>`,
-    });
-  }
-
-  async sendPasswordResetEmail(user: User) {
-    const mailerConfig = this.configService.get<NodemailerConfig>("nodemailer");
-    const appUrl = this.configService.get<ServerConfig>("appUrl");
-
-    const resetToken = crypto.randomBytes(16).toString("hex");
-    const expirationDate = new Date();
-    expirationDate.setMinutes(expirationDate.getMinutes() + 10);
-    await this.update(user.id, {
-      passwordResetToken: resetToken,
-      passwordResetTokenExpiration: expirationDate,
-    });
-
-    const resetUrl = `${appUrl}/reset-password?token=${resetToken}`;
-    await this.mailerService.sendMail({
-      from: mailerConfig.user,
-      to: user.email,
-      subject: "Reset Your Password",
-      text: `Please click this link to reset your password: ${resetUrl}`,
-      html: `Please click this link to reset your password: <a href="${resetUrl}">${resetUrl}</a>`,
-    });
   }
 
   async resetPassword(token: string, newPassword: string) {
