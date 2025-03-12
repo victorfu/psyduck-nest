@@ -33,7 +33,7 @@ export interface Workspace extends Auditable {
   id: string;
   name: string;
   description: string;
-  uids: Record<string, boolean>;
+  uids: string[];
   lineConfig?: LineConfig;
   googleConfig?: GoogleConfig;
   imageUrl?: string;
@@ -54,7 +54,7 @@ export const addWorkspace = async (workspace: Partial<Workspace>) => {
 
 export const getWorkspaces = async (uid: string): Promise<Workspace[]> => {
   const querySnapshot = await getDocs(
-    query(collection(db, "workspaces"), where(`uids.${uid}`, "==", true)),
+    query(collection(db, "workspaces"), where(`uids`, "array-contains", uid)),
   );
   return querySnapshot.docs
     .map((doc) => {
@@ -99,7 +99,7 @@ export const deleteWorkspace = async (uid: string, workspace: Workspace) => {
 
 export const countWorkspaces = async (uid: string) => {
   const querySnapshot = await getCountFromServer(
-    query(collection(db, "workspaces"), where(`uids.${uid}`, "==", true)),
+    query(collection(db, "workspaces"), where(`uids`, "array-contains", uid)),
   );
   return querySnapshot.data().count;
 };

@@ -96,7 +96,7 @@ export async function membersLoader({ params }: LoaderFunctionArgs) {
 
   const workspaceId = params.workspaceId;
   if (authService?.user?.uid && workspaceId) {
-    const members = await getMembers(authService.user.uid, workspaceId);
+    const members = await getMembers(workspaceId);
     const phoneNumbers = members.map((m) => m.phone).filter(Boolean);
     const lineUsers = await getLineUsersByPhoneNumbers(
       workspaceId,
@@ -125,7 +125,7 @@ export async function dashboardLoader({ params }: LoaderFunctionArgs) {
 
   const [workspace, memberCount, lineUserCount] = await Promise.all([
     getWorkspace(workspaceId),
-    countMembers(uid, workspaceId),
+    countMembers(workspaceId),
     countLineUsers(workspaceId),
   ]);
 

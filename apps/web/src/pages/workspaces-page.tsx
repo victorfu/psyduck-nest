@@ -58,7 +58,7 @@ const WorkspacesPage = () => {
           createdBy: user.uid,
           updatedAt: timestamp,
           updatedBy: user.uid,
-          uids: { [user.uid]: true },
+          uids: [user.uid],
         });
       }
       setSelectedWorkspace(null);

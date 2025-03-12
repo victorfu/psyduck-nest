@@ -8,6 +8,7 @@ import {
   getDocs,
   query,
   updateDoc,
+  orderBy,
   where,
   writeBatch,
 } from "firebase/firestore";
@@ -20,8 +21,7 @@ export interface Member extends Auditable {
   name: string;
   email: string;
   phone: string;
-  uids: Record<string, boolean>;
-  workspaceIds: Record<string, boolean>;
+  workspaceIds: string[];
 }
 
 export interface MemberWithLineUser extends Member {
@@ -31,9 +31,6 @@ export interface MemberWithLineUser extends Member {
 export type MemberFields = Pick<Member, "name" | "email" | "phone">;
 
 export const addMember = async (member: Partial<Member>) => {
-  if (!member.uids) {
-    throw new Error("uids are required");
-  }
   const docRef = await addDoc(collection(db, "members"), member);
   return { ...member, id: docRef.id } as Member;
 };
@@ -49,23 +46,18 @@ export const batchAddMembers = async (members: Partial<Member>[]) => {
   await batch.commit();
 };
 
-export const getMembers = async (
-  uid: string,
-  workspaceId: string,
-): Promise<Member[]> => {
+export const getMembers = async (workspaceId: string): Promise<Member[]> => {
   const querySnapshot = await getDocs(
     query(
       collection(db, "members"),
-      where(`uids.${uid}`, "==", true),
-      where(`workspaceIds.${workspaceId}`, "==", true),
+      where(`workspaceIds`, "array-contains", workspaceId),
+      orderBy("createdAt", "desc"),
     ),
   );
 
-  return querySnapshot.docs
-    .map((doc) => {
-      return { ...doc.data(), id: doc.id } as Member;
-    })
-    .sort((a, b) => a.id.localeCompare(b.id));
+  return querySnapshot.docs.map((doc) => {
+    return { ...doc.data(), id: doc.id } as Member;
+  });
 };
 
 export const getMember = async (id: string) => {
@@ -74,24 +66,17 @@ export const getMember = async (id: string) => {
   return { ...docSnap.data(), id: docSnap.id } as Member;
 };
 
-export const hasMembersInWorkspace = async (
-  uid: string,
-  workspaceId: string,
-) => {
+export const hasMembersInWorkspace = async (workspaceId: string) => {
   const querySnapshot = await getDocs(
     query(
       collection(db, "members"),
-      where(`uids.${uid}`, "==", true),
-      where(`workspaceIds.${workspaceId}`, "==", true),
+      where(`workspaceIds`, "array-contains", workspaceId),
     ),
   );
   return querySnapshot.docs.length > 0;
 };
 
 export const updateMember = async (id: string, member: Partial<Member>) => {
-  if (member.uids) {
-    throw new Error("uids are not allowed to be updated");
-  }
   if ("key" in member) {
     // don't update key, this is for table row key
     delete member.key;
@@ -105,12 +90,11 @@ export const deleteMember = async (member: Member) => {
   await deleteDoc(docRef);
 };
 
-export const countMembers = async (uid: string, workspaceId: string) => {
+export const countMembers = async (workspaceId: string) => {
   const querySnapshot = await getCountFromServer(
     query(
       collection(db, "members"),
-      where(`uids.${uid}`, "==", true),
-      where(`workspaceIds.${workspaceId}`, "==", true),
+      where(`workspaceIds`, "array-contains", workspaceId),
     ),
   );
   return querySnapshot.data().count;
