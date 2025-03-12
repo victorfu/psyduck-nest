@@ -9,6 +9,7 @@ import {
 } from "./line-users";
 import { countMembers, getMembers } from "./member";
 import { getMessageSchedules } from "./message-schedule";
+import { getTeamMembers } from "./api";
 
 export async function rootLoader() {
   await waitForAuthReady();
@@ -130,4 +131,17 @@ export async function dashboardLoader({ params }: LoaderFunctionArgs) {
   ]);
 
   return { workspace, memberCount, lineUserCount };
+}
+
+export async function teamLoader({ params }: LoaderFunctionArgs) {
+  await waitForAuthReady();
+
+  const workspaceId = params.workspaceId;
+  if (workspaceId) {
+    const workspace = await getWorkspace(workspaceId);
+    const teamMembers = await getTeamMembers(workspaceId);
+    return { workspace, teamMembers };
+  }
+
+  return {};
 }

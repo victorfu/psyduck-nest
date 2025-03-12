@@ -87,8 +87,8 @@ export const updateWorkspace = async (
   await updateDoc(docRef, workspace);
 };
 
-export const deleteWorkspace = async (uid: string, workspace: Workspace) => {
-  const hasMembers = await hasMembersInWorkspace(uid, workspace.id);
+export const deleteWorkspace = async (workspace: Workspace) => {
+  const hasMembers = await hasMembersInWorkspace(workspace.id);
   if (hasMembers) {
     throw new Error("Workspace has members, please remove them first");
   }

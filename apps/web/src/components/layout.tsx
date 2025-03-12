@@ -89,6 +89,12 @@ export function Layout() {
   const bottomNavigation = useMemo(
     () => [
       {
+        name: "團隊",
+        href: `/workspace/${workspaceId}/team`,
+        icon: TeamOutlined,
+        current: currentPage?.match(/^\/workspace\/[^/]+\/team/),
+      },
+      {
         name: "我的空間",
         href: `/workspace/${workspaceId}/workspaces`,
         icon: DatabaseOutlined,
@@ -340,7 +346,17 @@ export function Layout() {
                 <Menu as="div" className="relative">
                   <MenuButton className="-m-1.5 flex items-center p-1.5">
                     <span className="sr-only">Open user menu</span>
-                    <div className="size-8 rounded-full bg-gray-500"></div>
+                    <div className="size-8 rounded-full">
+                      {rootData.user?.photoURL ? (
+                        <img
+                          src={rootData.user?.photoURL}
+                          alt="user"
+                          className="size-full rounded-full"
+                        />
+                      ) : (
+                        <div className="size-full rounded-full bg-gray-500" />
+                      )}
+                    </div>
                     <span className="hidden lg:flex lg:items-center">
                       <span
                         aria-hidden="true"

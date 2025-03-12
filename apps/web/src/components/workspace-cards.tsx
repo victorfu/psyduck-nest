@@ -2,11 +2,12 @@ import React from "react";
 import {
   EditOutlined,
   EllipsisOutlined,
-  InfoCircleOutlined,
+  SwapOutlined,
 } from "@ant-design/icons";
 import { Card, Flex, Dropdown } from "antd";
 import placeholder from "@/assets/placeholder.svg";
 import { Workspace } from "@/lib/workspace";
+import { useNavigate } from "react-router-dom";
 
 export const WorkspaceCards = ({
   workspaces,
@@ -15,11 +16,11 @@ export const WorkspaceCards = ({
   workspaces: Workspace[];
   onEditClick?: (workspace: Workspace) => void;
 }) => {
+  const navigate = useNavigate();
   const handleMenuClick = (key: string, workspace: Workspace) => {
     switch (key) {
-      case "details":
-        // Handle view details action
-        console.log("View details for workspace:", workspace);
+      case "switch":
+        navigate(`/workspace/${workspace.id}/workspaces`);
         break;
       default:
         break;
@@ -36,10 +37,10 @@ export const WorkspaceCards = ({
         menu={{
           items: [
             {
-              key: "details",
-              icon: <InfoCircleOutlined />,
-              label: "查看詳細資訊",
-              onClick: () => handleMenuClick("details", workspace),
+              key: "switch",
+              icon: <SwapOutlined />,
+              label: "切換工作空間",
+              onClick: () => handleMenuClick("switch", workspace),
             },
           ],
         }}
