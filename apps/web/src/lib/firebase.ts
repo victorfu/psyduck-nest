@@ -1,6 +1,12 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { Auth, getAuth, GoogleAuthProvider } from "firebase/auth";
+import {
+  Auth,
+  getAuth,
+  GoogleAuthProvider,
+  updateProfile,
+  User,
+} from "firebase/auth";
 import {
   getStorage,
   ref,
@@ -30,6 +36,16 @@ export const googleAuthProvider = new GoogleAuthProvider();
 googleAuthProvider.setCustomParameters({
   prompt: "select_account",
 });
+
+export const updateUserProfile = async (
+  user: User,
+  { displayName, photoURL }: { displayName?: string; photoURL?: string },
+) => {
+  await updateProfile(user, {
+    displayName,
+    photoURL,
+  });
+};
 
 export const uploadImage = (file: File, callback?: (url: string) => void) => {
   const timestamp = Date.now();

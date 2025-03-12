@@ -14,6 +14,7 @@ import {
   membersLoader,
   dashboardLoader,
   scheduleMessagesLoader,
+  teamLoader,
 } from "./lib/loaders.ts";
 import { loginAction } from "./lib/actions.ts";
 import { authService } from "./auth/auth-service.ts";
@@ -29,6 +30,7 @@ import DashboardPage from "./pages/dashboard-page.tsx";
 import LineUsersPage from "./pages/line-users-page.tsx";
 import ScheduleMessagesPage from "./pages/schedule-messages-page.tsx";
 import { Fallback } from "./components/fallback.tsx";
+import TeamPage from "./pages/team-page.tsx";
 
 const router = createBrowserRouter([
   {
@@ -71,6 +73,11 @@ const router = createBrowserRouter([
           {
             path: "workspaces",
             Component: WorkspacesPage,
+          },
+          {
+            path: "team",
+            Component: TeamPage,
+            loader: teamLoader,
           },
           {
             path: "settings",

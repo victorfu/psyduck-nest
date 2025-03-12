@@ -30,4 +30,8 @@ export default () => ({
     adminSdkPath:
       process.env.FIREBASE_ADMIN_SDK_PATH || "firebase-adminsdk.json",
   },
+  cp: {
+    workspaceApiUrl: process.env.CP_WORKSPACE_API_URL,
+    workspaceApiKey: process.env.CP_WORKSPACE_API_KEY,
+  },
 });
