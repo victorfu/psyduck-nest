@@ -1,121 +1,133 @@
-import { authProvider } from "@/auth";
-import Api from "./api";
-import { redirect } from "react-router-dom";
+import { LoaderFunctionArgs, redirect } from "react-router-dom";
+import { waitForAuthReady } from "../auth/auth-state";
+import { authService } from "../auth/auth-service";
+import { getWorkspace, getWorkspaces } from "./workspace";
+import {
+  countLineUsers,
+  getLineUsers,
+  getLineUsersByPhoneNumbers,
+} from "./line-users";
+import { countMembers, getMembers } from "./member";
+import { getMessageSchedules } from "./message-schedule";
 
-type Params<Key extends string = string> = {
-  readonly [key in Key]: string | undefined;
-};
+export async function rootLoader() {
+  await waitForAuthReady();
 
-export async function workspaceListLoader() {
-  try {
-    const workspaces = await Api.getWorkspaces();
-    return { workspaces };
-  } catch (error) {
-    console.error(error);
-    return { workspaces: [] };
-  }
+  return { user: authService.user };
 }
 
-export async function workspaceLoader({ params }: { params: Params }) {
-  const id = params.wid;
-  if (!id) throw new Error("No workspace id");
+export async function loginLoader() {
+  await waitForAuthReady();
 
-  try {
-    await authProvider.signinWithToken();
-    if (!authProvider.isAuthenticated) return redirect("/login");
-    const workspaces = await Api.getWorkspaces();
-    const workspace = workspaces.find((w) => w.id === +id);
-    return { workspace, user: authProvider.user, workspaces };
-  } catch (error) {
-    console.error(error);
-    return { workspace: null, user: null, workspaces: [] };
+  if (authService.isAuthenticated) {
+    return redirect("/");
   }
+  return null;
 }
 
-export async function notesLoader() {
-  try {
-    const notes = await Api.getNotes();
-    return { notes };
-  } catch (error) {
-    console.error(error);
-    return { notes: [] };
+export async function mainLoader({ request }: LoaderFunctionArgs) {
+  await waitForAuthReady();
+
+  if (!authService.isAuthenticated || !authService.user?.uid) {
+    const params = new URLSearchParams();
+    params.set("from", new URL(request.url).pathname);
+    return redirect("/login?" + params.toString());
   }
+
+  const workspaces = await getWorkspaces(authService.user.uid);
+  if (workspaces && workspaces.length > 0) {
+    return redirect(`/workspace/${workspaces[0].id}`);
+  }
+
+  return null;
 }
 
-export async function workspaceMemberLoader({ params }: { params: Params }) {
-  const id = params.wid;
-  if (!id) throw new Error("No workspace id");
+export async function workspacesLoader({ request }: LoaderFunctionArgs) {
+  await waitForAuthReady();
 
-  try {
-    const members = await Api.getWorkspaceMembers(+id);
-    return { members };
-  } catch (error) {
-    console.error(error);
-    return { members: [] };
+  if (!authService.isAuthenticated || !authService.user?.uid) {
+    const params = new URLSearchParams();
+    params.set("from", new URL(request.url).pathname);
+    return redirect("/login?" + params.toString());
   }
+
+  const workspaces = await getWorkspaces(authService.user.uid);
+  return { workspaces };
 }
 
-export async function adminUsersLoader() {
-  try {
-    const users = await Api.adminGetUsers();
-    const workspaceAccesses = await Api.adminGetWorkspaceAccess();
-    return { users, workspaceAccesses };
-  } catch (error) {
-    console.error(error);
-    return { users: [], workspaceAccesses: [] };
-  }
-}
+export async function settingsLoader({ params }: LoaderFunctionArgs) {
+  await waitForAuthReady();
 
-export async function adminWorkspacesLoader() {
-  try {
-    const workspaces = await Api.adminGetWorkspaces();
-    return { workspaces };
-  } catch (error) {
-    console.error(error);
-    return { workspaces: [] };
-  }
-}
-
-export async function adminWorkspaceLoader({ params }: { params: Params }) {
-  const id = params.wid;
-  if (!id) throw new Error("No workspace id");
-
-  try {
-    const workspace = await Api.adminGetWorkspace(+id);
+  const workspaceId = params.workspaceId;
+  if (workspaceId) {
+    const workspace = await getWorkspace(workspaceId);
     return { workspace };
-  } catch (error) {
-    console.error(error);
-    return { workspace: null };
   }
+
+  return {};
 }
 
-export async function adminDashboardLoader() {
-  try {
-    const users = await Api.adminGetUsers();
-    const workspaces = await Api.adminGetWorkspaces();
-    return { users, workspaces };
-  } catch (error) {
-    console.error(error);
-    return { users: [], workspaces: [] };
+export async function lineUsersLoader({ params }: LoaderFunctionArgs) {
+  await waitForAuthReady();
+
+  const workspaceId = params.workspaceId;
+  if (workspaceId) {
+    const lineUsers = await getLineUsers(workspaceId);
+    return { lineUsers };
   }
+
+  return {};
 }
 
-export async function adminClientsLoader() {
-  try {
-    const clients = await Api.adminGetClients();
-    return { clients };
-  } catch (error) {
-    console.error(error);
-    return { clients: [] };
+export async function scheduleMessagesLoader({ params }: LoaderFunctionArgs) {
+  await waitForAuthReady();
+
+  const workspaceId = params.workspaceId;
+  if (workspaceId) {
+    const messageSchedules = await getMessageSchedules(workspaceId);
+    return { messageSchedules };
   }
+
+  return {};
 }
 
-export async function adminOrganizationsLoader() {
-  try {
-    const organizations = await Api.adminGetOrganizations();
-    return { organizations };
-  } catch (error) {
-    console.error(error);
-    return { organizations: [] };
+export async function membersLoader({ params }: LoaderFunctionArgs) {
+  await waitForAuthReady();
+
+  const workspaceId = params.workspaceId;
+  if (authService?.user?.uid && workspaceId) {
+    const members = await getMembers(authService.user.uid, workspaceId);
+    const phoneNumbers = members.map((m) => m.phone).filter(Boolean);
+    const lineUsers = await getLineUsersByPhoneNumbers(
+      workspaceId,
+      phoneNumbers,
+    );
+    const lineUserMap = new Map(lineUsers.map((lu) => [lu.phone, lu]));
+    return {
+      members: members.map((m) => ({
+        ...m,
+        lineUser: lineUserMap.get(m.phone),
+      })),
+    };
   }
+
+  return {};
+}
+
+export async function dashboardLoader({ params }: LoaderFunctionArgs) {
+  await waitForAuthReady();
+
+  const workspaceId = params.workspaceId;
+  const uid = authService.user?.uid;
+  if (!uid || !workspaceId) {
+    return {};
+  }
+
+  const [workspace, memberCount, lineUserCount] = await Promise.all([
+    getWorkspace(workspaceId),
+    countMembers(uid, workspaceId),
+    countLineUsers(workspaceId),
+  ]);
+
+  return { workspace, memberCount, lineUserCount };
 }

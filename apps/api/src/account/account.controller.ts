@@ -11,13 +11,19 @@ import {
 } from "@nestjs/common";
 import { AccountService } from "./account.service";
 import { UpdateAccountDto } from "./dto/update-account.dto";
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from "@nestjs/swagger";
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiExcludeController,
+  ApiTags,
+} from "@nestjs/swagger";
 import { ChangePasswordDto } from "@/auth/dto/change-password.dto";
-import { SetLocalPasswordDto } from "@/auth/dto/set-local-password.dto";
 import { AuthService } from "@/auth/auth.service";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { FirebaseAdminService } from "@/firebase-admin/firebase-admin.service";
 
+@ApiExcludeController()
 @ApiTags("account")
 @Controller("account")
 export class AccountController {
@@ -36,34 +42,14 @@ export class AccountController {
 
   @ApiBearerAuth()
   @Patch()
-  update(@Request() req, @Body() updateAccountDto: UpdateAccountDto) {
-    const id = req.user.id;
-    return this.accountService.update(id, updateAccountDto);
-  }
-
-  @ApiBearerAuth()
-  @Post("has-local-auth")
-  async hasLocalAuth(@Request() req) {
-    const hasLocalAuth = await this.accountService.hasLocalAuth(req.user.id);
-    return { hasLocalAuth };
-  }
-
-  @ApiBearerAuth()
-  @Post("send-verification-email")
-  sendVerificationEmail(@Request() req) {
-    return this.accountService.sendVerificationEmail(req.user);
+  update(@Request() req, @Body() body: UpdateAccountDto) {
+    return this.accountService.update(req.user.uid, body);
   }
 
   @ApiBearerAuth()
   @Post("change-password")
   async changePassword(@Request() req, @Body() body: ChangePasswordDto) {
-    return await this.authService.changePassword(req.user, body);
-  }
-
-  @ApiBearerAuth()
-  @Post("set-local-password")
-  async setLocalPassword(@Request() req, @Body() body: SetLocalPasswordDto) {
-    return await this.authService.setLocalPassword(req.user, body);
+    return await this.authService.changePassword(req.user.uid, body);
   }
 
   @ApiBearerAuth()
@@ -79,7 +65,7 @@ export class AccountController {
       },
     },
   })
-  @Post("picture")
+  @Post("avatar")
   @UseInterceptors(FileInterceptor("file"))
   async picture(@Request() req, @UploadedFile() file: Express.Multer.File) {
     const timestamp = new Date().getTime();
@@ -87,7 +73,7 @@ export class AccountController {
       file,
       `${timestamp}.${file.originalname.split(".").pop()}`,
     );
-    await this.accountService.update(req.user.id, { picture: url });
+    await this.accountService.update(req.user.uid, { photoURL: url });
     return { url };
   }
 }

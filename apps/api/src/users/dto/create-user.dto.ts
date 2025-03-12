@@ -2,25 +2,12 @@ import { ApiProperty } from "@nestjs/swagger";
 import {
   IsBoolean,
   IsEmail,
-  IsNotEmpty,
   IsOptional,
   IsString,
   Length,
 } from "class-validator";
-import { User } from "../entities/user.entity";
-import { AuditableDto } from "@/common/auditable.dto";
 
-export class CreateUserDto extends AuditableDto {
-  @IsNotEmpty()
-  @Length(4, 20)
-  @ApiProperty()
-  username: string;
-
-  @IsOptional()
-  @Length(4, 20)
-  @ApiProperty()
-  password?: string;
-
+export class CreateUserDto {
   @IsOptional()
   @IsEmail()
   @ApiProperty()
@@ -32,46 +19,22 @@ export class CreateUserDto extends AuditableDto {
   emailVerified?: boolean;
 
   @IsOptional()
-  @IsString()
+  @Length(8, 20)
   @ApiProperty()
-  firstName?: string;
+  password?: string;
 
   @IsOptional()
   @IsString()
   @ApiProperty()
-  lastName?: string;
-
-  @IsOptional()
-  @ApiProperty()
-  roles?: string[];
+  displayName?: string;
 
   @IsOptional()
   @IsString()
   @ApiProperty()
-  picture?: string;
+  photoURL?: string;
 
   @IsOptional()
   @IsBoolean()
   @ApiProperty()
-  isActive?: boolean;
-
-  @IsOptional()
-  @IsString()
-  @ApiProperty()
-  oauthGoogleRaw?: string;
-
-  public static async toUser(dto: CreateUserDto) {
-    const user = new User();
-    user.username = dto.username;
-    user.password = dto.password;
-    user.email = dto.email;
-    user.emailVerified = dto.emailVerified;
-    user.firstName = dto.firstName;
-    user.lastName = dto.lastName;
-    user.roles = dto.roles;
-    user.picture = dto.picture;
-    user.isActive = dto.isActive;
-    user.oauthGoogleRaw = dto.oauthGoogleRaw;
-    return user;
-  }
+  disabled?: boolean;
 }
