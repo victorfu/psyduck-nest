@@ -13,11 +13,13 @@ import {
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { CreateUserDto } from "./dto/create-user.dto";
+import { ApiBearerAuth, ApiExcludeController, ApiTags } from "@nestjs/swagger";
+import { Roles } from "@/decorators/roles.decorator";
+import { Role } from "@/enums/role.enum";
 import { UpdateUserDto } from "./dto/update-user.dto";
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { Roles } from "../decorators/roles.decorator";
-import { Role } from "../enums/role.enum";
+import { ResetPasswordDto } from "./dto/reset-password.dto";
 
+@ApiExcludeController()
 @ApiBearerAuth()
 @ApiTags("admin")
 @Controller("admin/users")
@@ -28,50 +30,44 @@ export class UsersController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Post()
   create(@Request() req, @Body() createUserDto: CreateUserDto) {
-    const user = req.user;
-    createUserDto.createdBy = user.id;
-    createUserDto.updatedBy = user.id;
-    return this.usersService.create(createUserDto);
+    return this.usersService.createUser(createUserDto);
   }
 
   @Roles(Role.Admin)
   @UseInterceptors(ClassSerializerInterceptor)
-  @Get()
-  findAll(@Query("username") username) {
-    if (username && username.length > 0) {
-      return this.usersService.findAllByUsername(username);
-    }
-    return this.usersService.findAll();
+  @Get(":uid")
+  findOne(@Param("uid") uid: string) {
+    return this.usersService.getUser(uid);
   }
 
   @Roles(Role.Admin)
-  @UseInterceptors(ClassSerializerInterceptor)
-  @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.usersService.findOne(+id);
-  }
-
-  @Roles(Role.Admin)
-  @Patch(":id")
+  @Patch(":uid")
   update(
     @Request() req,
-    @Param("id") id: string,
-    @Body() updateUserDto: UpdateUserDto,
+    @Param("uid") uid: string,
+    @Body() body: UpdateUserDto,
   ) {
-    const user = req.user;
-    updateUserDto.updatedBy = user.id;
-    return this.usersService.update(+id, updateUserDto);
+    return this.usersService.updateUser(uid, body);
   }
 
   @Roles(Role.Admin)
-  @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.usersService.remove(+id);
+  @Delete(":uid")
+  remove(@Param("uid") uid: string) {
+    return this.usersService.deleteUser(uid);
   }
 
   @Roles(Role.Admin)
-  @Post(":id/reset-password")
-  resetPassword(@Param("id") id: string) {
-    return this.usersService.setDefaultPassword(+id);
+  @Post(":uid/reset-password")
+  resetPassword(@Param("uid") uid: string, @Body() body: ResetPasswordDto) {
+    return this.usersService.resetPassword(uid, body);
+  }
+
+  @Roles(Role.Admin)
+  @Get()
+  listUsers(
+    @Query("maxResults") maxResults: number,
+    @Query("pageToken") pageToken: string,
+  ) {
+    return this.usersService.listUsers(maxResults, pageToken);
   }
 }

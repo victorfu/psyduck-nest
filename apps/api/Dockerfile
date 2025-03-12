@@ -4,15 +4,11 @@ RUN apk update
 RUN npm install -g turbo
 COPY . .
 RUN npm ci
-
-FROM node:20-alpine AS sourcer
-WORKDIR /app
-COPY --from=builder /app/ .
-RUN npm install -g turbo
-RUN turbo build --scope=api --scope=web --include-dependencies --no-deps
+RUN turbo build --force
 
 FROM node:20-alpine as runner
 WORKDIR /app
-COPY --from=sourcer /app/ .
+COPY --from=builder /app/ .
 
+EXPOSE 8080
 CMD ["sh", "-c", "cd apps/api && node dist/main.js"]

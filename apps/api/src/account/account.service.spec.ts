@@ -1,6 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { AccountService } from "./account.service";
-import { UsersService } from "@/users/users.service";
+import { FirebaseAdminService } from "@/firebase-admin/firebase-admin.service";
 
 describe("AccountService", () => {
   let service: AccountService;
@@ -10,7 +10,7 @@ describe("AccountService", () => {
       providers: [
         AccountService,
         {
-          provide: UsersService,
+          provide: FirebaseAdminService,
           useValue: {},
         },
       ],

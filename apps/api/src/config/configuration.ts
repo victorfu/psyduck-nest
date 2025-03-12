@@ -26,32 +26,8 @@ export default () => ({
     secret: process.env.JWT_SECRET,
     expiresIn: process.env.JWT_EXPIRES_IN || "60s",
   },
-  defaultAdmin: {
-    username: process.env.DEFAULT_ADMIN_USERNAME || "admin",
-    password: process.env.DEFAULT_ADMIN_PASSWORD || "password",
-    firstName: process.env.DEFAULT_ADMIN_FIRST_NAME || "Admin",
-    lastName: process.env.DEFAULT_ADMIN_LAST_NAME || "User",
-    roles: (process.env.DEFAULT_ADMIN_ROLES || "admin").split(","),
-  },
-  nodemailer: {
-    service: process.env.NODEMAILER_SERVICE || "gmail",
-    user: process.env.NODEMAILER_USER || "",
-    pass: process.env.NODEMAILER_PASS || "",
-    from: process.env.NODEMAILER_FROM || "",
-  },
-  user: {
-    defaultPassword: process.env.USER_DEFAULT_PASSWORD || "password",
-  },
   firebase: {
     adminSdkPath:
       process.env.FIREBASE_ADMIN_SDK_PATH || "firebase-adminsdk.json",
-    storageBucket: process.env.FIREBASE_STORAGE_BUCKET || "",
-  },
-  oauth: {
-    google: {
-      clientId: process.env.OAUTH_GOOGLE_CLIENT_ID || "",
-      clientSecret: process.env.OAUTH_GOOGLE_CLIENT_SECRET || "",
-      redirectUrl: process.env.OAUTH_GOOGLE_REDIRECT_URL || "",
-    },
   },
 });

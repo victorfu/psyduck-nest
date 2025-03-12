@@ -2,7 +2,6 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { AccountController } from "./account.controller";
 import { AccountService } from "./account.service";
 import { AuthService } from "@/auth/auth.service";
-import { UsersService } from "@/users/users.service";
 import { FirebaseAdminService } from "@/firebase-admin/firebase-admin.service";
 
 describe("AccountController", () => {
@@ -13,10 +12,6 @@ describe("AccountController", () => {
       controllers: [AccountController],
       providers: [
         AccountService,
-        {
-          provide: UsersService,
-          useValue: {},
-        },
         {
           provide: AuthService,
           useValue: {},

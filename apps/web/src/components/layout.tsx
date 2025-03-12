@@ -1,172 +1,241 @@
-import { useState } from "react";
-import { Link, Outlet, useLocation } from "react-router-dom";
-import { Fragment } from "react";
-import { Dialog, Transition } from "@headlessui/react";
-import { twMerge } from "tailwind-merge";
-import { Toaster } from "@/components/ui/toaster";
-import { TailwindIndicator } from "@/components/ui/tailwind-indicator";
-import { useRootUser } from "../hooks/use-root-user";
-import { PanelLeftCloseIcon, PanelRightCloseIcon, XIcon } from "lucide-react";
-import routes from "../routes";
+import {
+  Outlet,
+  useFetcher,
+  Navigate,
+  useParams,
+  useLocation,
+  Link,
+} from "react-router-dom";
+import { useMemo, useState } from "react";
+import {
+  Dialog,
+  DialogBackdrop,
+  DialogPanel,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems,
+  TransitionChild,
+} from "@headlessui/react";
+import {
+  Bars3Icon,
+  XMarkIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from "@heroicons/react/24/outline";
+import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import { cn } from "@/lib/utils";
 import Logo from "./logo";
-import LayoutHeader from "./layout-header";
+import { useRootData, useWorkspacesLoaderData } from "@/hooks/use-data";
+import { WorkspaceSelect } from "./workspace-select";
+import { Tooltip } from "antd";
+import {
+  CommentOutlined,
+  LineChartOutlined,
+  CalendarOutlined,
+  TeamOutlined,
+  DatabaseOutlined,
+  SettingOutlined,
+} from "@ant-design/icons";
 
-function Layout() {
+export function Layout() {
+  const rootData = useRootData();
+  const loaderData = useWorkspacesLoaderData();
+  const { workspaceId } = useParams();
+  const fetcher = useFetcher();
   const location = useLocation();
-  const { pathname } = location;
-  const { user } = useRootUser();
+  const currentPage = location.pathname;
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [fullSidebar, setFullSidebar] = useState(true);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
-  const navigation = routes
-    .filter((value) => value.isPrimary)
-    .map((value) => ({
-      ...value,
-      current: pathname.includes(value.href),
-    }));
+  const navigation = useMemo(
+    () => [
+      {
+        name: "儀表板",
+        href: `/workspace/${workspaceId}`,
+        icon: LineChartOutlined,
+        current: currentPage?.match(/^\/workspace\/[^/]+$/),
+      },
+      {
+        name: "會員",
+        href: `/workspace/${workspaceId}/members`,
+        icon: TeamOutlined,
+        current: currentPage?.match(/^\/workspace\/[^/]+\/members/),
+      },
+      {
+        name: "LINE用戶",
+        href: `/workspace/${workspaceId}/line-users`,
+        icon: CommentOutlined,
+        current: currentPage?.match(/^\/workspace\/[^/]+\/line-users/),
+      },
+      {
+        name: "訊息排程",
+        href: `/workspace/${workspaceId}/schedule-messages`,
+        icon: CalendarOutlined,
+        current: currentPage?.match(/^\/workspace\/[^/]+\/schedule-messages/),
+      },
+    ],
+    [workspaceId, currentPage],
+  );
 
-  const secondaryNavigation = routes
-    .filter((value) => value.isSecondary)
-    .map((value) => ({
-      ...value,
-      current: pathname.includes(value.href),
-    }));
+  const userNavigation = useMemo(
+    () => [
+      { name: "帳號", href: `/workspace/${workspaceId}/settings?tab=account` },
+      { name: "登出", href: "/logout" },
+    ],
+    [workspaceId],
+  );
+
+  const bottomNavigation = useMemo(
+    () => [
+      {
+        name: "我的空間",
+        href: `/workspace/${workspaceId}/workspaces`,
+        icon: DatabaseOutlined,
+        current: currentPage?.match(/^\/workspace\/[^/]+\/workspaces/),
+      },
+      {
+        name: "設定",
+        href: `/workspace/${workspaceId}/settings?tab=settings`,
+        icon: SettingOutlined,
+        current: currentPage?.match(/^\/workspace\/[^/]+\/settings/),
+      },
+    ],
+    [workspaceId, currentPage],
+  );
+
+  const isLoggingOut = fetcher.formData != null;
+
+  if (!loaderData?.workspaces || loaderData.workspaces.length === 0) {
+    return <Navigate to="/" />;
+  }
+
+  const found = loaderData.workspaces.find(
+    (workspace) => workspace.id === workspaceId,
+  );
+  if (!found) {
+    return <Navigate to={`/workspace/${loaderData.workspaces[0].id}`} />;
+  }
 
   return (
     <>
-      <div className="h-screen">
-        <Transition.Root show={sidebarOpen} as={Fragment}>
-          <Dialog
-            as="div"
-            className="relative z-50 lg:hidden"
-            onClose={setSidebarOpen}
-          >
-            <Transition.Child
-              as={Fragment}
-              enter="transition-opacity ease-linear duration-300"
-              enterFrom="opacity-0"
-              enterTo="opacity-100"
-              leave="transition-opacity ease-linear duration-300"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-            >
-              <div className="fixed inset-0 bg-gray-900/80" />
-            </Transition.Child>
+      <div>
+        <Dialog
+          open={sidebarOpen}
+          onClose={setSidebarOpen}
+          className="relative z-50 lg:hidden"
+        >
+          <DialogBackdrop
+            transition
+            className="fixed inset-0 bg-gray-900/80 transition-opacity duration-300 ease-linear data-closed:opacity-0"
+          />
 
-            <div className="fixed inset-0 flex">
-              <Transition.Child
-                as={Fragment}
-                enter="transition ease-in-out duration-300 transform"
-                enterFrom="-translate-x-full"
-                enterTo="translate-x-0"
-                leave="transition ease-in-out duration-300 transform"
-                leaveFrom="translate-x-0"
-                leaveTo="-translate-x-full"
-              >
-                <Dialog.Panel className="relative mr-16 flex w-full max-w-xs flex-1">
-                  <Transition.Child
-                    as={Fragment}
-                    enter="ease-in-out duration-300"
-                    enterFrom="opacity-0"
-                    enterTo="opacity-100"
-                    leave="ease-in-out duration-300"
-                    leaveFrom="opacity-100"
-                    leaveTo="opacity-0"
+          <div className="fixed inset-0 flex">
+            <DialogPanel
+              transition
+              className="relative mr-16 flex w-full max-w-50 flex-1 transform transition duration-300 ease-in-out data-closed:-translate-x-full"
+            >
+              <TransitionChild>
+                <div className="absolute top-0 left-full flex w-16 justify-center pt-5 duration-300 ease-in-out data-closed:opacity-0">
+                  <button
+                    type="button"
+                    onClick={() => setSidebarOpen(false)}
+                    className="-m-2.5 p-2.5"
                   >
-                    <div className="absolute left-full top-0 flex w-16 justify-center pt-5">
-                      <button
-                        type="button"
-                        className="-m-2.5 p-2.5"
-                        onClick={() => setSidebarOpen(false)}
-                      >
-                        <span className="sr-only">Close sidebar</span>
-                        <XIcon
-                          className="h-6 w-6 text-white"
-                          aria-hidden="true"
-                        />
-                      </button>
-                    </div>
-                  </Transition.Child>
-                  {/* Sidebar component */}
-                  <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-4 ring-1 ring-white/10">
-                    <Link to="/" className="flex h-16 shrink-0 items-center">
-                      <Logo />
-                    </Link>
-                    <nav className="flex flex-1 flex-col">
-                      <ul role="list" className="flex flex-1 flex-col gap-y-7">
-                        <li>
-                          <ul role="list" className="-mx-2 space-y-1">
-                            {navigation.map((item) => (
-                              <li key={item.name}>
-                                <Link
-                                  to={item.href}
-                                  className={twMerge(
-                                    item.current
-                                      ? "bg-gray-800 text-white"
-                                      : "text-gray-400 hover:text-white hover:bg-gray-800",
-                                    "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold",
-                                  )}
-                                >
-                                  <item.icon
-                                    className="h-6 w-6 shrink-0"
-                                    aria-hidden="true"
-                                  />
-                                  {item.name}
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        </li>
-                        <div className="mt-auto">
-                          {secondaryNavigation.map((item) => (
-                            <li key={item.name}>
-                              <Link
-                                to={item.href}
-                                className={twMerge(
-                                  item.current
-                                    ? "bg-gray-800 text-white"
-                                    : "text-gray-400 hover:text-white hover:bg-gray-800",
-                                  "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold",
-                                )}
-                              >
-                                <item.icon
-                                  className="h-6 w-6 shrink-0"
-                                  aria-hidden="true"
-                                />
-                                {item.name}
-                              </Link>
-                            </li>
-                          ))}
-                        </div>
+                    <span className="sr-only">Close sidebar</span>
+                    <XMarkIcon
+                      aria-hidden="true"
+                      className="size-6 text-white"
+                    />
+                  </button>
+                </div>
+              </TransitionChild>
+              {/* Sidebar component, swap this element with another sidebar if you like */}
+              <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-4 ring-1 ring-white/10">
+                <div className="flex h-16 shrink-0 items-center justify-between">
+                  <Link to="/">
+                    <Logo className="h-8 w-auto" />
+                  </Link>
+                </div>
+                <nav className="flex flex-1 flex-col">
+                  <ul role="list" className="flex flex-1 flex-col gap-y-7">
+                    <li>
+                      <ul role="list" className="-mx-2 space-y-1">
+                        {navigation.map((item) => (
+                          <li key={item.name}>
+                            <Link
+                              to={item.href}
+                              className={cn(
+                                item.current
+                                  ? "bg-gray-800 text-white"
+                                  : "text-gray-400 hover:bg-gray-800 hover:text-white",
+                                "group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold",
+                              )}
+                            >
+                              <item.icon
+                                aria-hidden="true"
+                                className="size-6 shrink-0"
+                                style={{
+                                  fontSize: "24px",
+                                }}
+                              />
+                              {item.name}
+                            </Link>
+                          </li>
+                        ))}
                       </ul>
-                    </nav>
-                  </div>
-                </Dialog.Panel>
-              </Transition.Child>
-            </div>
-          </Dialog>
-        </Transition.Root>
+                    </li>
+                    <li className="mt-auto">
+                      {bottomNavigation.map((item) => (
+                        <Link
+                          key={item.name}
+                          to={item.href}
+                          className={cn(
+                            item.current
+                              ? "bg-gray-800 text-white"
+                              : "text-gray-400 hover:bg-gray-800 hover:text-white",
+                            "-mx-2 group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold",
+                          )}
+                        >
+                          <item.icon
+                            aria-hidden="true"
+                            className="size-6 shrink-0"
+                            style={{
+                              fontSize: "24px",
+                            }}
+                          />
+                          {item.name}
+                        </Link>
+                      ))}
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            </DialogPanel>
+          </div>
+        </Dialog>
 
         {/* Static sidebar for desktop */}
         <div
-          className={twMerge(
-            "hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:flex-col",
-            fullSidebar ? "lg:w-52" : "lg:w-16",
+          className={cn(
+            "hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:flex-col transition-all duration-300",
+            isCollapsed ? "lg:w-20" : "lg:w-50",
           )}
         >
-          {/* Sidebar component */}
+          {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-4">
-            <div className="flex h-16 shrink-0 items-center">
-              <div className="flex-1 w-full">
-                <Link to="/" className="flex h-16 shrink-0 items-center">
-                  <Logo />
-                </Link>
-              </div>
-              <button onClick={() => setFullSidebar(!fullSidebar)}>
-                {fullSidebar ? (
-                  <PanelLeftCloseIcon className="h-5 w-5 text-white " />
+            <div className="flex h-16 shrink-0 items-center justify-between">
+              <Link to="/" className={cn(isCollapsed && "justify-center")}>
+                <Logo className={cn("h-8 w-auto", isCollapsed && "h-6")} />
+              </Link>
+              <button
+                onClick={() => setIsCollapsed(!isCollapsed)}
+                className="cursor-pointer hidden lg:flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800"
+              >
+                {isCollapsed ? (
+                  <ChevronRightIcon className="h-5 w-5" />
                 ) : (
-                  <PanelRightCloseIcon className="h-5 w-5 text-white " />
+                  <ChevronLeftIcon className="h-5 w-5" />
                 )}
               </button>
             </div>
@@ -178,53 +247,153 @@ function Layout() {
                       <li key={item.name}>
                         <Link
                           to={item.href}
-                          className={twMerge(
+                          className={cn(
                             item.current
                               ? "bg-gray-800 text-white"
-                              : "text-gray-400 hover:text-white hover:bg-gray-800",
-                            "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold",
-                            fullSidebar ? "p-2" : "p-1",
+                              : "text-gray-400 hover:bg-gray-800 hover:text-white",
+                            "group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold",
+                            isCollapsed && "justify-center",
                           )}
+                          title={isCollapsed ? item.name : undefined}
                         >
-                          <item.icon
-                            className="h-6 w-6 shrink-0"
-                            aria-hidden="true"
-                          />
-                          {fullSidebar && item.name}
+                          <Tooltip title={item.name}>
+                            <item.icon
+                              aria-hidden="true"
+                              className="size-6 shrink-0"
+                              style={{
+                                fontSize: "24px",
+                              }}
+                            />
+                          </Tooltip>
+                          {!isCollapsed && item.name}
                         </Link>
                       </li>
                     ))}
                   </ul>
                 </li>
-                <div className="mt-auto">
-                  {secondaryNavigation.map((item) => (
-                    <li key={item.name}>
-                      <Link
-                        to={item.href}
-                        className={twMerge(
-                          item.current
-                            ? "bg-gray-800 text-white"
-                            : "text-gray-400 hover:text-white hover:bg-gray-800",
-                          "-mx-2 group flex gap-x-3 rounded-md text-sm leading-6 font-semibold",
-                          fullSidebar ? "p-2" : "p-1",
-                        )}
-                      >
+                <li className="mt-auto">
+                  {bottomNavigation.map((item) => (
+                    <Link
+                      key={item.name}
+                      to={item.href}
+                      className={cn(
+                        item.current
+                          ? "bg-gray-800 text-white"
+                          : "text-gray-400 hover:bg-gray-800 hover:text-white",
+                        "-mx-2 group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold",
+                        isCollapsed && "justify-center",
+                      )}
+                      title={isCollapsed ? item.name : undefined}
+                    >
+                      <Tooltip title={item.name}>
                         <item.icon
-                          className="h-6 w-6 shrink-0"
                           aria-hidden="true"
+                          className="size-6 shrink-0"
+                          style={{
+                            fontSize: "24px",
+                          }}
                         />
-                        {fullSidebar && item.name}
-                      </Link>
-                    </li>
+                      </Tooltip>
+                      {!isCollapsed && item.name}
+                    </Link>
                   ))}
-                </div>
+                </li>
               </ul>
             </nav>
           </div>
         </div>
 
-        <div className={fullSidebar ? "lg:pl-52" : "lg:pl-16"}>
-          <LayoutHeader user={user} onClick={() => setSidebarOpen(true)} />
+        <div
+          className={cn(
+            "transition-all duration-300",
+            isCollapsed ? "lg:pl-16" : "lg:pl-50",
+          )}
+        >
+          <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-xs sm:gap-x-6 sm:px-6 lg:px-8">
+            <button
+              type="button"
+              onClick={() => setSidebarOpen(true)}
+              className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
+            >
+              <span className="sr-only">Open sidebar</span>
+              <Bars3Icon aria-hidden="true" className="size-6" />
+            </button>
+
+            {/* Separator */}
+            <div
+              aria-hidden="true"
+              className="h-6 w-px bg-gray-900/10 lg:hidden"
+            />
+
+            <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
+              <div className="grid flex-1 grid-cols-1 items-center">
+                <WorkspaceSelect workspaces={loaderData.workspaces ?? []} />
+              </div>
+              <div className="flex items-center gap-x-4 lg:gap-x-6">
+                {/* Separator */}
+                <div
+                  aria-hidden="true"
+                  className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-900/10"
+                />
+
+                {/* Profile dropdown */}
+                <Menu as="div" className="relative">
+                  <MenuButton className="-m-1.5 flex items-center p-1.5">
+                    <span className="sr-only">Open user menu</span>
+                    <div className="size-8 rounded-full bg-gray-500"></div>
+                    <span className="hidden lg:flex lg:items-center">
+                      <span
+                        aria-hidden="true"
+                        className="ml-4 text-sm/6 font-semibold text-gray-900"
+                      >
+                        {rootData.user?.email}
+                      </span>
+                      <ChevronDownIcon
+                        aria-hidden="true"
+                        className="ml-2 size-5 text-gray-400"
+                      />
+                    </span>
+                  </MenuButton>
+                  <MenuItems
+                    transition
+                    className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 ring-1 shadow-lg ring-gray-900/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
+                  >
+                    {userNavigation.map((item) => {
+                      if (item.href === "/logout") {
+                        return (
+                          <MenuItem key={item.name}>
+                            <fetcher.Form
+                              method="post"
+                              action="/logout"
+                              className="block px-3 py-1 text-sm/6 text-gray-900 data-focus:bg-gray-50 data-focus:outline-hidden cursor-pointer"
+                            >
+                              <button
+                                type="submit"
+                                className="cursor-pointer w-full text-left"
+                                aria-disabled={isLoggingOut}
+                              >
+                                {isLoggingOut ? "登出中..." : item.name}
+                              </button>
+                            </fetcher.Form>
+                          </MenuItem>
+                        );
+                      }
+                      return (
+                        <MenuItem key={item.name}>
+                          <Link
+                            to={item.href}
+                            className="block px-3 py-1 text-sm/6 text-gray-900 data-focus:bg-gray-50 data-focus:outline-hidden"
+                          >
+                            {item.name}
+                          </Link>
+                        </MenuItem>
+                      );
+                    })}
+                  </MenuItems>
+                </Menu>
+              </div>
+            </div>
+          </div>
 
           <main className="py-10">
             <div className="px-4 sm:px-6 lg:px-8">
@@ -233,10 +402,6 @@ function Layout() {
           </main>
         </div>
       </div>
-      <Toaster />
-      <TailwindIndicator />
     </>
   );
 }
-
-export default Layout;

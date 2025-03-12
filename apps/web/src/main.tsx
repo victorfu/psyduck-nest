@@ -1,152 +1,83 @@
+import "@ant-design/v5-patch-for-react-19";
+
 import "./index.css";
 import ReactDOM from "react-dom/client";
+import { createBrowserRouter, redirect } from "react-router-dom";
+import { AuthProvider } from "./components/auth-provider.tsx";
 import {
-  createBrowserRouter,
-  Navigate,
-  RouterProvider,
-} from "react-router-dom";
-import {
-  forgotPasswordAction,
-  loginAction,
   loginLoader,
-  logoutAction,
-  authLoader,
-} from "./auth.ts";
-import AdminDashboardPage from "./pages/admin/dashboard/page.tsx";
-import AdminUserPage from "./pages/admin/user/page.tsx";
-import AccountPage from "./pages/account/page.tsx";
-import LoginPage from "./pages/login-page.tsx";
-import ErrorPage from "./pages/error-page.tsx";
-import AdminWorkspacePage from "./pages/admin/workspace/page.tsx";
-import SettingsPage from "./pages/settings/page.tsx";
-import Layout from "./components/layout.tsx";
-import {
-  adminClientsLoader,
-  adminDashboardLoader,
-  adminOrganizationsLoader,
-  adminUsersLoader,
-  workspaceListLoader,
-  adminWorkspaceLoader,
-  adminWorkspacesLoader,
-  workspaceLoader,
-  workspaceMemberLoader,
-  notesLoader,
+  mainLoader,
+  workspacesLoader,
+  rootLoader,
+  settingsLoader,
+  lineUsersLoader,
+  membersLoader,
+  dashboardLoader,
+  scheduleMessagesLoader,
 } from "./lib/loaders.ts";
-import AuthSuccessPage from "./pages/auth-success-page.tsx";
-import ForgotPasswordPage from "./pages/forgot-password-page.tsx";
-import { CookiesProvider } from "react-cookie";
-import AdminClientPage from "./pages/admin/client/page.tsx";
-import AdminOrganizationPage from "./pages/admin/organization/page.tsx";
-import AdminLayout from "./components/admin-layout.tsx";
-import AdminWorkspaceAccessPage from "./pages/admin/workspace-access/page.tsx";
-import WorkspaceListPage from "./pages/list/page.tsx";
-import WorkspaceLayout from "./components/workspace-layout.tsx";
-import WorkspaceClientPage from "./pages/workspace/client/page.tsx";
-import WorkspaceMemberPage from "./pages/workspace/member/page.tsx";
-import WorkspaceSettingsPage from "./pages/workspace/settings/page.tsx";
-import WorkspaceNotePage from "./pages/workspace/note/page.tsx";
-import WorkspaceNoteDetailPage from "./pages/workspace/note-detail/page.tsx";
+import { loginAction } from "./lib/actions.ts";
+import { authService } from "./auth/auth-service.ts";
+import { Layout } from "./components/layout.tsx";
+
+import ErrorPage from "./pages/error-page.tsx";
+import MainPage from "./pages/main-page.tsx";
+import LoginPage from "./pages/login-page.tsx";
+import MembersPage from "./pages/members-page.tsx";
+import SettingsPage from "./pages/settings-page.tsx";
+import WorkspacesPage from "./pages/workspaces-page.tsx";
+import DashboardPage from "./pages/dashboard-page.tsx";
+import LineUsersPage from "./pages/line-users-page.tsx";
+import ScheduleMessagesPage from "./pages/schedule-messages-page.tsx";
+import { Fallback } from "./components/fallback.tsx";
 
 const router = createBrowserRouter([
   {
     id: "root",
     path: "/",
-    element: <Layout />,
-    errorElement: <ErrorPage />,
-    loader: authLoader,
-    children: [
-      { index: true, element: <Navigate to="workspaces" replace /> },
-      {
-        path: "workspaces",
-        loader: workspaceListLoader,
-        element: <WorkspaceListPage />,
-      },
-      {
-        path: "notes",
-        loader: notesLoader,
-        element: <WorkspaceNotePage />,
-      },
-      {
-        path: "notes/:nid",
-        element: <WorkspaceNoteDetailPage />,
-      },
-      {
-        path: "account",
-        element: <AccountPage />,
-      },
-      {
-        path: "settings",
-        element: <SettingsPage />,
-      },
-    ],
-  },
-  {
-    id: "workspace",
-    path: "/workspaces/:wid",
-    element: <WorkspaceLayout />,
-    errorElement: <ErrorPage />,
-    loader: workspaceLoader,
+    loader: rootLoader,
+    HydrateFallback: Fallback,
     children: [
       {
         index: true,
-        element: <Navigate to="clients" replace />,
+        Component: MainPage,
+        loader: mainLoader,
       },
       {
-        path: "clients",
-        element: <WorkspaceClientPage />,
-      },
-      {
-        path: "members",
-        loader: workspaceMemberLoader,
-        element: <WorkspaceMemberPage />,
-      },
-      {
-        path: "settings",
-        element: <WorkspaceSettingsPage />,
-      },
-      {
-        path: "settings/:tab",
-        element: <WorkspaceSettingsPage />,
-      },
-    ],
-  },
-  {
-    id: "adminRoot",
-    path: "/admin",
-    element: <AdminLayout />,
-    errorElement: <ErrorPage />,
-    loader: authLoader,
-    children: [
-      { index: true, element: <Navigate to="/admin/dashboard" replace /> },
-      {
-        path: "dashboard",
-        loader: adminDashboardLoader,
-        element: <AdminDashboardPage />,
-      },
-      {
-        path: "users",
-        loader: adminUsersLoader,
-        element: <AdminUserPage />,
-      },
-      {
-        path: "organizations",
-        loader: adminOrganizationsLoader,
-        element: <AdminOrganizationPage />,
-      },
-      {
-        path: "workspaces",
-        loader: adminWorkspacesLoader,
-        element: <AdminWorkspacePage />,
-      },
-      {
-        path: "workspaces/:wid",
-        loader: adminWorkspaceLoader,
-        element: <AdminWorkspaceAccessPage />,
-      },
-      {
-        path: "clients",
-        loader: adminClientsLoader,
-        element: <AdminClientPage />,
+        id: "workspaces",
+        path: "workspace/:workspaceId",
+        Component: Layout,
+        loader: workspacesLoader,
+        children: [
+          {
+            index: true,
+            Component: DashboardPage,
+            loader: dashboardLoader,
+          },
+          {
+            path: "members",
+            Component: MembersPage,
+            loader: membersLoader,
+          },
+          {
+            path: "line-users",
+            Component: LineUsersPage,
+            loader: lineUsersLoader,
+          },
+          {
+            path: "schedule-messages",
+            Component: ScheduleMessagesPage,
+            loader: scheduleMessagesLoader,
+          },
+          {
+            path: "workspaces",
+            Component: WorkspacesPage,
+          },
+          {
+            path: "settings",
+            Component: SettingsPage,
+            loader: settingsLoader,
+          },
+        ],
       },
     ],
   },
@@ -154,27 +85,23 @@ const router = createBrowserRouter([
     path: "login",
     action: loginAction,
     loader: loginLoader,
-    element: <LoginPage />,
+    Component: LoginPage,
+    HydrateFallback: Fallback,
   },
   {
-    path: "logout",
-    action: logoutAction,
+    path: "/logout",
+    async action() {
+      await authService.signOut();
+      return redirect("/");
+    },
   },
   {
-    path: "auth/google/success",
-    element: (
-      <CookiesProvider>
-        <AuthSuccessPage />
-      </CookiesProvider>
-    ),
-  },
-  {
-    path: "forgot-password",
-    action: forgotPasswordAction,
-    element: <ForgotPasswordPage />,
+    path: "*",
+    Component: ErrorPage,
+    HydrateFallback: Fallback,
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <RouterProvider router={router} />,
+  <AuthProvider router={router} />,
 );

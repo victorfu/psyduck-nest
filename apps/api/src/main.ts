@@ -6,25 +6,18 @@ import { getPackageVersion } from "./utils";
 import { ServerConfig, SwaggerConfig } from "./config/configuration.interface";
 import { RequestMethod, ValidationPipe } from "@nestjs/common";
 import { WsAdapter } from "@nestjs/platform-ws";
-import { UsersService } from "./users/users.service";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { join } from "path";
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    rawBody: true,
+  });
   app.setGlobalPrefix("api", {
     exclude: [
       {
-        path: "verify-email",
+        path: "ssr",
         method: RequestMethod.GET,
-      },
-      {
-        path: "reset-password",
-        method: RequestMethod.GET,
-      },
-      {
-        path: "reset-password",
-        method: RequestMethod.POST,
       },
     ],
   });
@@ -57,9 +50,6 @@ async function bootstrap() {
   if (corsConfig.enabled) {
     app.enableCors();
   }
-
-  const usersService = app.get(UsersService);
-  await usersService.initializeDefaultAdmin();
 
   await app.listen(serverConfig.port);
   console.info(`~ Server is running on: ${await app.getUrl()}`);
