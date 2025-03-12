@@ -83,7 +83,7 @@ const WorkspacesPage = () => {
     }
 
     try {
-      await deleteWorkspace(user.uid, selectedWorkspace);
+      await deleteWorkspace(selectedWorkspace);
       setSelectedWorkspace(null);
       setOpen(false);
 

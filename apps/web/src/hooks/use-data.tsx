@@ -4,6 +4,7 @@ import { User } from "firebase/auth";
 import { useLoaderData, useRouteLoaderData } from "react-router-dom";
 import { MemberWithLineUser } from "@/lib/member";
 import { Workspace } from "@/lib/workspace";
+import { TeamMember } from "@/lib/api";
 
 export function useRootData() {
   // The id "root" needs to match the id in the router configuration
@@ -53,5 +54,12 @@ export function useDashboardLoaderData() {
     workspace: Workspace | null;
     memberCount: number;
     lineUserCount: number;
+  };
+}
+
+export function useTeamLoaderData() {
+  return useLoaderData() as {
+    workspace: Workspace | null;
+    teamMembers: TeamMember[] | null;
   };
 }

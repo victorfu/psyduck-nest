@@ -42,6 +42,7 @@ export function Layout() {
   const rootData = useRootData();
   const loaderData = useWorkspacesLoaderData();
   const { workspaceId } = useParams();
+  const workspaces = loaderData?.workspaces;
   const fetcher = useFetcher();
   const location = useLocation();
   const currentPage = location.pathname;
@@ -89,6 +90,12 @@ export function Layout() {
   const bottomNavigation = useMemo(
     () => [
       {
+        name: "團隊",
+        href: `/workspace/${workspaceId}/team`,
+        icon: TeamOutlined,
+        current: currentPage?.match(/^\/workspace\/[^/]+\/team/),
+      },
+      {
         name: "我的空間",
         href: `/workspace/${workspaceId}/workspaces`,
         icon: DatabaseOutlined,
@@ -106,15 +113,13 @@ export function Layout() {
 
   const isLoggingOut = fetcher.formData != null;
 
-  if (!loaderData?.workspaces || loaderData.workspaces.length === 0) {
+  if (!workspaces || workspaces.length === 0) {
     return <Navigate to="/" />;
   }
 
-  const found = loaderData.workspaces.find(
-    (workspace) => workspace.id === workspaceId,
-  );
+  const found = workspaces.find((workspace) => workspace.id === workspaceId);
   if (!found) {
-    return <Navigate to={`/workspace/${loaderData.workspaces[0].id}`} />;
+    return <Navigate to={`/workspace/${workspaces[0].id}`} />;
   }
 
   return (
@@ -154,7 +159,7 @@ export function Layout() {
               <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-4 ring-1 ring-white/10">
                 <div className="flex h-16 shrink-0 items-center justify-between">
                   <Link to="/">
-                    <Logo className="h-8 w-auto" />
+                    <Logo className="h-8 w-8 rounded" url={found.imageUrl} />
                   </Link>
                 </div>
                 <nav className="flex flex-1 flex-col">
@@ -226,7 +231,10 @@ export function Layout() {
           <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-4">
             <div className="flex h-16 shrink-0 items-center justify-between">
               <Link to="/" className={cn(isCollapsed && "justify-center")}>
-                <Logo className={cn("h-8 w-auto", isCollapsed && "h-6")} />
+                <Logo
+                  className={cn("h-8 w-8 rounded", isCollapsed && "h-6")}
+                  url={found.imageUrl}
+                />
               </Link>
               <button
                 onClick={() => setIsCollapsed(!isCollapsed)}
@@ -327,7 +335,7 @@ export function Layout() {
 
             <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
               <div className="grid flex-1 grid-cols-1 items-center">
-                <WorkspaceSelect workspaces={loaderData.workspaces ?? []} />
+                <WorkspaceSelect workspaces={workspaces ?? []} />
               </div>
               <div className="flex items-center gap-x-4 lg:gap-x-6">
                 {/* Separator */}
@@ -340,7 +348,17 @@ export function Layout() {
                 <Menu as="div" className="relative">
                   <MenuButton className="-m-1.5 flex items-center p-1.5">
                     <span className="sr-only">Open user menu</span>
-                    <div className="size-8 rounded-full bg-gray-500"></div>
+                    <div className="size-8 rounded-full">
+                      {rootData.user?.photoURL ? (
+                        <img
+                          src={rootData.user?.photoURL}
+                          alt="user"
+                          className="size-full rounded-full"
+                        />
+                      ) : (
+                        <div className="size-full rounded-full bg-gray-500" />
+                      )}
+                    </div>
                     <span className="hidden lg:flex lg:items-center">
                       <span
                         aria-hidden="true"

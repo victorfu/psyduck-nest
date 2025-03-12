@@ -16,6 +16,7 @@ import { LineSdkModule } from "./line-sdk/line-sdk.module";
 import { FirebaseGuard } from "./auth/firebase.guard";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from "path";
+import { WorkspacesModule } from "./workspaces/workspaces.module";
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { join } from "path";
     FirebaseAdminModule,
     AccountModule,
     LineSdkModule,
+    WorkspacesModule,
   ],
   controllers: [AppController],
   providers: [

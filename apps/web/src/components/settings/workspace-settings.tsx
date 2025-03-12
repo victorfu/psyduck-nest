@@ -77,8 +77,6 @@ export const WorkspaceSettings = () => {
     }
 
     try {
-      if (!open) return;
-
       await updateWorkspace(workspace.id, {
         imageUrl: "",
         updatedAt: Timestamp.fromDate(new Date()),
@@ -158,7 +156,7 @@ export const WorkspaceSettings = () => {
       >
         <Form
           form={form}
-          name="basic"
+          name="workspace-settings-form"
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 16 }}
           style={{ maxWidth: 600 }}

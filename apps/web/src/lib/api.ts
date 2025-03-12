@@ -25,6 +25,15 @@ export interface WebhookEndpoint {
   active: boolean;
 }
 
+export interface TeamMember {
+  uid: string;
+  email: string;
+  displayName: string;
+  photoURL: string;
+  phoneNumber: string;
+  disabled: boolean;
+}
+
 const getToken = async () => {
   const token = await localforage.getItem("token");
   return token;
@@ -92,4 +101,20 @@ export const sendLineMessage = async (
       message: message,
     }),
   });
+};
+
+export const getTeamMembers = async (workspaceId: string) => {
+  const token = await getToken();
+  const response = await fetch(
+    `${apiUrl}/api/workspaces/${workspaceId}/team-members`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+  const result = await response.json();
+  return result as TeamMember[];
 };
