@@ -25,7 +25,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { cn } from "@/lib/utils";
-import Logo from "./logo";
+import { Logo, SingleTextLogo } from "./logo";
 import { useRootData, useWorkspacesLoaderData } from "@/hooks/use-data";
 import { WorkspaceSelect } from "./workspace-select";
 import { Tooltip } from "antd";
@@ -230,14 +230,16 @@ export function Layout() {
         >
           {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-4">
-            <div className="flex h-16 shrink-0 items-center justify-between">
-              {!isCollapsed && (
-                <Link to="/" className={cn(isCollapsed && "justify-center")}>
+            <div className="flex h-16 items-center">
+              <Link to="/" className={cn(isCollapsed && "justify-center")}>
+                {isCollapsed ? (
+                  <SingleTextLogo className="h-8 w-8 flex items-center justify-center" />
+                ) : (
                   <Logo
                     className={cn("h-8 w-8 rounded", isCollapsed && "h-6")}
                   />
-                </Link>
-              )}
+                )}
+              </Link>
             </div>
             <nav className="flex flex-1 flex-col">
               <ul role="list" className="flex flex-1 flex-col gap-y-2">
