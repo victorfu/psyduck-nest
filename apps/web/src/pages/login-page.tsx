@@ -1,5 +1,5 @@
 import { authService } from "@/auth/auth-service";
-import Logo from "@/components/logo";
+import { Logo } from "@/components/logo";
 import { Divider } from "antd";
 import {
   Form,
