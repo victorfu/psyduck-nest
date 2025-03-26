@@ -2,11 +2,12 @@ import React from "react";
 import {
   EditOutlined,
   EllipsisOutlined,
-  InfoCircleOutlined,
+  SwapOutlined,
 } from "@ant-design/icons";
-import { Card, Flex, Dropdown } from "antd";
-import placeholder from "@/assets/placeholder.svg";
+import { Card, Flex, Dropdown, Tooltip } from "antd";
 import { Workspace } from "@/lib/workspace";
+import { useNavigate } from "react-router-dom";
+// import placeholder from "@/assets/placeholder.svg";
 
 export const WorkspaceCards = ({
   workspaces,
@@ -15,11 +16,11 @@ export const WorkspaceCards = ({
   workspaces: Workspace[];
   onEditClick?: (workspace: Workspace) => void;
 }) => {
+  const navigate = useNavigate();
   const handleMenuClick = (key: string, workspace: Workspace) => {
     switch (key) {
-      case "details":
-        // Handle view details action
-        console.log("View details for workspace:", workspace);
+      case "switch":
+        navigate(`/workspace/${workspace.id}/workspaces`);
         break;
       default:
         break;
@@ -30,16 +31,21 @@ export const WorkspaceCards = ({
     workspace,
   ) => {
     return [
-      <EditOutlined key="edit" onClick={() => onEditClick?.(workspace)} />,
+      <Tooltip title="切換工作空間">
+        <SwapOutlined
+          key="switch"
+          onClick={() => handleMenuClick("switch", workspace)}
+        />
+      </Tooltip>,
       <Dropdown
         key="more"
         menu={{
           items: [
             {
-              key: "details",
-              icon: <InfoCircleOutlined />,
-              label: "查看詳細資訊",
-              onClick: () => handleMenuClick("details", workspace),
+              key: "edit",
+              icon: <EditOutlined />,
+              label: "編輯",
+              onClick: () => onEditClick?.(workspace),
             },
           ],
         }}
@@ -60,17 +66,17 @@ export const WorkspaceCards = ({
       {workspaces.map((workspace) => (
         <Card
           key={workspace.id}
-          cover={
-            <img
-              alt={workspace.name}
-              src={
-                workspace.imageUrl && workspace.imageUrl !== ""
-                  ? workspace.imageUrl
-                  : placeholder
-              }
-              className="w-full h-[150px] object-cover"
-            />
-          }
+          // cover={
+          //   <img
+          //     alt={workspace.name}
+          //     src={
+          //       workspace.imageUrl && workspace.imageUrl !== ""
+          //         ? workspace.imageUrl
+          //         : placeholder
+          //     }
+          //     className="w-full h-[150px] object-cover"
+          //   />
+          // }
           actions={createActions(workspace)}
           className="w-full sm:w-[250px]"
         >

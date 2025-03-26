@@ -10,6 +10,7 @@ import {
   updateDoc,
   where,
   WithFieldValue,
+  writeBatch,
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { hasMembersInWorkspace } from "./member";
@@ -33,7 +34,7 @@ export interface Workspace extends Auditable {
   id: string;
   name: string;
   description: string;
-  uids: Record<string, boolean>;
+  uids: string[];
   lineConfig?: LineConfig;
   googleConfig?: GoogleConfig;
   imageUrl?: string;
@@ -54,7 +55,7 @@ export const addWorkspace = async (workspace: Partial<Workspace>) => {
 
 export const getWorkspaces = async (uid: string): Promise<Workspace[]> => {
   const querySnapshot = await getDocs(
-    query(collection(db, "workspaces"), where(`uids.${uid}`, "==", true)),
+    query(collection(db, "workspaces"), where(`uids`, "array-contains", uid)),
   );
   return querySnapshot.docs
     .map((doc) => {
@@ -87,8 +88,8 @@ export const updateWorkspace = async (
   await updateDoc(docRef, workspace);
 };
 
-export const deleteWorkspace = async (uid: string, workspace: Workspace) => {
-  const hasMembers = await hasMembersInWorkspace(uid, workspace.id);
+export const deleteWorkspace = async (workspace: Workspace) => {
+  const hasMembers = await hasMembersInWorkspace(workspace.id);
   if (hasMembers) {
     throw new Error("Workspace has members, please remove them first");
   }
@@ -99,7 +100,16 @@ export const deleteWorkspace = async (uid: string, workspace: Workspace) => {
 
 export const countWorkspaces = async (uid: string) => {
   const querySnapshot = await getCountFromServer(
-    query(collection(db, "workspaces"), where(`uids.${uid}`, "==", true)),
+    query(collection(db, "workspaces"), where(`uids`, "array-contains", uid)),
   );
   return querySnapshot.data().count;
+};
+
+export const bulkSetWorkspaces = async (workspaces: Workspace[]) => {
+  const batch = writeBatch(db);
+  workspaces.forEach((workspace) => {
+    const docRef = doc(collection(db, "workspaces"), workspace.id);
+    batch.set(docRef, workspace);
+  });
+  await batch.commit();
 };

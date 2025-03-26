@@ -66,8 +66,7 @@ const MembersPage = () => {
           createdBy: user.uid,
           updatedAt: timestamp,
           updatedBy: user.uid,
-          uids: { [user.uid]: true },
-          workspaceIds: { [workspaceId]: true },
+          workspaceIds: [workspaceId],
         });
       }
       revalidator.revalidate();
@@ -110,8 +109,7 @@ const MembersPage = () => {
         createdBy: user.uid,
         updatedAt: timestamp,
         updatedBy: user.uid,
-        uids: { [user.uid]: true },
-        workspaceIds: { [workspaceId]: true },
+        workspaceIds: [workspaceId],
       }));
 
       await batchAddMembers(membersWithUids);
@@ -190,7 +188,6 @@ const MembersPage = () => {
       message: filterUndefinedAndTrim(messageSchedule.message),
       recipient: filterUndefinedAndTrim(messageSchedule.recipient),
     };
-    console.log(ms);
     await addMessageSchedule(ms);
   };
 

@@ -28,7 +28,7 @@ function MainPage() {
         createdAt: timestamp,
         updatedBy: rootData.user.uid,
         updatedAt: timestamp,
-        uids: { [rootData.user.uid]: true },
+        uids: [rootData.user.uid],
       });
       revalidator.revalidate();
     } catch (error) {

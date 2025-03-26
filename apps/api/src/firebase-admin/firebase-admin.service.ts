@@ -68,6 +68,10 @@ export class FirebaseAdminService {
     return getAuth().getUser(uid);
   }
 
+  getUsers(uids: string[]) {
+    return getAuth().getUsers(uids.map((uid) => ({ uid })));
+  }
+
   updateUser(uid: string, properties: UpdateRequest) {
     return getAuth().updateUser(uid, properties);
   }
@@ -135,6 +139,22 @@ export class FirebaseAdminService {
     return snapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
+    }));
+  }
+
+  async findTeamMembers(id: string) {
+    const db = this.getDb();
+    const snapshot = await db.collection("workspaces").doc(id).get();
+    const data = snapshot.data();
+    const { uids } = data;
+    const { users } = await this.getUsers(uids);
+    return users.map((user) => ({
+      uid: user.uid,
+      email: user.email,
+      displayName: user.displayName,
+      photoURL: user.photoURL,
+      phoneNumber: user.phoneNumber,
+      disabled: user.disabled,
     }));
   }
 }
