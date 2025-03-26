@@ -7,5 +7,15 @@ export default function Logo({
   className?: string;
   url?: string;
 }) {
-  return <img src={url || logo} alt="psyduck" className={className} />;
+  if (url) {
+    return <img src={url} alt="psyduck" className={className} />;
+  }
+
+  return (
+    <div className={className}>
+      <span className="text-xl font-bold bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500 text-transparent bg-clip-text">
+        DUCK
+      </span>
+    </div>
+  );
 }

@@ -37,6 +37,7 @@ import {
   DatabaseOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
+import { version } from "../../package.json";
 
 export function Layout() {
   const rootData = useRootData();
@@ -159,7 +160,7 @@ export function Layout() {
               <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-4 ring-1 ring-white/10">
                 <div className="flex h-16 shrink-0 items-center justify-between">
                   <Link to="/">
-                    <Logo className="h-8 w-8 rounded" url={found.imageUrl} />
+                    <Logo className="h-8 w-8 rounded" />
                   </Link>
                 </div>
                 <nav className="flex flex-1 flex-col">
@@ -230,25 +231,16 @@ export function Layout() {
           {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-4">
             <div className="flex h-16 shrink-0 items-center justify-between">
-              <Link to="/" className={cn(isCollapsed && "justify-center")}>
-                <Logo
-                  className={cn("h-8 w-8 rounded", isCollapsed && "h-6")}
-                  url={found.imageUrl}
-                />
-              </Link>
-              <button
-                onClick={() => setIsCollapsed(!isCollapsed)}
-                className="cursor-pointer hidden lg:flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800"
-              >
-                {isCollapsed ? (
-                  <ChevronRightIcon className="h-5 w-5" />
-                ) : (
-                  <ChevronLeftIcon className="h-5 w-5" />
-                )}
-              </button>
+              {!isCollapsed && (
+                <Link to="/" className={cn(isCollapsed && "justify-center")}>
+                  <Logo
+                    className={cn("h-8 w-8 rounded", isCollapsed && "h-6")}
+                  />
+                </Link>
+              )}
             </div>
             <nav className="flex flex-1 flex-col">
-              <ul role="list" className="flex flex-1 flex-col gap-y-7">
+              <ul role="list" className="flex flex-1 flex-col gap-y-2">
                 <li>
                   <ul role="list" className="-mx-2 space-y-1">
                     {navigation.map((item) => (
@@ -305,6 +297,21 @@ export function Layout() {
                       {!isCollapsed && item.name}
                     </Link>
                   ))}
+                </li>
+                <li className="flex items-center justify-between">
+                  {!isCollapsed && (
+                    <span className="text-gray-500">v{version}</span>
+                  )}
+                  <button
+                    onClick={() => setIsCollapsed(!isCollapsed)}
+                    className="cursor-pointer hidden lg:flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800"
+                  >
+                    {isCollapsed ? (
+                      <ChevronRightIcon className="h-5 w-5" />
+                    ) : (
+                      <ChevronLeftIcon className="h-5 w-5" />
+                    )}
+                  </button>
                 </li>
               </ul>
             </nav>
