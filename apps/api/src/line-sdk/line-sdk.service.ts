@@ -705,7 +705,6 @@ export class LineSdkService {
         });
 
       default:
-        console.log(`Echo message to ${replyToken}: ${message.text}`);
         return this.replyText(client, replyToken, message.text);
     }
   }
