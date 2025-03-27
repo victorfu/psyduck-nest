@@ -29,8 +29,9 @@ import WorkspacesPage from "./pages/workspaces-page.tsx";
 import DashboardPage from "./pages/dashboard-page.tsx";
 import LineUsersPage from "./pages/line-users-page.tsx";
 import ScheduleMessagesPage from "./pages/schedule-messages-page.tsx";
-import { Fallback } from "./components/fallback.tsx";
 import TeamPage from "./pages/team-page.tsx";
+import PlanPage from "./pages/plan-page.tsx";
+import { Fallback } from "./components/fallback.tsx";
 
 const router = createBrowserRouter([
   {
@@ -69,6 +70,10 @@ const router = createBrowserRouter([
             path: "schedule-messages",
             Component: ScheduleMessagesPage,
             loader: scheduleMessagesLoader,
+          },
+          {
+            path: "plan",
+            Component: PlanPage,
           },
           {
             path: "workspaces",

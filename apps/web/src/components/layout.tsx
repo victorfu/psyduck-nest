@@ -36,6 +36,7 @@ import {
   TeamOutlined,
   DatabaseOutlined,
   SettingOutlined,
+  PaperClipOutlined,
 } from "@ant-design/icons";
 import { version } from "../../package.json";
 
@@ -75,6 +76,12 @@ export function Layout() {
         href: `/workspace/${workspaceId}/schedule-messages`,
         icon: CalendarOutlined,
         current: currentPage?.match(/^\/workspace\/[^/]+\/schedule-messages/),
+      },
+      {
+        name: "計畫",
+        href: `/workspace/${workspaceId}/plan`,
+        icon: PaperClipOutlined,
+        current: currentPage?.match(/^\/workspace\/[^/]+\/plan/),
       },
     ],
     [workspaceId, currentPage],
