@@ -7,13 +7,6 @@ export default () => ({
   cors: {
     enabled: process.env.CORS_ENABLED === "true",
   },
-  db: {
-    type: process.env.DB_TYPE || "better-sqlite3",
-    database: process.env.DB_DATABASE || "db.dat",
-    synchronize: process.env.DB_SYNCHRONIZE === "true",
-    autoLoadEntities: true,
-    logging: process.env.DB_LOGGING === "true",
-  },
   swagger: {
     enabled: process.env.SWAGGER_ENABLED === "true",
     title: process.env.SWAGGER_TITLE || "API",
